@@ -1620,7 +1620,8 @@ class Component extends DCLogic {
     thumb.style.cursor = 'grabbing';
     const move = (ev) => {
       const top = Math.min(trackH - h, Math.max(0, startTop + (ev.clientY - startY)));
-      window.scrollTo({ top: (top / (trackH - h)) * (total - view) });
+      // instant: html has scroll-behavior smooth, which makes every drag step animate and lag
+      window.scrollTo({ top: (top / (trackH - h)) * (total - view), behavior: 'instant' });
     };
     const up = () => {
       thumb.style.cursor = 'grab';
