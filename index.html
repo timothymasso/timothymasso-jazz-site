@@ -956,8 +956,8 @@
           </sc-for>
         </div>
         <div id="ph-stage" ref="{{ phStageRef }}" onPointerDown="{{ phDown }}" onPointerMove="{{ phMove }}" onPointerUp="{{ phUp }}" onPointerCancel="{{ phUp }}" style="position: relative; height: clamp(300px, calc(100svh - 300px), 660px); margin-top: 8px; overflow-x: clip; overflow-y: visible; touch-action: pan-y; user-select: none; cursor: {{ phStageCursor }}">
-          <div aria-hidden="true" data-phglow="a" style="position: absolute; left: 50%; top: 52%; height: 20%; aspect-ratio: 4 / 5; transform: translate(-50%, -50%) scale(4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.5) brightness(0.85); opacity: 0.6; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
-          <div aria-hidden="true" data-phglow="b" style="position: absolute; left: 50%; top: 52%; height: 20%; aspect-ratio: 4 / 5; transform: translate(-50%, -50%) scale(4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.5) brightness(0.85); opacity: 0; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
+          <div aria-hidden="true" data-phglow="a" style="position: absolute; left: 50%; top: 52%; height: 22%; aspect-ratio: 5 / 4; transform: translate(-50%, -50%) scale(4.4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.8) brightness(1); opacity: 0.85; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
+          <div aria-hidden="true" data-phglow="b" style="position: absolute; left: 50%; top: 52%; height: 22%; aspect-ratio: 5 / 4; transform: translate(-50%, -50%) scale(4.4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.8) brightness(1); opacity: 0; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
           <sc-for list="{{ phSlides }}" as="c" hint-placeholder-count="5">
             <a href="#" onClick="{{ c.go }}" draggable="false" data-ci="{{ c.i }}" aria-label="{{ c.label }}" style="position: absolute; left: 50%; top: 50%; height: 80%; max-width: 86vw; aspect-ratio: {{ c.ratio }}; border-radius: 16px; overflow: hidden; background: var(--panel); display: block; transform: {{ c.tf }}; opacity: {{ c.op }}; z-index: {{ c.z }}; pointer-events: {{ c.pe }}; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease; will-change: transform">
               <img src="{{ c.src }}" alt="{{ c.label }}" loading="{{ c.load }}" draggable="false" style="display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none"></img>
@@ -1702,7 +1702,7 @@ class Component extends DCLogic {
       this._idle = (this._idle == null ? -0.04 : this._idle) + (((this._ringHover ? 0 : -0.04)) - (this._idle == null ? -0.04 : this._idle)) * 0.04;
       this._ringAng = (this._ringAng || 0) + this._ringVel + this._idle;
     }
-    if (this._ringEl) this._ringEl.style.transform = 'rotateX(-8deg) rotateY(' + this._ringAng + 'deg)';
+    if (this._ringEl) this._ringEl.style.transform = 'translateZ(' + (-(this._ringR || 0)) + 'px) rotateX(-8deg) rotateY(' + this._ringAng + 'deg)';
     this._raf = requestAnimationFrame(() => this._spin());
   }
   _snake(flat) {
@@ -1800,10 +1800,13 @@ class Component extends DCLogic {
     if (j !== prev) {
       const ga = st.querySelector('[data-phglow="a"]'), gb = st.querySelector('[data-phglow="b"]');
       if (ga && gb) {
-        const on = this._glowB ? gb : ga, off = this._glowB ? ga : gb;
-        off.style.backgroundImage = "url('" + p.src + "')"; off.style.opacity = '0.6'; on.style.opacity = '0';
-        this._glowB = !this._glowB;
-        clearTimeout(this._glowT); this._glowT = setTimeout(() => { const keep = this._glowB ? gb : ga, other = this._glowB ? ga : gb; ga.style.transition = gb.style.transition = 'none'; ga.style.backgroundImage = keep.style.backgroundImage; ga.style.opacity = '0.6'; gb.style.opacity = '0'; this._glowB = false; void ga.offsetWidth; ga.style.transition = gb.style.transition = ''; }, 900);
+        ga.style.transition = gb.style.transition = 'opacity 0.2s ease';
+        ga.style.opacity = gb.style.opacity = '0';
+        clearTimeout(this._glowDelay);
+        this._glowDelay = setTimeout(() => {
+          ga.style.transition = 'none'; ga.style.backgroundImage = "url('" + p.src + "')"; void ga.offsetWidth;
+          ga.style.transition = 'opacity 0.35s ease'; ga.style.opacity = '0.85'; this._glowB = false;
+        }, 320);
       }
     }
     const q = (s) => document.querySelector(s);
@@ -2261,7 +2264,7 @@ class Component extends DCLogic {
         const about = [{ k: 'about', bg: "url('./assets/portrait-crop-sm.jpg')", l: 'about', go: nav({ page: 'about' }) }];
         const extra = [perfs[0], null, lives[0], null, perfs[1], null, lives[1], null, perfs[2]];
         const cards = []; photoCards.forEach((p, i) => { cards.push(p); if (extra[i]) cards.push(extra[i]); });
-        const n = cards.length, w = 230, r = Math.round(w / (2 * Math.tan(Math.PI / n))) + 30;
+        const n = cards.length, w = 370, r = Math.round(w / (2 * Math.tan(Math.PI / n))) + 40; this._ringR = r;
         const h = React.createElement;
         const hover = (on) => (e) => {
           const el = e.currentTarget, img = el.firstChild, cap = el.lastChild;
@@ -2285,8 +2288,8 @@ class Component extends DCLogic {
             onPointerUp: (e) => { this._dragMoved = this._drag ? this._drag.moved : 0; this._drag = null; e.currentTarget.style.cursor = 'grab'; },
             onPointerCancel: () => { this._drag = null; }
           },
-          h('div', { style: { perspective: '1600px', width: w + 'px', height: '306px', scale: 'var(--ring-scale)' } },
-          h('div', { ref: (el) => { this._ringEl = el; }, style: { position: 'relative', width: '100%', height: '100%', transformStyle: 'preserve-3d', transform: 'rotateX(-8deg) rotateY(' + (this._ringAng || 0) + 'deg)' } },
+          h('div', { style: { perspective: '2600px', width: w + 'px', height: '492px', scale: 'var(--ring-scale)' } },
+          h('div', { ref: (el) => { this._ringEl = el; }, style: { position: 'relative', width: '100%', height: '100%', transformStyle: 'preserve-3d', transform: 'translateZ(' + (-r) + 'px) rotateX(-8deg) rotateY(' + (this._ringAng || 0) + 'deg)' } },
             cards.map((c, i) => {
               const base = 'rotateY(' + (i * 360 / n) + 'deg) translateZ(' + r + 'px)';
               return h('a', {
