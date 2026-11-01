@@ -10,7 +10,8 @@
 <helmet>
 <title>Timothy Masso · saxophone, composition, live sound</title>
 <meta name="description" content="Timothy Masso: saxophonist, composer and live sound engineer. Performances, sheet music, and live sound work.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%235C7A4C%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2242%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2C%20'Times%20New%20Roman'%2C%20serif%22%20font-style%3D%22italic%22%20font-size%3D%2230%22%20letter-spacing%3D%22-1%22%20fill%3D%22%23F4ECDF%22%3ETM%3C%2Ftext%3E%3C%2Fsvg%3E">
+<link rel="icon" type="image/png" href="./assets/favicon-tm3.png">
+<link rel="apple-touch-icon" href="./assets/favicon-tm.png">
 <meta name="theme-color" content="#1E1712">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Timothy Masso">
@@ -121,7 +122,7 @@
   
   <header ref="{{ hdrRef }}" style="position: sticky; top: 0; z-index: 50; background: var(--paper); font-family: 'Newsreader', Georgia, serif; color: var(--ink); transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)">
     <div style="display: grid; grid-template-columns: var(--hdr-cols); grid-template-areas: var(--hdr-areas); gap: 6px 16px; align-items: center; padding: 14px var(--gutter)">
-      <a href="#" onClick="{{ goIndex }}" style="grid-area: name; color: var(--ink); font-family: 'Gambarino', Georgia, serif; font-size: 22px; letter-spacing: -0.02em; line-height: 1; justify-self: start" style-hover="color: var(--accent, #B8502A)">Timothy Masso</a>
+      <a href="#" onClick="{{ goIndex }}" aria-hidden="{{ hdrNameHidden }}" tabIndex="{{ hdrNameTab }}" style="grid-area: name; color: var(--ink); font-family: 'Gambarino', Georgia, serif; font-size: 22px; letter-spacing: -0.02em; line-height: 1; justify-self: start; opacity: {{ hdrNameOp }}; pointer-events: {{ hdrNamePe }}; transition: opacity 0.4s ease" style-hover="color: var(--accent, #B8502A)">Timothy Masso</a>
       <nav aria-label="Main" style="grid-area: nav; display: flex; gap: var(--nav-gap); justify-content: center">
         <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
           <a href="#" onClick="{{ n.go }}" aria-current="{{ n.current }}" style="position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; color: {{ n.color }}; font-family: 'Gambarino', Georgia, serif; font-size: var(--nav-size); letter-spacing: -0.02em; line-height: 1" style-hover="color: var(--accent, #B8502A)">{{ n.text }}<span aria-hidden="true" style="position: absolute; left: calc(100% - 4px + 0.03em); top: calc(50% + 0.19em); width: 0.2em; height: 0.2em; border-radius: 50%; background: var(--accent, #B8502A); opacity: {{ n.dot }}; transition: opacity 0.35s ease"></span></a>
@@ -132,7 +133,7 @@
         <a href="#" onClick="{{ toggleTheme }}" title="Switch theme" style="color: var(--ink); min-height: 44px; display: inline-flex; align-items: center" style-hover="color: var(--accent, #B8502A)">( {{ themeLabel }} )</a>
       </span>
     </div>
-    <sc-if value="{{ inMusicAny }}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{ inMusic }}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; align-items: center; gap: 12px 24px; padding: 0 var(--gutter) 6px; margin-top: -10px; justify-content: center; font-size: 15px; font-style: italic; overflow-x: auto; white-space: nowrap">
         <nav aria-label="Music" style="display: flex; gap: 22px; flex: none">
           <sc-for list="{{ subNav }}" as="s" hint-placeholder-count="3">
@@ -183,25 +184,13 @@
           </div>
         </div>
       </section>
-      <section style="padding: clamp(28px, 5vh, 34px) var(--gutter) 28px; display: flex; flex-direction: column; gap: 22px">
-        <div style="display: grid; grid-template-columns: var(--footer-cols); gap: 16px; align-items: center; padding-top: 24px; font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); font-style: italic">
-          <span style="display: flex; gap: 18px; flex-wrap: wrap">
-            <a href="https://www.instagram.com/himothymasso/" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">instagram</a>
-            <a href="https://github.com/timothymasso" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">github</a>
-            <a href="https://www.cosmos.so/timothymasso" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">cosmos</a>
-            <a href="#" onClick="{{ goAll }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">everything</a>
-          </span>
-          <a href="#" onClick="{{ toggleTheme }}" aria-label="Switch theme" style="color: var(--ink); text-align: center" style-hover="color: var(--accent, #B8502A)">( {{ themeLabel }} mode )</a>
-          <span style="text-align: right; display: flex; justify-content: flex-end; align-items: baseline; gap: 10px">© {{ year }} Timothy Masso<span aria-hidden="true" style="font-family: 'Mrs Saint Delafield', cursive; font-style: normal; font-size: 30px; line-height: 0.6; color: var(--ink); opacity: 0.85; transform: rotate(-6deg) translateY(4px); display: inline-block">TM</span></span>
-        </div>
-      </section>
     </main>
   </sc-if>
 
   <sc-if value="{{ isPerf }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>{{ perfCount }} entries</span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>saxophonist · alto, soprano &amp; baritone</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">performances<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: 36px var(--gutter) 16px">
@@ -385,7 +374,7 @@
   <sc-if value="{{ isLive }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>foh · backline · production</span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>foh engineer · backline</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">live sound<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: 36px var(--gutter) 8px">
@@ -427,7 +416,7 @@
   <sc-if value="{{ isSessions }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>season 2 · backline &amp; assistant live sound · 10 episodes · 2024</span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>backline · assistant live sound</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">sunday sessions<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section id="sessions" style="padding: 8px var(--gutter) 28px; display: flex; flex-direction: column; gap: 20px">
@@ -642,7 +631,7 @@
   <sc-if value="{{ isComp }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>{{ compCount }} scores</span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>composer · arranger</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">sheet music<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: clamp(20px, 3vh, 19px) var(--gutter) 0">
@@ -911,8 +900,7 @@
   <sc-if value="{{ isMusic }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>saxophone — composition — live sound</span></div>
-        <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">music<span style="color: var(--accent, #B8502A)">.</span></h1>
+                <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">music<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: 8px var(--gutter) 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 24px">
         <a href="#" onClick="{{ goPerf }}" style="display: flex; flex-direction: column; gap: 12px; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
@@ -937,8 +925,7 @@
         <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap">
           <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">photos<span style="color: var(--accent, #B8502A)">.</span></h1>
           <nav aria-label="Photo tools" style="display: flex; align-items: center; gap: 22px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
-            <span style="color: var(--muted)">all shot by me, 2025</span>
-            <a href="#" onClick="{{ phShuffle }}" style="display: inline-flex; align-items: center; min-height: 44px; line-height: 1; color: var(--muted)" style-hover="color: var(--accent, #B8502A)">surprise me</a>
+                        <a href="#" onClick="{{ phShuffle }}" style="display: inline-flex; align-items: center; min-height: 44px; line-height: 1; color: var(--muted)" style-hover="color: var(--accent, #B8502A)">surprise me</a>
           </nav>
         </div>
       </section>
@@ -1011,7 +998,6 @@
   <sc-if value="{{ isAll }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>{{ totalCount }} entries</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">everything<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: 20px var(--gutter) 26px">
@@ -1082,7 +1068,7 @@
         </aside>
         <div style="flex: 999 1 480px; min-width: 0; display: flex; flex-direction: column; margin-top: -44px">
           <div style="display: flex; flex-direction: column; gap: 20px; padding: 44px 0 8px; max-width: 760px">
-            <p style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 19px; line-height: 1.65; font-optical-sizing: none; font-variation-settings: 'opsz' 14; color: var(--body); margin: 0; text-wrap: pretty">I grew up in <span style="color: var(--ink)">Cleveland</span> in a musical family. My father plays guitar and works as a sound engineer, and I fell for the <span style="color: var(--ink)">baritone saxophone</span> at a summer camp. In high school I played everywhere I could: the Cleveland Youth Wind Symphony at Severance Hall, the Shaker Heights wind and jazz ensembles, the Tri-C JazzFest Academy, show choir bands and pit orchestras. I studied jazz and contemporary music at <span style="color: var(--ink)">The New School</span> in New York, playing in ensembles led by Bobby Sanabria, Marty Ehrlich and Andrew Cyrille, and worked backline and <span style="color: var(--ink)">live sound</span> for Sunday Sessions. Since graduating in 2024 I've turned to <span style="color: var(--ink)">data analytics</span>, pursuing a post-degree certificate at Tri-C on the way to a master's in applied mathematics and statistics, while working as a LAN and desktop support technician.</p>
+            <p style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 19px; line-height: 1.65; font-optical-sizing: none; font-variation-settings: 'opsz' 14; color: var(--body); margin: 0; text-wrap: pretty">I grew up in Cleveland in a musical family. My father plays guitar and works as a sound engineer, and I fell for the baritone saxophone at a summer camp. In high school I played everywhere I could: the Cleveland Youth Wind Symphony at Severance Hall, the Shaker Heights wind and jazz ensembles, the Tri-C JazzFest Academy, show choir bands and pit orchestras. I studied jazz and contemporary music at The New School in New York, playing in ensembles led by Bobby Sanabria, Marty Ehrlich and Andrew Cyrille, and worked backline and live sound for Sunday Sessions. Since graduating in 2024 I've turned to data analytics, pursuing a post-degree certificate at Tri-C on the way to a master's in applied mathematics and statistics, while working as a LAN and desktop support technician.</p>
             <div role="list" aria-label="Chapters" style="position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 28px; padding-top: 0">
               <span aria-hidden="true" style="position: absolute; top: 22px; left: 0; right: 0; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span>
               <span aria-hidden="true" style="position: absolute; top: 22px; left: 0; width: 2px; height: 17px; background: var(--ink)"></span>
@@ -1152,7 +1138,6 @@
     </main>
   </sc-if>
 
-  <sc-if value="{{ notIndex }}" hint-placeholder-val="{{ true }}">
     <footer style="display: grid; grid-template-columns: var(--footer-cols); align-items: center; gap: 16px; padding: 24px var(--gutter) 24px; font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); border-top: 1px solid var(--rule); margin: 24px var(--gutter) 0; padding-left: 0; padding-right: 0; font-style: italic">
       <span style="display: flex; gap: 18px; flex-wrap: wrap">
         <a href="https://www.instagram.com/himothymasso/" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">instagram</a>
@@ -1165,7 +1150,6 @@
       </span>
       <span style="text-align: right; display: flex; justify-content: flex-end; align-items: baseline; gap: 10px">© {{ year }} Timothy Masso<span aria-hidden="true" style="font-family: 'Mrs Saint Delafield', cursive; font-style: normal; font-size: 30px; line-height: 0.6; color: var(--ink); opacity: 0.85; transform: rotate(-6deg) translateY(4px); display: inline-block">TM</span></span>
     </footer>
-  </sc-if>
   <div ref="{{ railRef }}" aria-hidden="true" style="position: fixed; z-index: 95; top: 0; right: 0; width: 10px; height: 100vh; opacity: 0; transition: opacity 0.35s ease; pointer-events: none">
     <div ref="{{ thumbRef }}" onMouseDown="{{ startDrag }}" style="position: absolute; right: 0; width: 3px; top: 0; height: 40px; background: var(--accent, #B8502A); cursor: grab; pointer-events: auto; transition: width 0.18s ease" style-hover="width: 6px"></div>
   </div>
@@ -1715,7 +1699,7 @@ class Component extends DCLogic {
   _spin() {
     if (!this._drag) {
       this._ringVel = (this._ringVel || 0) * 0.965;
-      this._idle = (this._idle == null ? -0.08 : this._idle) + (((this._ringHover ? 0 : -0.08)) - (this._idle == null ? -0.08 : this._idle)) * 0.04;
+      this._idle = (this._idle == null ? -0.04 : this._idle) + (((this._ringHover ? 0 : -0.04)) - (this._idle == null ? -0.04 : this._idle)) * 0.04;
       this._ringAng = (this._ringAng || 0) + this._ringVel + this._idle;
     }
     if (this._ringEl) this._ringEl.style.transform = 'rotateX(-8deg) rotateY(' + this._ringAng + 'deg)';
@@ -2088,7 +2072,7 @@ class Component extends DCLogic {
       })
     };
     return {
-      isIndex: p === 'index', notIndex: p !== 'index', isGig: p === 'gig', isProject: p === 'project', isPeople: p === 'people', isAll: p === 'all', isColophon: p === 'colophon', isGraphic: p === 'graphic', goGraphic: this.go('graphic'),
+      isIndex: p === 'index', notIndex: p !== 'index', hdrNameOp: p === 'index' ? 0 : 1, hdrNamePe: p === 'index' ? 'none' : 'auto', hdrNameHidden: p === 'index' ? 'true' : 'false', hdrNameTab: p === 'index' ? -1 : 0, isGig: p === 'gig', isProject: p === 'project', isPeople: p === 'people', isAll: p === 'all', isColophon: p === 'colophon', isGraphic: p === 'graphic', goGraphic: this.go('graphic'),
       goGraphicRecital: (e) => { e.preventDefault(); this._nav({ page: 'detail', slug: 'recital' }); this.setState({ pcue: 0 }); }, isPerf: p === 'perf', isDetail: p === 'detail', isSessions: p === 'sessions', isLive: p === 'live', isComp: p === 'comp', isCompDetail: p === 'compdetail', isSessionDetail: p === 'sessiondetail', isData: p === 'data', isAbout: p === 'about',
       aboutFull: this.state.aboutFull ? 1 : 0, aboutFullLabel: this.state.aboutFull ? 'show less ↑' : 'read the full story ↓',
       toggleAboutFull: (e) => {
