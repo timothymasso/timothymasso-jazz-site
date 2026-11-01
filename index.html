@@ -151,7 +151,7 @@
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 12.4vw, 215px); line-height: 0.9; letter-spacing: -0.035em; color: var(--ink); white-space: nowrap; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">Timothy Masso<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
-      <section style="position: relative; padding: 0 0 calc(130px * var(--ring-scale)); overflow: hidden">
+      <section style="position: relative; z-index: 0; isolation: isolate; padding: 0 0 calc(130px * var(--ring-scale)); overflow: hidden">
         <div style="position: relative; height: calc(580px * var(--ring-scale)); display: flex; align-items: center; justify-content: center; margin-top: calc(-60px * var(--ring-scale))">{{ ring }}</div>
         
         
@@ -912,7 +912,7 @@
           <span style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(22px, 2.4vw, 32px); line-height: 0.94; letter-spacing: -0.026em">live sound</span></span>
         </a>
         <a href="#" onClick="{{ goComp }}" style="display: flex; flex-direction: column; gap: 12px; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
-          <span style="position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--panel); border-radius: 14px; overflow: hidden"><div data-pdf="cover" data-pdf-src="./assets/scores/resolute/full-score.pdf" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; filter: grayscale(1) var(--pdf-invert, none)"></div></span>
+          <span style="position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--panel); border-radius: 14px; overflow: hidden"><div data-pdf="cover" data-pdf-src="./assets/scores/resolute/full-score.pdf" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; filter: grayscale(1) var(--pdf-invert, none); transition: transform 0.6s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="transform: scale(1.04)"></div></span>
           <span style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(22px, 2.4vw, 32px); line-height: 0.94; letter-spacing: -0.026em">sheet music</span></span>
         </a>
       </section>
@@ -1049,13 +1049,6 @@
       <section style="padding: 12px var(--gutter) 40px; display: flex; flex-wrap: wrap; gap: 40px 56px; align-items: flex-start">
         <aside style="flex: 1 1 260px; max-width: 360px; position: sticky; top: 90px; display: flex; flex-direction: column; gap: 18px">
           <div role="img" aria-label="Timothy Masso" style="aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background: var(--panel) url('./assets/portrait-2025.jpg') 62% 40% / cover"></div>
-          <sc-if value="{{ aboutFull }}" hint-placeholder-val="{{ false }}">
-          <nav aria-label="Chapters" style="display: flex; flex-direction: column; gap: 2px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
-            <sc-for list="{{ aboutChapters }}" as="c" hint-placeholder-count="4">
-              <a href="#" onClick="{{ c.go }}" style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; color: var(--ink)" style-hover="color: var(--accent, #B8502A)"><span>{{ c.name }}</span><span style="color: var(--muted)">{{ c.years }}</span></a>
-            </sc-for>
-          </nav>
-          </sc-if>
           <div style="display: flex; flex-direction: column; gap: 8px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
             <span style="color: var(--muted)">contact &amp; elsewhere</span>
             <span style="display: flex; flex-direction: column; gap: 6px">
@@ -1065,6 +1058,13 @@
           <a href="https://www.cosmos.so/timothymasso" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">cosmos ↗</a>
         </span>
           </div>
+          <sc-if value="{{ aboutFull }}" hint-placeholder-val="{{ false }}">
+          <nav aria-label="Chapters" style="display: flex; flex-direction: column; gap: 2px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
+            <sc-for list="{{ aboutChapters }}" as="c" hint-placeholder-count="4">
+              <a href="#" onClick="{{ c.go }}" style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; color: var(--ink)" style-hover="color: var(--accent, #B8502A)"><span>{{ c.name }}</span><span style="color: var(--muted)">{{ c.years }}</span></a>
+            </sc-for>
+          </nav>
+          </sc-if>
         </aside>
         <div style="flex: 999 1 480px; min-width: 0; display: flex; flex-direction: column; margin-top: -44px">
           <div style="display: flex; flex-direction: column; gap: 20px; padding: 44px 0 8px; max-width: 760px">
@@ -1726,7 +1726,7 @@ class Component extends DCLogic {
     fetch(NOW_PLAYING_URL).then((r) => r.json()).then((d) => { if (d && d.title) this.setState({ np: d }); }).catch(() => {});
   }
   componentDidMount() {
-    ['./assets/playing-sm.jpg', './assets/photos/p40.jpg', './assets/portrait-crop-sm.jpg'].forEach((s) => { const i = new Image(); i.src = s; });
+    ['./assets/playing-sm.jpg', './assets/photos/p40.jpg', './assets/portrait-2025.jpg'].forEach((s) => { const i = new Image(); i.src = s; });
     this._np(); this._npT = setInterval(() => this._np(), 30000);
     fetch('./assets/shows.json').then((r) => r.json()).then((shows) => {
       const rows = shows.map((sh) => ({ slug: sh.slug, year: sh.year, title: sh.title, band: sh.band, lineup: sh.lineup, role: 'Live sound engineer, FOH', dates: sh.dates, venue: sh.venue, gear: '', crew: '', img: sh.band === 'MOB' ? './assets/gigs/mob/thumb.png' : './assets/gigs/tavern/thumb.png', kind: 'sound', note: '', docs: [], show: sh }));
@@ -2174,7 +2174,7 @@ class Component extends DCLogic {
         return { show: 0 };
       })(),
       ...(() => {
-        const rows = [['01', 'music', 'goMusic', String(PERFS.length + SESSIONS.length + COMPS.length + 1), './assets/playing-sm.jpg', 'Timothy Masso playing alto with his quartet', 'auto 175%', '48% 58%'], ['02', 'photos', 'goPhotos', String(this._photos().length), (() => { const ring = [25, 34, 7, 42, 26, 12, 22, 47, 14, 56, 29, 35, 62, 52]; const pool = []; for (let k = 1; k <= 65; k++) if (ring.indexOf(k) < 0) pool.push(k); return './assets/photos/p' + String(pool[Math.floor(Date.now() / 86400000) % pool.length]).padStart(2, '0') + '.jpg'; })(), 'Photograph by Timothy Masso'], ['03', 'about', 'goAbout', '→', './assets/portrait-crop-sm.jpg', 'Timothy Masso portrait']];
+        const rows = [['01', 'music', 'goMusic', String(PERFS.length + SESSIONS.length + COMPS.length + 1), './assets/playing-sm.jpg', 'Timothy Masso playing alto with his quartet', 'auto 175%', '48% 58%'], ['02', 'photos', 'goPhotos', String(this._photos().length), (() => { const ring = [25, 34, 7, 42, 26, 12, 22, 47, 14, 56, 29, 35, 62, 52]; const pool = []; for (let k = 1; k <= 65; k++) if (ring.indexOf(k) < 0) pool.push(k); return './assets/photos/p' + String(pool[Math.floor(Date.now() / 86400000) % pool.length]).padStart(2, '0') + '.jpg'; })(), 'Photograph by Timothy Masso'], ['03', 'about', 'goAbout', '→', './assets/portrait-2025.jpg', 'Timothy Masso portrait', 'cover', '62% 40%']];
         const cur = this.state.workHover || 'music';
         const pick = rows.find((r) => r[1] === cur) || rows[0];
         return {
@@ -2340,7 +2340,15 @@ class Component extends DCLogic {
         this._hdr = el;
         if (el && !this._hdrScroll) {
           let last = window.scrollY;
-          this._hdrScroll = () => { const y = window.scrollY; if (!this._hdr) return; this._hdr.style.boxShadow = y > 8 ? '0 1px 0 var(--rule)' : 'none'; last = y; };
+          this._hdrScroll = () => {
+            const h = this._hdr; if (!h) return;
+            const on = window.scrollY > 40; if (on === this._hdrMin) return; this._hdrMin = on;
+            h.style.background = on ? 'transparent' : 'var(--paper)'; h.style.pointerEvents = on ? 'none' : '';
+            const name = h.querySelector('[style*="grid-area: name"]'), end = h.querySelector('[style*="grid-area: end"]'), nav = h.querySelector('nav[aria-label="Main"]'), sub = h.children[1];
+            [name, end, sub].forEach((el) => { if (!el) return; el.style.transition = 'opacity 0.3s ease'; el.style.opacity = on ? '0' : ''; el.style.visibility = on ? 'hidden' : ''; });
+            if (nav) { nav.style.transition = 'background 0.3s ease, box-shadow 0.3s ease'; nav.style.pointerEvents = 'auto'; nav.style.justifySelf = 'center'; nav.style.padding = '0 18px'; nav.style.borderRadius = '999px'; nav.style.background = on ? 'color-mix(in srgb, var(--paper) 82%, transparent)' : ''; nav.style.backdropFilter = nav.style.webkitBackdropFilter = on ? 'blur(10px)' : ''; nav.style.boxShadow = on ? '0 0 0 1px var(--rule)' : ''; }
+            last = window.scrollY;
+          };
           window.addEventListener('scroll', this._hdrScroll, { passive: true });
         }
       }),
