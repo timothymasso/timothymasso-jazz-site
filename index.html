@@ -10,7 +10,7 @@
 <helmet>
 <title>Timothy Masso · saxophone, composition, live sound</title>
 <meta name="description" content="Timothy Masso: saxophonist, composer and live sound engineer. Performances, sheet music, and live sound work.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%23B8502A%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2242%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2C%20'Times%20New%20Roman'%2C%20serif%22%20font-style%3D%22italic%22%20font-size%3D%2230%22%20letter-spacing%3D%22-1%22%20fill%3D%22%23F4ECDF%22%3ETM%3C%2Ftext%3E%3C%2Fsvg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2231%22%20fill%3D%22%235C7A4C%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2242%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2C%20'Times%20New%20Roman'%2C%20serif%22%20font-style%3D%22italic%22%20font-size%3D%2230%22%20letter-spacing%3D%22-1%22%20fill%3D%22%23F4ECDF%22%3ETM%3C%2Ftext%3E%3C%2Fsvg%3E">
 <meta name="theme-color" content="#1E1712">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Timothy Masso">
@@ -21,6 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <link href="https://api.fontshare.com/v2/css?f[]=gambarino@400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;display=swap" rel="stylesheet">
 <style>
 
@@ -56,8 +57,14 @@
     --home-of: hidden;
     --footer-cols: 1fr auto 1fr;
     --gigcols: minmax(0, 1fr) 150px 130px;
+    --allcols: minmax(0, 1fr) 140px 190px;
     --ring-scale: 1;
     --ph-cols: 4;
+    --hdr-cols: 1fr auto 1fr;
+    --hdr-areas: "name nav end";
+    --nav-size: 24px;
+    --nav-gap: 28px;
+    --hdr-time: inline;
   }
   @media (max-width: 820px) {
     :root {
@@ -79,8 +86,14 @@
       --home-of: visible;
       --footer-cols: minmax(0, 1fr);
       --gigcols: minmax(0, 1fr);
+      --allcols: minmax(0, 1fr);
       --ring-scale: 0.6;
       --ph-cols: 2;
+      --hdr-cols: minmax(0, 1fr) auto;
+      --hdr-areas: "name end" "nav nav";
+      --nav-size: 22px;
+      --nav-gap: 0px;
+      --hdr-time: none;
     }
   }
   html { scroll-behavior: smooth; }
@@ -93,6 +106,8 @@
   * { scrollbar-width: none; -ms-overflow-style: none; }
   ::-webkit-scrollbar { width: 0; height: 0; }
   ::selection { background: transparent; color: var(--ink); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  @keyframes vinyl { to { transform: rotate(360deg); } }
+  @keyframes pageTurn { from { opacity: 0; transform: perspective(1400px) rotateY(-14deg); } to { opacity: 1; transform: none; } }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   @keyframes slideUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
   @keyframes wipeIn { from { opacity: 0; clip-path: inset(-0.35em 100% -0.35em -0.15em); } to { opacity: 1; clip-path: none; } }
@@ -102,40 +117,37 @@
   @keyframes sleeveIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 </style>
 </helmet>
-<div style="min-height: 100vh; background: var(--paper); color: var(--ink); font-family: 'Newsreader', Georgia, serif; overflow-x: hidden">
-  <sc-if value="{{ isIndex }}" hint-placeholder-val="{{ true }}">
-  <div role="note" style="font-family: 'Newsreader', Georgia, serif; background: var(--paper); color: var(--faint); border-bottom: 1px solid var(--rule); min-height: var(--banner-h); box-sizing: border-box; padding: 7px var(--gutter); display: flex; justify-content: center; align-items: baseline; gap: 12px; flex-wrap: wrap; font-weight: 400; font-size: 14px; letter-spacing: 0; text-align: center; font-style: italic">
-    <span>work in progress</span>
-    <span aria-hidden="true">·</span>
-    <span>Some pages and scores are still being finished</span>
-  </div>
-  </sc-if>
-  <sc-if value="{{ notIndex }}" hint-placeholder-val="{{ true }}">
-    <header style="position: sticky; top: 0; z-index: 50; background: var(--paper); border-bottom: 1px solid var(--rule); display: grid; grid-template-columns: var(--footer-cols); gap: 16px; align-items: center; padding: 18px var(--gutter); font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); font-style: italic">
-      <a href="#" onClick="{{ goIndex }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">Timothy Masso</a>
-      <nav style="display: flex; gap: 22px; flex-wrap: wrap; justify-content: center">
+<div style="min-height: 100vh; background: var(--paper); color: var(--ink); font-family: 'Newsreader', Georgia, serif; overflow-x: clip">
+  
+  <header ref="{{ hdrRef }}" style="position: sticky; top: 0; z-index: 50; background: var(--paper); font-family: 'Newsreader', Georgia, serif; color: var(--ink); transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)">
+    <div style="display: grid; grid-template-columns: var(--hdr-cols); grid-template-areas: var(--hdr-areas); gap: 6px 16px; align-items: center; padding: 14px var(--gutter)">
+      <a href="#" onClick="{{ goIndex }}" style="grid-area: name; color: var(--ink); font-family: 'Gambarino', Georgia, serif; font-size: 22px; letter-spacing: -0.02em; line-height: 1; justify-self: start" style-hover="color: var(--accent, #B8502A)">Timothy Masso</a>
+      <nav aria-label="Main" style="grid-area: nav; display: flex; gap: var(--nav-gap); justify-content: center">
         <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
-          <a href="#" onClick="{{ n.go }}" style="color: {{ n.color }}" style-hover="color: var(--accent, #B8502A)">{{ n.text }}</a>
+          <a href="#" onClick="{{ n.go }}" aria-current="{{ n.current }}" style="position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; color: {{ n.color }}; font-family: 'Gambarino', Georgia, serif; font-size: var(--nav-size); letter-spacing: -0.02em; line-height: 1" style-hover="color: var(--accent, #B8502A)">{{ n.text }}<span aria-hidden="true" style="position: absolute; left: calc(100% - 4px + 0.03em); top: calc(50% + 0.19em); width: 0.2em; height: 0.2em; border-radius: 50%; background: var(--accent, #B8502A); opacity: {{ n.dot }}; transition: opacity 0.35s ease"></span></a>
         </sc-for>
       </nav>
-      <span style="display: flex; gap: 18px; justify-content: flex-end; color: var(--muted)"><a href="#" onClick="{{ toggleTheme }}" title="Switch theme" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">( {{ themeLabel }} )</a></span>
-    </header>
-  </sc-if>
+      <span style="grid-area: end; display: flex; gap: 18px; justify-content: flex-end; align-items: center; font-size: 14px; font-style: italic; color: var(--muted)">
+        
+        <a href="#" onClick="{{ toggleTheme }}" title="Switch theme" style="color: var(--ink); min-height: 44px; display: inline-flex; align-items: center" style-hover="color: var(--accent, #B8502A)">( {{ themeLabel }} )</a>
+      </span>
+    </div>
+    <sc-if value="{{ inMusicAny }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; align-items: center; gap: 12px 24px; padding: 0 var(--gutter) 6px; margin-top: -10px; justify-content: center; font-size: 15px; font-style: italic; overflow-x: auto; white-space: nowrap">
+        <nav aria-label="Music" style="display: flex; gap: 22px; flex: none">
+          <sc-for list="{{ subNav }}" as="s" hint-placeholder-count="3">
+            <a href="#" onClick="{{ s.go }}" aria-current="{{ s.current }}" style="position: relative; display: inline-flex; align-items: center; min-height: 44px; line-height: 1; color: {{ s.color }}" style-hover="color: var(--accent, #B8502A)">{{ s.text }}<span aria-hidden="true" style="position: absolute; left: calc(100% + 0.05em); top: calc(50% + 0.08em); width: 0.24em; height: 0.24em; border-radius: 50%; background: var(--accent, #B8502A); opacity: {{ s.bar }}; transition: opacity 0.35s ease"></span></a>
+          </sc-for>
+        </nav>
+      </div>
+    </sc-if>
+  </header>
 
 
   <sc-if value="{{ isIndex }}" hint-placeholder-val="{{ true }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; display: flex; flex-direction: column">
-      <nav style="display: grid; grid-template-columns: var(--footer-cols); gap: 16px; align-items: center; padding: 18px var(--gutter); font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); font-style: italic">
-        <span></span>
-        <span style="display: flex; gap: 22px; flex-wrap: wrap; justify-content: center">
-          <a href="#" onClick="{{ goMusic }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">music</a>
-          <a href="#" onClick="{{ goPhotos }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">photos</a>
-          <a href="#" onClick="{{ goAbout }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">about</a>
-        </span>
-        <span style="display: flex; gap: 18px; justify-content: flex-end; color: var(--muted)"><span>{{ nyTime }}</span></span>
-      </nav>
+      
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span>saxophone — composition — live sound — photography</span><span>Cleveland, OH<br></span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 12.4vw, 215px); line-height: 0.9; letter-spacing: -0.035em; color: var(--ink); white-space: nowrap; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">Timothy Masso<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="position: relative; padding: 0 0 calc(130px * var(--ring-scale)); overflow: hidden">
@@ -145,10 +157,10 @@
       </section>
       <section style="padding: 24px var(--gutter) 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: end; border-top: 1px solid var(--rule); margin: 0 var(--gutter);  padding-left: 0; padding-right: 0">
         <p style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-size: clamp(22px, 2.4vw, 34px); line-height: 1.15; letter-spacing: -0.022em; color: var(--ink); text-wrap: pretty">I play saxophone, write and arrange music, mix live shows, and take photos. This is an archive of all of it.</p>
-        <sc-if value="{{ np.show }}">
+        <sc-if value="{{ np.show }}" hint-placeholder-val="{{ false }}">
           <a href="{{ np.url }}" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 14px; width: fit-content; max-width: 100%; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
-            <sc-if value="{{ np.hasArt }}">
-              <img src="{{ np.art }}" alt="" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex: none"></img>
+            <sc-if value="{{ np.hasArt }}" hint-placeholder-val="{{ false }}">
+              <div aria-hidden="true" style="position: relative; width: 48px; height: 48px; border-radius: 50%; flex: none; background: var(--panel) center / cover no-repeat; background-image: url('{{ np.art }}'); box-shadow: 0 0 0 3px #111; animation: vinyl 6s linear infinite; animation-play-state: {{ np.spin }}"><span style="position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: var(--paper)"></span></div>
             </sc-if>
             <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
               <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted); display: flex; align-items: center; gap: 8px"><sc-if value="{{ np.playing }}"><span aria-hidden="true" style="width: 7px; height: 7px; border-radius: 50%; background: #1DB954; animation: blink 1.6s ease-in-out infinite"></span></sc-if>{{ np.label }}</span>
@@ -167,7 +179,7 @@
             </sc-for>
           </div>
           <div style="position: sticky; top: 24px; aspect-ratio: 4 / 5; overflow: hidden; background: var(--panel); margin-top: 14px; display: var(--work-preview); border-radius: 14px; overflow: hidden">
-            <div role="img" aria-label="{{ workPreview.label }}" style="position: absolute; inset: 0; background-image: url('{{ workPreview.img }}'); background-size: cover; background-position: center; transition: opacity 0.3s ease"></div>
+            <div role="img" aria-label="{{ workPreview.label }}" style="position: absolute; inset: 0; background-image: url('{{ workPreview.img }}'); background-size: {{ workPreview.size }}; background-position: {{ workPreview.pos }}; transition: opacity 0.3s ease"></div>
           </div>
         </div>
       </section>
@@ -177,9 +189,10 @@
             <a href="https://www.instagram.com/himothymasso/" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">instagram</a>
             <a href="https://github.com/timothymasso" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">github</a>
             <a href="https://www.cosmos.so/timothymasso" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">cosmos</a>
+            <a href="#" onClick="{{ goAll }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">everything</a>
           </span>
           <a href="#" onClick="{{ toggleTheme }}" aria-label="Switch theme" style="color: var(--ink); text-align: center" style-hover="color: var(--accent, #B8502A)">( {{ themeLabel }} mode )</a>
-          <span style="text-align: right">© {{ year }} timothy masso</span>
+          <span style="text-align: right; display: flex; justify-content: flex-end; align-items: baseline; gap: 10px">© {{ year }} Timothy Masso<span aria-hidden="true" style="font-family: 'Mrs Saint Delafield', cursive; font-style: normal; font-size: 30px; line-height: 0.6; color: var(--ink); opacity: 0.85; transform: rotate(-6deg) translateY(4px); display: inline-block">TM</span></span>
         </div>
       </section>
     </main>
@@ -188,25 +201,24 @@
   <sc-if value="{{ isPerf }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span><a href="#" onClick="{{ goMusic }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">music</a> / <a href="#" onClick="{{ goPerf }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">performances</a></span><span>{{ perfCount }} entries</span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>{{ perfCount }} entries</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">performances<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
-      <section style="padding: 24px var(--gutter) 16px">
+      <section style="padding: 36px var(--gutter) 16px">
         <sc-for list="{{ snakeRows }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 48px">
-            <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 1px; background: var(--ink)"></span>
+          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 96px">
+            <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
-              <span aria-hidden="true" style="position: absolute; top: 0; right: 0; width: 57px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--ink); border-left: none; border-radius: 0 999px 999px 0"></span>
+              <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
             </sc-if>
             <sc-if value="{{ r.turnLeft }}">
-              <span aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 57px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--ink); border-right: none; border-radius: 999px 0 0 999px"></span>
+              <span aria-hidden="true" style="position: absolute; top: 0px; left: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 8px; left: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 12px; left: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 16px; left: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span>
             </sc-if>
             <sc-for list="{{ r.items }}" as="p" hint-placeholder-count="3">
-              <div style="flex: 1 1 0; min-width: 0; position: relative; padding-top: 18px; visibility: {{ p.vis }}">
-                <span aria-hidden="true" style="position: absolute; top: 0; left: 50%; width: 1px; height: 30px; background: var(--rule)"></span>
-                <span aria-hidden="true" style="position: absolute; top: -4px; left: 50%; transform: translateX(-50%); width: 9px; height: 9px; background: var(--accent, #B8502A); border-radius: 50%"></span>
-                <sc-if value="{{ p.yearMark }}">
-                  <span style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-size: 11px; color: var(--muted); background: var(--paper); padding: 0 6px; font-style: italic">{{ p.year }}</span>
+              <div onMouseEnter="{{ p.tick }}" style="flex: 1 1 0; min-width: 0; position: relative; padding-top: 38px; visibility: {{ p.vis }}">
+                                <span data-note="1" aria-hidden="true" style="position: absolute; top: 4px; left: 50%; margin-left: -6px; width: 12px; height: 9px; box-sizing: border-box; background: {{ p.headBg }}; border: 1.5px solid var(--accent, #B8502A); border-radius: 50%; transform: rotate(-22deg)"></span><span data-note="1" aria-hidden="true" style="display: {{ p.stem }}; position: absolute; top: -18px; left: calc(50% + 4.5px); width: 1.5px; height: 26px; background: var(--accent, #B8502A)"></span><span data-note="1" aria-hidden="true" style="display: {{ p.flag1 }}; position: absolute; top: -18px; left: calc(50% + 4.5px); width: 7px; height: 11px; box-sizing: border-box; border-top: 1.5px solid var(--accent, #B8502A); border-right: 1.5px solid var(--accent, #B8502A); border-top-right-radius: 9px"></span><span data-note="1" aria-hidden="true" style="display: {{ p.flag2 }}; position: absolute; top: -13px; left: calc(50% + 4.5px); width: 7px; height: 11px; box-sizing: border-box; border-top: 1.5px solid var(--accent, #B8502A); border-right: 1.5px solid var(--accent, #B8502A); border-top-right-radius: 9px"></span>
+                <sc-if value="{{ p.yearEnd }}">
+                  <span aria-hidden="true" style="position: absolute; top: -36px; left: {{ p.barL }}; right: {{ p.barR }}; width: 2px; height: 53px; border-radius: 2px; background: var(--ink)"></span><span style="position: absolute; top: -36px; left: {{ p.yL }}; right: {{ p.yR }}; white-space: nowrap; font-family: 'Gambarino', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; font-size: 28px; line-height: 1; color: var(--ink)">{{ p.year }}</span>
                 </sc-if>
                 <a href="#" onClick="{{ p.open }}" style="display: flex; flex-direction: column; gap: 10px; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
                   <sc-if value="{{ p.hasThumb }}">
@@ -214,7 +226,7 @@
                       <sc-if value="{{ p.hasPdf }}">
                         <div data-pdf="cover" data-pdf-src="{{ p.pdf }}" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; filter: grayscale(1) contrast(1.05)"></div>
                       </sc-if>
-                      <div role="img" aria-label="{{ p.title }}" style="position: absolute; inset: 0; background-image: {{ p.bg }}; background-size: cover; background-position: center; transition: transform 0.5s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="transform: scale(1.05)"></div>
+                      <div role="img" aria-label="{{ p.title }}" style="position: absolute; inset: -4px; background-image: {{ p.bg }}; background-size: {{ p.bgSize }}; background-position: center; transition: transform 0.5s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="transform: scale(1.05)"></div>
                     </div>
                   </sc-if>
                   <h3 style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: clamp(18px, 1.9vw, 26px); line-height: 1; letter-spacing: -0.045em; text-transform: lowercase; margin: 0; text-align: center; text-wrap: balance">{{ p.title }}</h3>
@@ -231,7 +243,7 @@
   <sc-if value="{{ isDetail }}">
     <main style="animation: rise 0.4s ease both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span><a href="#" onClick="{{ goMusic }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">music</a> / <a href="#" onClick="{{ goPerf }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">performances</a></span><span style="display: flex; gap: 12px; flex-wrap: wrap"></span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span style="display: flex; gap: 12px; flex-wrap: wrap"></span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 5.4vw, 76px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); text-transform: lowercase; text-wrap: balance; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">{{ cur.title }}<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
 
@@ -352,8 +364,11 @@
   </sc-if>
 
       <sc-if value="{{ lbOpen }}" hint-placeholder-val="{{ false }}">
-        <div ref="{{ lbRef }}" onClick="{{ lbClose }}" role="dialog" aria-modal="true" aria-label="{{ lbLabel }}" style="position: fixed; inset: 0; z-index: 1000; background: rgba(22,21,15,0.86); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 29px 24px; cursor: zoom-out; animation: rise 0.2s ease both">
-          <div role="img" aria-label="{{ lbLabel }}" style="width: min(100%, calc((100vh - 120px) * {{ lbAspect }})); aspect-ratio: {{ lbRatio }}; max-height: calc(100vh - 120px); background-image: url('{{ lbSrc }}'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: #FFFFFF; border: 1px solid #16150F; box-shadow: 10px 10px 0 var(--accent, #B8502A); border-radius: 14px; overflow: hidden"></div>
+        <div ref="{{ lbRef }}" onClick="{{ lbClose }}" role="dialog" aria-modal="true" aria-label="{{ lbLabel }}" style="position: fixed; inset: 0; z-index: 1000; background: rgba(22,21,15,0.86); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 29px 24px; cursor: zoom-out">
+          <div role="img" data-lbimg="1" aria-label="{{ lbLabel }}" style="position: relative; width: min(100%, calc((100vh - 120px) * {{ lbAspect }})); aspect-ratio: {{ lbRatio }}; max-height: calc(100vh - 120px)">
+            <div aria-hidden="true" style="position: absolute; inset: 6% 4% -4%; background-image: url('{{ lbSrc }}'); background-size: cover; background-position: center; filter: blur(48px) saturate(1.6) brightness(0.9); opacity: 0.75; border-radius: 30px; transition: background-image 0.4s ease"></div>
+            <div style="position: absolute; inset: 0; background-image: url('{{ lbSrc }}'); background-size: cover; background-position: center; border-radius: 14px"></div>
+          </div>
           <div onClick="{{ lbStop }}" style="font-family: 'Newsreader', Georgia, serif; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; justify-content: center; font-weight: 400; font-size: 14px; letter-spacing: 0; color: #F2EFE4; font-style: italic; cursor: default">
             <sc-if value="{{ lbHasNav }}">
               <a href="#" onClick="{{ lbPrev }}" aria-label="Previous photo" style="display: inline-flex; align-items: center; justify-content: center; min-width: 36px; min-height: 36px; padding: 0 8px; border-radius: 999px; color: #F2EFE4; font-style: normal; font-size: 18px; cursor: pointer" style-hover="background: rgba(242,239,228,0.12)">←</a>
@@ -370,25 +385,24 @@
   <sc-if value="{{ isLive }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span><a href="#" onClick="{{ goMusic }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">music</a> / <a href="#" onClick="{{ goLive }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">live sound</a></span><span>foh · backline · production</span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>foh · backline · production</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">live sound<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
-      <section style="padding: 24px var(--gutter) 8px">
+      <section style="padding: 36px var(--gutter) 8px">
         <sc-for list="{{ liveSnake }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 48px">
-            <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 1px; background: var(--ink)"></span>
+          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 96px">
+            <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
-              <span aria-hidden="true" style="position: absolute; top: 0; right: 0; width: 57px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--ink); border-left: none; border-radius: 0 999px 999px 0"></span>
+              <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
             </sc-if>
             <sc-if value="{{ r.turnLeft }}">
-              <span aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 57px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--ink); border-right: none; border-radius: 999px 0 0 999px"></span>
+              <span aria-hidden="true" style="position: absolute; top: 0px; left: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 8px; left: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 12px; left: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 16px; left: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span>
             </sc-if>
             <sc-for list="{{ r.items }}" as="p" hint-placeholder-count="3">
-              <div style="flex: 1 1 0; min-width: 0; position: relative; padding-top: 18px; visibility: {{ p.vis }}">
-                <span aria-hidden="true" style="position: absolute; top: 0; left: 50%; width: 1px; height: 30px; background: var(--rule)"></span>
-                <span aria-hidden="true" style="position: absolute; top: -4px; left: 50%; transform: translateX(-50%); width: 9px; height: 9px; background: var(--accent, #B8502A); border-radius: 50%"></span>
-                <sc-if value="{{ p.yearMark }}">
-                  <span style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-size: 11px; color: var(--muted); background: var(--paper); padding: 0 6px; font-style: italic">{{ p.year }}</span>
+              <div onMouseEnter="{{ p.tick }}" style="flex: 1 1 0; min-width: 0; position: relative; padding-top: 38px; visibility: {{ p.vis }}">
+                                <span data-note="1" aria-hidden="true" style="position: absolute; top: 4px; left: 50%; margin-left: -6px; width: 12px; height: 9px; box-sizing: border-box; background: {{ p.headBg }}; border: 1.5px solid var(--accent, #B8502A); border-radius: 50%; transform: rotate(-22deg)"></span><span data-note="1" aria-hidden="true" style="display: {{ p.stem }}; position: absolute; top: -18px; left: calc(50% + 4.5px); width: 1.5px; height: 26px; background: var(--accent, #B8502A)"></span><span data-note="1" aria-hidden="true" style="display: {{ p.flag1 }}; position: absolute; top: -18px; left: calc(50% + 4.5px); width: 7px; height: 11px; box-sizing: border-box; border-top: 1.5px solid var(--accent, #B8502A); border-right: 1.5px solid var(--accent, #B8502A); border-top-right-radius: 9px"></span><span data-note="1" aria-hidden="true" style="display: {{ p.flag2 }}; position: absolute; top: -13px; left: calc(50% + 4.5px); width: 7px; height: 11px; box-sizing: border-box; border-top: 1.5px solid var(--accent, #B8502A); border-right: 1.5px solid var(--accent, #B8502A); border-top-right-radius: 9px"></span>
+                <sc-if value="{{ p.yearEnd }}">
+                  <span aria-hidden="true" style="position: absolute; top: -36px; left: {{ p.barL }}; right: {{ p.barR }}; width: 2px; height: 53px; border-radius: 2px; background: var(--ink)"></span><span style="position: absolute; top: -36px; left: {{ p.yL }}; right: {{ p.yR }}; white-space: nowrap; font-family: 'Gambarino', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; font-size: 28px; line-height: 1; color: var(--ink)">{{ p.year }}</span>
                 </sc-if>
                 <a href="#" onClick="{{ p.open }}" style="display: flex; flex-direction: column; gap: 10px; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
                   <sc-if value="{{ p.hasThumb }}">
@@ -396,7 +410,7 @@
                       <sc-if value="{{ p.hasPdf }}">
                         <div data-pdf="cover" data-pdf-src="{{ p.pdf }}" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; filter: grayscale(1) contrast(1.05)"></div>
                       </sc-if>
-                      <div role="img" aria-label="{{ p.title }}" style="position: absolute; inset: 0; background-image: {{ p.bg }}; background-size: cover; background-position: center; transition: transform 0.5s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="transform: scale(1.05)"></div>
+                      <div role="img" aria-label="{{ p.title }}" style="position: absolute; inset: -4px; background-image: {{ p.bg }}; background-size: {{ p.bgSize }}; background-position: center; transition: transform 0.5s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="transform: scale(1.05)"></div>
                     </div>
                   </sc-if>
                   <h3 style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: clamp(18px, 1.9vw, 26px); line-height: 1; letter-spacing: -0.045em; text-transform: lowercase; margin: 0; text-align: center; text-wrap: balance">{{ p.title }}</h3>
@@ -407,27 +421,31 @@
           </div>
         </sc-for>
       </section>
-      <section id="sessions" style="padding: 24px var(--gutter) 28px; display: flex; flex-direction: column; gap: 20px">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid var(--rule); padding-bottom: 12px">
-          <h2 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(28px, 3.6vw, 52px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink)">sunday sessions s2</h2>
-          <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-size: 11px; color: var(--muted); font-style: italic">backline &amp; assistant live sound · 10 episodes · 2024</span>
-        </div>
-        <div style="padding-top: 24px">
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isSessions }}">
+    <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
+      <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>season 2 · backline &amp; assistant live sound · 10 episodes · 2024</span></div>
+        <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">sunday sessions<span style="color: var(--accent, #B8502A)">.</span></h1>
+      </section>
+      <section id="sessions" style="padding: 8px var(--gutter) 28px; display: flex; flex-direction: column; gap: 20px">
+        <div style="padding-top: 36px">
         <sc-for list="{{ sessionSnake }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 48px">
-            <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 1px; background: var(--ink)"></span>
+          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 96px">
+            <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
-              <span aria-hidden="true" style="position: absolute; top: 0; right: 0; width: 57px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--ink); border-left: none; border-radius: 0 999px 999px 0"></span>
+              <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
             </sc-if>
             <sc-if value="{{ r.turnLeft }}">
-              <span aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 57px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--ink); border-right: none; border-radius: 999px 0 0 999px"></span>
+              <span aria-hidden="true" style="position: absolute; top: 0px; left: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 8px; left: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 12px; left: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 16px; left: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span>
             </sc-if>
             <sc-for list="{{ r.items }}" as="p" hint-placeholder-count="3">
-              <div style="flex: 1 1 0; min-width: 0; position: relative; padding-top: 18px; visibility: {{ p.vis }}">
-                <span aria-hidden="true" style="position: absolute; top: 0; left: 50%; width: 1px; height: 30px; background: var(--rule)"></span>
-                <span aria-hidden="true" style="position: absolute; top: -4px; left: 50%; transform: translateX(-50%); width: 9px; height: 9px; background: var(--accent, #B8502A); border-radius: 50%"></span>
-                <sc-if value="{{ p.yearMark }}">
-                  <span style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-size: 11px; color: var(--muted); background: var(--paper); padding: 0 6px; font-style: italic">{{ p.year }}</span>
+              <div onMouseEnter="{{ p.tick }}" style="flex: 1 1 0; min-width: 0; position: relative; padding-top: 38px; visibility: {{ p.vis }}">
+                                <span data-note="1" aria-hidden="true" style="position: absolute; top: 4px; left: 50%; margin-left: -6px; width: 12px; height: 9px; box-sizing: border-box; background: {{ p.headBg }}; border: 1.5px solid var(--accent, #B8502A); border-radius: 50%; transform: rotate(-22deg)"></span><span data-note="1" aria-hidden="true" style="display: {{ p.stem }}; position: absolute; top: -18px; left: calc(50% + 4.5px); width: 1.5px; height: 26px; background: var(--accent, #B8502A)"></span><span data-note="1" aria-hidden="true" style="display: {{ p.flag1 }}; position: absolute; top: -18px; left: calc(50% + 4.5px); width: 7px; height: 11px; box-sizing: border-box; border-top: 1.5px solid var(--accent, #B8502A); border-right: 1.5px solid var(--accent, #B8502A); border-top-right-radius: 9px"></span><span data-note="1" aria-hidden="true" style="display: {{ p.flag2 }}; position: absolute; top: -13px; left: calc(50% + 4.5px); width: 7px; height: 11px; box-sizing: border-box; border-top: 1.5px solid var(--accent, #B8502A); border-right: 1.5px solid var(--accent, #B8502A); border-top-right-radius: 9px"></span>
+                <sc-if value="{{ p.yearEnd }}">
+                  <span aria-hidden="true" style="position: absolute; top: -36px; left: {{ p.barL }}; right: {{ p.barR }}; width: 2px; height: 53px; border-radius: 2px; background: var(--ink)"></span><span style="position: absolute; top: -36px; left: {{ p.yL }}; right: {{ p.yR }}; white-space: nowrap; font-family: 'Gambarino', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; font-size: 28px; line-height: 1; color: var(--ink)">{{ p.year }}</span>
                 </sc-if>
                 <a href="#" onClick="{{ p.open }}" style="display: flex; flex-direction: column; gap: 10px; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
                   <sc-if value="{{ p.hasThumb }}">
@@ -435,7 +453,7 @@
                       <sc-if value="{{ p.hasPdf }}">
                         <div data-pdf="cover" data-pdf-src="{{ p.pdf }}" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; filter: grayscale(1) contrast(1.05)"></div>
                       </sc-if>
-                      <div role="img" aria-label="{{ p.title }}" style="position: absolute; inset: 0; background-image: {{ p.bg }}; background-size: cover; background-position: center; transition: transform 0.5s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="transform: scale(1.05)"></div>
+                      <div role="img" aria-label="{{ p.title }}" style="position: absolute; inset: -4px; background-image: {{ p.bg }}; background-size: {{ p.bgSize }}; background-position: center; transition: transform 0.5s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="transform: scale(1.05)"></div>
                     </div>
                   </sc-if>
                   <h3 style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: clamp(18px, 1.9vw, 26px); line-height: 1; letter-spacing: -0.045em; text-transform: lowercase; margin: 0; text-align: center; text-wrap: balance">{{ p.title }}</h3>
@@ -453,7 +471,7 @@
   <sc-if value="{{ isGig }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span><a href="#" onClick="{{ goMusic }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">music</a> / <a href="#" onClick="{{ goLive }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">live sound</a></span><span style="display: flex; gap: 12px; flex-wrap: wrap"><span>{{ gig.role }}</span></span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span style="display: flex; gap: 12px; flex-wrap: wrap"><span>{{ gig.role }}</span></span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 5.4vw, 76px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); text-transform: lowercase; text-wrap: balance; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">{{ gig.title }}<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
 
@@ -489,6 +507,15 @@
             </sc-for>
           </div>
         </section>
+        <sc-if value="{{ gig.hasPhotos }}" hint-placeholder-val="{{ false }}">
+          <section style="padding: 24px var(--gutter) 0; display: flex; gap: 12px; flex-wrap: wrap">
+            <sc-for list="{{ gig.photos }}" as="ph" hint-placeholder-count="2">
+              <a href="{{ ph.f }}" onClick="{{ ph.pop }}" style="flex: {{ ph.grow }} 1 0; min-width: 140px; max-height: 340px; aspect-ratio: {{ ph.ratio }}; border-radius: 14px; overflow: hidden; background: var(--panel); cursor: zoom-in; display: block">
+                <div role="img" aria-label="{{ ph.label }}" style="width: 100%; height: 100%; background-image: url('{{ ph.f }}'); background-size: cover; background-position: center; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)" style-hover="transform: scale(1.04)"></div>
+              </a>
+            </sc-for>
+          </section>
+        </sc-if>
         <nav style="position: sticky; top: var(--hdr-h, 54px); z-index: 5; background: var(--paper); margin: 24px var(--gutter) 0; padding: 12px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); display: flex; gap: 8px 22px; flex-wrap: wrap; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-style: italic">
           <sc-for list="{{ gig.tabs }}" as="tb" hint-placeholder-count="3">
             <a href="#" onClick="{{ tb.pick }}" style="color: {{ tb.color }}" style-hover="color: var(--accent, #B8502A)">{{ tb.text }}</a>
@@ -615,7 +642,7 @@
   <sc-if value="{{ isComp }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span><a href="#" onClick="{{ goMusic }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">music</a> / <a href="#" onClick="{{ goComp }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">sheet music</a></span><span>{{ compCount }} scores</span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>{{ compCount }} scores</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">sheet music<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: clamp(20px, 3vh, 19px) var(--gutter) 0">
@@ -625,22 +652,21 @@
           </sc-for>
         </div>
       </section>
-      <section style="padding: 24px var(--gutter) 16px">
+      <section style="padding: 36px var(--gutter) 16px">
         <sc-for list="{{ compSnake }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 48px">
-            <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 1px; background: var(--ink)"></span>
+          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 96px">
+            <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
-              <span aria-hidden="true" style="position: absolute; top: 0; right: 0; width: 57px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--ink); border-left: none; border-radius: 0 999px 999px 0"></span>
+              <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
             </sc-if>
             <sc-if value="{{ r.turnLeft }}">
-              <span aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 57px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--ink); border-right: none; border-radius: 999px 0 0 999px"></span>
+              <span aria-hidden="true" style="position: absolute; top: 0px; left: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 8px; left: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 12px; left: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 16px; left: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span>
             </sc-if>
             <sc-for list="{{ r.items }}" as="p" hint-placeholder-count="3">
-              <div style="flex: 1 1 0; min-width: 0; position: relative; padding-top: 18px; visibility: {{ p.vis }}">
-                <span aria-hidden="true" style="position: absolute; top: 0; left: 50%; width: 1px; height: 30px; background: var(--rule)"></span>
-                <span aria-hidden="true" style="position: absolute; top: -4px; left: 50%; transform: translateX(-50%); width: 9px; height: 9px; background: var(--accent, #B8502A); border-radius: 50%"></span>
-                <sc-if value="{{ p.yearMark }}">
-                  <span style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-size: 11px; color: var(--muted); background: var(--paper); padding: 0 6px; font-style: italic">{{ p.year }}</span>
+              <div onMouseEnter="{{ p.tick }}" style="flex: 1 1 0; min-width: 0; position: relative; padding-top: 38px; visibility: {{ p.vis }}">
+                                <span data-note="1" aria-hidden="true" style="position: absolute; top: 4px; left: 50%; margin-left: -6px; width: 12px; height: 9px; box-sizing: border-box; background: {{ p.headBg }}; border: 1.5px solid var(--accent, #B8502A); border-radius: 50%; transform: rotate(-22deg)"></span><span data-note="1" aria-hidden="true" style="display: {{ p.stem }}; position: absolute; top: -18px; left: calc(50% + 4.5px); width: 1.5px; height: 26px; background: var(--accent, #B8502A)"></span><span data-note="1" aria-hidden="true" style="display: {{ p.flag1 }}; position: absolute; top: -18px; left: calc(50% + 4.5px); width: 7px; height: 11px; box-sizing: border-box; border-top: 1.5px solid var(--accent, #B8502A); border-right: 1.5px solid var(--accent, #B8502A); border-top-right-radius: 9px"></span><span data-note="1" aria-hidden="true" style="display: {{ p.flag2 }}; position: absolute; top: -13px; left: calc(50% + 4.5px); width: 7px; height: 11px; box-sizing: border-box; border-top: 1.5px solid var(--accent, #B8502A); border-right: 1.5px solid var(--accent, #B8502A); border-top-right-radius: 9px"></span>
+                <sc-if value="{{ p.yearEnd }}">
+                  <span aria-hidden="true" style="position: absolute; top: -36px; left: {{ p.barL }}; right: {{ p.barR }}; width: 2px; height: 53px; border-radius: 2px; background: var(--ink)"></span><span style="position: absolute; top: -36px; left: {{ p.yL }}; right: {{ p.yR }}; white-space: nowrap; font-family: 'Gambarino', Georgia, serif; font-weight: 400; letter-spacing: -0.02em; font-size: 28px; line-height: 1; color: var(--ink)">{{ p.year }}</span>
                 </sc-if>
                 <a href="#" onClick="{{ p.open }}" style="display: flex; flex-direction: column; gap: 10px; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
                   <sc-if value="{{ p.hasThumb }}">
@@ -648,7 +674,7 @@
                       <sc-if value="{{ p.hasPdf }}">
                         <div data-pdf="cover" data-pdf-src="{{ p.pdf }}" aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; filter: grayscale(1) contrast(1.05)"></div>
                       </sc-if>
-                      <div role="img" aria-label="{{ p.title }}" style="position: absolute; inset: 0; background-image: {{ p.bg }}; background-size: cover; background-position: center; transition: transform 0.5s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="transform: scale(1.05)"></div>
+                      <div role="img" aria-label="{{ p.title }}" style="position: absolute; inset: -4px; background-image: {{ p.bg }}; background-size: {{ p.bgSize }}; background-position: center; transition: transform 0.5s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="transform: scale(1.05)"></div>
                     </div>
                   </sc-if>
                   <h3 style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: clamp(18px, 1.9vw, 26px); line-height: 1; letter-spacing: -0.045em; text-transform: lowercase; margin: 0; text-align: center; text-wrap: balance">{{ p.title }}</h3>
@@ -665,31 +691,14 @@
   <sc-if value="{{ isGraphic }}">
     <main style="animation: rise 0.4s ease both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span><a href="#" onClick="{{ goMusic }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">music</a> / <a href="#" onClick="{{ goComp }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">sheet music</a></span><span style="display: flex; gap: 12px; flex-wrap: wrap"><span>original · 2024</span></span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span style="display: flex; gap: 12px; flex-wrap: wrap"><span>original · 2024</span></span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 5.4vw, 76px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); text-transform: lowercase; text-wrap: balance; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">untitled graphic score<span style="color: var(--accent, #B8502A)">.</span></h1>
         <p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--body); max-width: 62ch; text-wrap: pretty">Drawn rather than notated, performed as the closing piece of the degree recital on 19 April 2024.</p>
         <a href="#" onClick="{{ goGraphicRecital }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); width: fit-content; font-style: italic" style-hover="color: var(--ink)">( played at the degree recital → )</a>
       </section>
-      <section style="display: grid; grid-template-columns: 280px minmax(0, 1fr)">
-        <div style="border-right: 1px solid var(--rule); background: var(--panel); padding: 14px 20px 24px">
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">THE SCORE</div>
-          <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px">
-            <div>
-              <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--faint); font-style: italic">FORM</div>
-              <div style="font-family: 'Newsreader', Georgia, serif; font-size: 16px; color: var(--ink); margin-top: 3px">One drawn sheet</div>
-            </div>
-            <div>
-              <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--faint); font-style: italic">NOTATION</div>
-              <div style="font-family: 'Newsreader', Georgia, serif; font-size: 16px; color: var(--ink); margin-top: 3px">Graphic, no staves</div>
-            </div>
-            <div>
-              <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--faint); font-style: italic">FIRST PERFORMED</div>
-              <div style="font-family: 'Newsreader', Georgia, serif; font-size: 16px; color: var(--ink); margin-top: 3px">19 April 2024</div>
-            </div>
-          </div>
-        </div>
-        <div style="position: relative; min-height: 62vh; background: #0B0B09; overflow: hidden; display: grid; place-items: center; padding: 26px">
-          <img src="./assets/graphicscore.png" alt="Untitled graphic score: six labelled instrument lines — textures, alto, trumpet, bari, piano, bass (mostly bowed), drums" style="display: block; transform: rotate(-90deg); max-width: 62vh; max-height: 100%; width: auto; height: auto; border-radius: 14px; overflow: hidden">
+      <section style="padding: 8px var(--gutter) 0">
+        <div style="position: relative; min-height: 62vh; background: #0B0B09; border-radius: 18px; overflow: hidden; display: grid; place-items: center; padding: 26px">
+          <img src="./assets/graphicscore.png" alt="Untitled graphic score: six labelled instrument lines — textures, alto, trumpet, bari, piano, bass (mostly bowed), drums" style="display: block; transform: rotate(-90deg); max-width: 62vh; max-height: 100%; width: auto; height: auto"></img>
         </div>
       </section>
     </main>
@@ -697,59 +706,52 @@
 
   <sc-if value="{{ isCompDetail }}">
     <main style="animation: rise 0.4s ease both">
-      <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span><a href="#" onClick="{{ goMusic }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">music</a> / <a href="#" onClick="{{ goComp }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">sheet music</a></span><span style="display: flex; gap: 12px; flex-wrap: wrap"><span>{{ comp.group }} · {{ comp.year }}</span></span></div>
-        <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 5.4vw, 76px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); text-transform: lowercase; text-wrap: balance; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">{{ comp.title }}<span style="color: var(--accent, #B8502A)">.</span></h1>
+
+      <section style="padding: 20px var(--gutter) 0; display: flex; flex-wrap: wrap; gap: 28px 40px; align-items: flex-start">
+        <aside style="flex: 1 1 220px; max-width: 280px; position: sticky; top: 120px; display: flex; flex-direction: column; gap: 22px">
+          <div style="display: flex; flex-direction: column; gap: 10px">
+        <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">{{ comp.group }} · {{ comp.year }}</span>
+        <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(34px, 3.6vw, 54px); line-height: 0.9; letter-spacing: -0.032em; color: var(--ink); text-transform: lowercase; text-wrap: balance; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">{{ comp.title }}<span style="color: var(--accent, #B8502A)">.</span></h1>
         <sc-if value="{{ comp.hasNote }}">
-        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: var(--body); max-width: 62ch; text-wrap: pretty">{{ comp.note }}</p>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: var(--body); max-width: 62ch; text-wrap: pretty">{{ comp.note }}</p>
         </sc-if>
         <sc-if value="{{ comp.playedIn }}">
         <a href="#" onClick="{{ comp.goRecital }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); width: fit-content; font-style: italic" style-hover="color: var(--ink)">( {{ comp.linkLabel }} )</a>
         </sc-if>
-      </section>
-      <section style="display: grid; grid-template-columns: 280px minmax(0, 1fr)">
-        <div style="border-right: 1px solid var(--rule); background: var(--panel)">
-          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 14px 20px 8px">
-            <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">SCORES &amp; PARTS</span>
-            <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--faint); font-style: italic">{{ comp.partCount }}</span>
-          </div>
-          <div style="display: flex; flex-direction: column">
-            <sc-for list="{{ comp.parts }}" as="pt" hint-placeholder-count="4">
-              <a href="#" onClick="{{ pt.pick }}" style="animation: slideUp 0.36s ease {{ pt.delay }} both; position: relative; overflow: hidden; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 11px 22px; border-top: 1px solid rgba(var(--ink-rgb), 0.18); background: {{ pt.bg }}; color: {{ pt.fg }}" style-hover="background: var(--panel)2; color: var(--ink)">
-                <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: {{ pt.dim }}; font-style: italic">{{ pt.no }}</span>
-                <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 15px; letter-spacing: 0; font-style: italic">{{ pt.name }}</span>
-              </a>
+      </div>
+          <nav aria-label="Parts" style="display: flex; flex-direction: column">
+            <sc-for list="{{ comp.parts }}" as="pt" hint-placeholder-count="3">
+              <a href="#" onClick="{{ pt.pick }}" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: {{ pt.labelColor }}" style-hover="color: var(--accent, #B8502A)">{{ pt.label }}</a>
             </sc-for>
+          </nav>
+          <div style="display: flex; flex-direction: column">
+            <a href="{{ comp.file }}" target="_blank" rel="noopener noreferrer" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">open full size ↗</a>
+            <a href="{{ comp.file }}" download="" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">download ↓</a>
           </div>
-        </div>
-        <div style="padding: 16px 18px 26px">
-          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 8px">
-            <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 17px; letter-spacing: 0; font-style: italic">{{ comp.fileName }}</span>
-            <div style="display: flex; gap: 18px; align-items: center; flex-wrap: wrap">
-              <div role="group" aria-label="Zoom" style="display: flex; align-items: stretch; border: 1px solid var(--rule)">
-                <a href="#" onClick="{{ zoomOut }}" aria-label="Zoom out" style="display: flex; align-items: center; justify-content: center; width: 30px; height: 28px; font-weight: 500; font-size: 15px; color: var(--ink); border-right: 1px solid var(--rule)" style-hover="background: var(--accent, #B8502A); color: #16150F">−</a>
-                <span style="font-family: 'Newsreader', Georgia, serif; display: flex; align-items: center; justify-content: center; min-width: 64px; padding: 0 8px; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--ink); font-style: italic">{{ zoomLabel }}</span>
-                <a href="#" onClick="{{ zoomIn }}" aria-label="Zoom in" style="display: flex; align-items: center; justify-content: center; width: 30px; height: 28px; font-weight: 500; font-size: 15px; color: var(--ink); border-left: 1px solid var(--rule)" style-hover="background: var(--accent, #B8502A); color: #16150F">+</a>
-              </div>
-              <div role="group" aria-label="Fit" style="display: flex; align-items: stretch; border: 1px solid var(--rule)">
-                <a href="#" onClick="{{ zoomWidth }}" style="font-family: 'Newsreader', Georgia, serif; display: flex; align-items: center; height: 28px; padding: 0 10px; font-weight: 400; font-size: 14px; letter-spacing: 0; background: {{ fitWidthBg }}; color: {{ fitWidthFg }}; border-right: 1px solid var(--rule); font-style: italic" style-hover="background: var(--accent, #B8502A); color: #16150F">Width</a>
-                <a href="#" onClick="{{ zoomPage }}" style="font-family: 'Newsreader', Georgia, serif; display: flex; align-items: center; height: 28px; padding: 0 10px; font-weight: 400; font-size: 14px; letter-spacing: 0; background: {{ fitPageBg }}; color: {{ fitPageFg }}; font-style: italic" style-hover="background: var(--accent, #B8502A); color: #16150F">Page</a>
-              </div>
-              <a href="{{ comp.file }}" target="_blank" rel="noopener noreferrer" style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--faint); font-style: italic" style-hover="color: var(--accent, #B8502A)">FULL SIZE ↗</a>
-              <a href="{{ comp.file }}" download="" style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--faint); font-style: italic" style-hover="color: var(--accent, #B8502A)">DOWNLOAD ↓</a>
-            </div>
+        </aside>
+        <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; justify-content: flex-end; align-items: center; gap: 20px">
+            <span style="display: inline-flex; align-items: center; gap: 10px">
+              <a href="#" onClick="{{ zoomOut }}" aria-label="Zoom out" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: var(--ink); padding: 0 6px" style-hover="color: var(--accent, #B8502A)">−</a>
+              <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: var(--muted); min-width: 40px; justify-content: center">{{ zoomLabel }}</span>
+              <a href="#" onClick="{{ zoomIn }}" aria-label="Zoom in" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: var(--ink); padding: 0 6px" style-hover="color: var(--accent, #B8502A)">+</a>
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 14px">
+              <a href="#" onClick="{{ zoomWidth }}" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: {{ fitWidthFg }}" style-hover="color: var(--accent, #B8502A)">fit width</a>
+              <a href="#" onClick="{{ zoomPage }}" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: {{ fitPageFg }}" style-hover="color: var(--accent, #B8502A)">fit page</a>
+            </span>
           </div>
-          <div ref="{{ compViewRef }}" data-pdf="page" data-pdf-src="{{ comp.file }}" data-pdf-zoom="{{ zoomKey }}" aria-label="{{ comp.fileName }}" style="border: 1px solid rgba(var(--ink-rgb), 1); background: #FFFFFF; height: 560px; overflow: auto; display: flex; flex-direction: column; align-items: safe center; gap: 10px; padding: 10px"></div>
+          <div ref="{{ compViewRef }}" data-pdf="page" data-pdf-src="{{ comp.file }}" data-pdf-zoom="{{ zoomKey }}" aria-label="{{ comp.fileName }}" style="background: var(--panel); border-radius: 18px; height: min(82vh, 980px); overflow: auto; display: flex; flex-direction: column; align-items: safe center; gap: 20px; padding: 28px; animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both"></div>
         </div>
       </section>
-      <section style="display: grid; grid-template-columns: var(--g2); border-top: 1px solid var(--rule)">
-        <a href="#" onClick="{{ comp.goPrev }}" style="padding: 22px var(--gutter); border-right: 1px solid var(--rule); color: var(--ink); display: block" style-hover="background: var(--panel); color: var(--ink)">
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--faint); font-style: italic">← PREVIOUS</div>
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 20px; letter-spacing: 0; margin-top: 6px; font-style: italic">{{ comp.prevTitle }}</div>
+      <section style="padding: 40px var(--gutter) 0; display: grid; grid-template-columns: var(--g2); gap: 16px">
+        <a href="#" onClick="{{ comp.goPrev }}" style="display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border-radius: 14px; color: var(--ink)" style-hover="background: var(--panel); color: var(--ink)">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">← previous</span>
+          <span style="font-family: 'Gambarino', Georgia, serif; font-size: 26px; letter-spacing: -0.02em; line-height: 1.05; text-transform: lowercase">{{ comp.prevTitle }}</span>
         </a>
-        <a href="#" onClick="{{ comp.goNext }}" style="padding: 13px var(--gutter); color: var(--ink); display: block; text-align: right" style-hover="background: var(--panel); color: var(--ink)">
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--faint); font-style: italic">NEXT →</div>
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 20px; letter-spacing: 0; margin-top: 6px; font-style: italic">{{ comp.nextTitle }}</div>
+        <a href="#" onClick="{{ comp.goNext }}" style="display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; border-radius: 14px; color: var(--ink); text-align: right; align-items: flex-end" style-hover="background: var(--panel); color: var(--ink)">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">next →</span>
+          <span style="font-family: 'Gambarino', Georgia, serif; font-size: 26px; letter-spacing: -0.02em; line-height: 1.05; text-transform: lowercase">{{ comp.nextTitle }}</span>
         </a>
       </section>
     </main>
@@ -758,7 +760,7 @@
   <sc-if value="{{ isSessionDetail }}">
     <main style="animation: rise 0.4s ease both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span><a href="#" onClick="{{ goMusic }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">music</a> / <a href="#" onClick="{{ goLive }}" style="color: var(--muted)" style-hover="color: var(--accent, #B8502A)">live sound</a> / sunday sessions</span><span style="display: flex; gap: 12px; flex-wrap: wrap"><span>{{ session.ep }} · {{ session.date }}</span></span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span style="display: flex; gap: 12px; flex-wrap: wrap"><span>{{ session.ep }} · {{ session.date }}</span></span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 5.4vw, 76px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); text-transform: lowercase; text-wrap: balance; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">{{ session.artist }}<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: 28px var(--gutter) 24px">
@@ -852,7 +854,7 @@
   <sc-if value="{{ isProject }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span>tech</span><span style="display: flex; gap: 12px; flex-wrap: wrap"><span>{{ project.kind }}</span><sc-if value="{{ project.hasStatus }}"><span style="color: var(--accent, #B8502A)">{{ project.status }}</span></sc-if></span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span style="display: flex; gap: 12px; flex-wrap: wrap"><span>{{ project.kind }}</span><sc-if value="{{ project.hasStatus }}"><span style="color: var(--accent, #B8502A)">{{ project.status }}</span></sc-if></span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 5.4vw, 76px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); text-transform: lowercase; text-wrap: balance; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">{{ project.title }}<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
 
@@ -909,7 +911,7 @@
   <sc-if value="{{ isMusic }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span>music</span><span>saxophone — composition — live sound</span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>saxophone — composition — live sound</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">music<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: 8px var(--gutter) 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 24px">
@@ -931,32 +933,48 @@
 
   <sc-if value="{{ isPhotos }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
-      <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span>photos</span><span>all shot by me, 2025</span></div>
-        <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">photos<span style="color: var(--accent, #B8502A)">.</span></h1>
-      </section>
-      <section id="photos" style="padding: clamp(24px, 4vh, 24px) var(--gutter) 38px; display: flex; flex-direction: column; gap: 20px">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid var(--rule); padding-bottom: 12px; font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; font-style: italic">
-          <span style="color: var(--muted)">jan — aug 2025</span>
-          <div style="display: flex; gap: 6px 16px; flex-wrap: wrap">
-            <sc-for list="{{ photoMonths }}" as="mo" hint-placeholder-count="9">
-              <a href="#" onClick="{{ mo.pick }}" style="color: {{ mo.color }}" style-hover="color: var(--accent, #B8502A)">{{ mo.text }}</a>
-            </sc-for>
-          </div>
+      <section style="padding: 20px var(--gutter) 12px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap">
+          <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">photos<span style="color: var(--accent, #B8502A)">.</span></h1>
+          <nav aria-label="Photo tools" style="display: flex; align-items: center; gap: 22px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
+            <span style="color: var(--muted)">all shot by me, 2025</span>
+            <a href="#" onClick="{{ phShuffle }}" style="display: inline-flex; align-items: center; min-height: 44px; line-height: 1; color: var(--muted)" style-hover="color: var(--accent, #B8502A)">surprise me</a>
+          </nav>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 36px">
-          <sc-for list="{{ photoGroups }}" as="g" hint-placeholder-count="3">
-            <div style="display: flex; flex-direction: column; gap: 10px">
-              <div style="display: flex; justify-content: space-between; font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); font-style: italic"><span style="color: var(--ink)">{{ g.month }}</span><span>{{ g.count }}</span></div>
-              <div style="display: flex; flex-wrap: wrap; gap: 8px">
-                <sc-for list="{{ g.items }}" as="p" hint-placeholder-count="6">
-                  <a href="#" onClick="{{ p.pop }}" aria-label="{{ p.label }}" style="flex: {{ p.grow }} 1 {{ p.basis }}; aspect-ratio: {{ p.ratio }}; position: relative; overflow: hidden; background: var(--panel); display: block; border-radius: 14px; overflow: hidden">
-                    <img src="{{ p.src }}" alt="{{ p.label }}" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: contain; transition: opacity 0.3s ease; border-radius: 14px; overflow: hidden" style-hover="opacity: 0.85">
+      </section>
+      <section id="photos" style="padding: 0 0 40px; display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 0 var(--gutter); font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
+          <span style="color: var(--ink)"><span data-phcm="1">{{ phCapMonth }}</span> <span data-phcn="1" style="color: var(--muted)">{{ phCapNum }}</span></span>
+          <span style="display: flex; gap: 8px">
+            <a href="#" onClick="{{ phPrev }}" aria-label="Previous photo" style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 999px; color: var(--ink); font-style: normal; font-size: 18px" style-hover="background: var(--panel); color: var(--accent, #B8502A)">←</a>
+            <a href="#" onClick="{{ phNext }}" aria-label="Next photo" style="display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 999px; color: var(--ink); font-style: normal; font-size: 18px" style-hover="background: var(--panel); color: var(--accent, #B8502A)">→</a>
+          </span>
+        </div>
+        <div aria-label="Scrub through photos" onPointerDown="{{ scrDown }}" onPointerMove="{{ scrMove }}" onPointerUp="{{ scrUp }}" onPointerCancel="{{ scrUp }}" style="display: flex; gap: 10px; padding: 0 var(--gutter); touch-action: none; user-select: none; cursor: {{ scrCursor }}; position: relative">
+          <div aria-hidden="true" data-scrtip="1" style="position: absolute; left: {{ scrTip.x }}; top: calc(100% + 8px); transform: translateX(-50%) translateY({{ scrTip.y }}) scale({{ scrTip.s }}); transform-origin: 50% 0; opacity: {{ scrTip.o }}; transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none; z-index: 120; display: flex; flex-direction: column; align-items: center; gap: 6px">
+            <img data-scrimg="1" src="{{ scrTip.src }}" alt="" style="display: block; height: 96px; aspect-ratio: {{ scrTip.ratio }}; object-fit: cover; border-radius: 8px; box-shadow: 0 10px 24px -12px var(--accent, #5A7044)"></img>
+            <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 13px; color: var(--ink); white-space: nowrap" data-scrlab="1">{{ scrTip.label }}</span>
+          </div>
+          <sc-for list="{{ phScrub }}" as="m" hint-placeholder-count="8">
+            <div style="flex: {{ m.n }} 1 0; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+              <div style="display: flex; height: 30px; align-items: flex-end">
+                <sc-for list="{{ m.ticks }}" as="t" hint-placeholder-count="4">
+                  <a href="#" onClick="{{ t.go }}" aria-label="{{ t.label }}" data-ti="{{ t.i }}" draggable="false" style="flex: 1 1 0; height: 100%; display: flex; align-items: flex-end; justify-content: center" style-hover="opacity: 0.6">
+                    <span data-tk="1" style="display: block; width: {{ t.w }}; height: {{ t.h }}; border-radius: 2px; background: {{ t.c }}; transition: width 0.25s ease, height 0.4s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease"></span>
                   </a>
                 </sc-for>
-                <span aria-hidden="true" style="flex: 999 1 0; min-width: 0"></span>
               </div>
+              <a href="#" onClick="{{ m.go }}" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 13px; color: {{ m.color }}; white-space: nowrap; width: fit-content; transition: color 0.3s ease" style-hover="color: var(--accent, #B8502A)">{{ m.short }}</a>
             </div>
+          </sc-for>
+        </div>
+        <div id="ph-stage" ref="{{ phStageRef }}" onPointerDown="{{ phDown }}" onPointerMove="{{ phMove }}" onPointerUp="{{ phUp }}" onPointerCancel="{{ phUp }}" style="position: relative; height: clamp(300px, calc(100svh - 300px), 660px); margin-top: 8px; overflow-x: clip; overflow-y: visible; touch-action: pan-y; user-select: none; cursor: {{ phStageCursor }}">
+          <div aria-hidden="true" data-phglow="a" style="position: absolute; left: 50%; top: 52%; height: 20%; aspect-ratio: 4 / 5; transform: translate(-50%, -50%) scale(4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.5) brightness(0.85); opacity: 0.6; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
+          <div aria-hidden="true" data-phglow="b" style="position: absolute; left: 50%; top: 52%; height: 20%; aspect-ratio: 4 / 5; transform: translate(-50%, -50%) scale(4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.5) brightness(0.85); opacity: 0; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
+          <sc-for list="{{ phSlides }}" as="c" hint-placeholder-count="5">
+            <a href="#" onClick="{{ c.go }}" draggable="false" data-ci="{{ c.i }}" aria-label="{{ c.label }}" style="position: absolute; left: 50%; top: 50%; height: 80%; max-width: 86vw; aspect-ratio: {{ c.ratio }}; border-radius: 16px; overflow: hidden; background: var(--panel); display: block; transform: {{ c.tf }}; opacity: {{ c.op }}; z-index: {{ c.z }}; pointer-events: {{ c.pe }}; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease; will-change: transform">
+              <img src="{{ c.src }}" alt="{{ c.label }}" loading="{{ c.load }}" draggable="false" style="display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none"></img>
+            </a>
           </sc-for>
         </div>
       </section>
@@ -993,7 +1011,7 @@
   <sc-if value="{{ isAll }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span>everything</span><span>{{ totalCount }} entries</span></div>
+        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span></span><span>{{ totalCount }} entries</span></div>
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">everything<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: 20px var(--gutter) 26px">
@@ -1002,10 +1020,10 @@
             <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 11px; letter-spacing: 0.02em; color: var(--accent, #B8502A); padding-top: 6px">{{ y.year }}</span>
             <div style="display: flex; flex-direction: column">
               <sc-for list="{{ y.rows }}" as="r" hint-placeholder-count="8">
-                <a href="#" onClick="{{ r.open }}" style="display: grid; grid-template-columns: var(--gigcols); gap: 16px; align-items: baseline; padding: 5px 6px; color: var(--ink)" style-hover="background: var(--panel); color: var(--ink)">
+                <a href="#" onClick="{{ r.open }}" style="display: grid; grid-template-columns: var(--allcols); gap: 24px; align-items: baseline; padding: 5px 10px 5px 6px; color: var(--ink); border-radius: 8px" style-hover="background: var(--panel); color: var(--ink)">
                   <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 16px; letter-spacing: -0.02em">{{ r.title }}</span>
                   <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ r.kind }}</span>
-                  <span style="font-size: 13px; color: var(--muted); text-align: right">{{ r.meta }}</span>
+                  <span style="font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ r.meta }}</span>
                 </a>
               </sc-for>
             </div>
@@ -1040,12 +1058,18 @@
   <sc-if value="{{ isAbout }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <div style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-style: italic"><span>about</span><span>cleveland — new york</span></div>
-        <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">about<span style="color: var(--accent, #B8502A)">.</span></h1>
+                <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">about<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: 12px var(--gutter) 40px; display: flex; flex-wrap: wrap; gap: 40px 56px; align-items: flex-start">
         <aside style="flex: 1 1 260px; max-width: 360px; position: sticky; top: 90px; display: flex; flex-direction: column; gap: 18px">
-          <div role="img" aria-label="Timothy Masso" style="aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background: var(--panel) url('./assets/portrait-crop.png') center / cover"></div>
+          <div role="img" aria-label="Timothy Masso" style="aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background: var(--panel) url('./assets/portrait-2025.jpg') 62% 40% / cover"></div>
+          <sc-if value="{{ aboutFull }}" hint-placeholder-val="{{ false }}">
+          <nav aria-label="Chapters" style="display: flex; flex-direction: column; gap: 2px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
+            <sc-for list="{{ aboutChapters }}" as="c" hint-placeholder-count="4">
+              <a href="#" onClick="{{ c.go }}" style="display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; color: var(--ink)" style-hover="color: var(--accent, #B8502A)"><span>{{ c.name }}</span><span style="color: var(--muted)">{{ c.years }}</span></a>
+            </sc-for>
+          </nav>
+          </sc-if>
           <div style="display: flex; flex-direction: column; gap: 8px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
             <span style="color: var(--muted)">contact &amp; elsewhere</span>
             <span style="display: flex; flex-direction: column; gap: 6px">
@@ -1056,9 +1080,33 @@
         </span>
           </div>
         </aside>
-        <div style="flex: 999 1 480px; min-width: 0; display: flex; flex-direction: column">
+        <div style="flex: 999 1 480px; min-width: 0; display: flex; flex-direction: column; margin-top: -44px">
+          <div style="display: flex; flex-direction: column; gap: 20px; padding: 44px 0 8px; max-width: 760px">
+            <p style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 19px; line-height: 1.65; font-optical-sizing: none; font-variation-settings: 'opsz' 14; color: var(--body); margin: 0; text-wrap: pretty">I grew up in <span style="color: var(--ink)">Cleveland</span> in a musical family. My father plays guitar and works as a sound engineer, and I fell for the <span style="color: var(--ink)">baritone saxophone</span> at a summer camp. In high school I played everywhere I could: the Cleveland Youth Wind Symphony at Severance Hall, the Shaker Heights wind and jazz ensembles, the Tri-C JazzFest Academy, show choir bands and pit orchestras. I studied jazz and contemporary music at <span style="color: var(--ink)">The New School</span> in New York, playing in ensembles led by Bobby Sanabria, Marty Ehrlich and Andrew Cyrille, and worked backline and <span style="color: var(--ink)">live sound</span> for Sunday Sessions. Since graduating in 2024 I've turned to <span style="color: var(--ink)">data analytics</span>, pursuing a post-degree certificate at Tri-C on the way to a master's in applied mathematics and statistics, while working as a LAN and desktop support technician.</p>
+            <div role="list" aria-label="Chapters" style="position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 28px; padding-top: 0">
+              <span aria-hidden="true" style="position: absolute; top: 22px; left: 0; right: 0; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span>
+              <span aria-hidden="true" style="position: absolute; top: 22px; left: 0; width: 2px; height: 17px; background: var(--ink)"></span>
+              <span aria-hidden="true" style="position: absolute; top: 22px; right: 0; width: 2px; height: 17px; background: var(--ink)"></span>
+              <span aria-hidden="true" style="position: absolute; top: 22px; right: 5px; width: 1px; height: 17px; background: var(--ink)"></span>
+              <sc-for list="{{ aboutChapters }}" as="c" hint-placeholder-count="4">
+                <a role="listitem" href="#" onClick="{{ c.go }}" style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 52px; color: var(--ink); text-align: center" style-hover="color: var(--accent, #B8502A)">
+                  <span aria-hidden="true" style="position: absolute; top: {{ c.noteTop }}; left: 50%; margin-left: -6px; width: 12px; height: 9px; border-radius: 50%; background: var(--accent, #B8502A); transform: rotate(-22deg)"></span>
+                  <span aria-hidden="true" style="position: absolute; top: {{ c.stemTop }}; left: calc(50% + 4.5px); width: 1.5px; height: 24px; background: var(--accent, #B8502A)"></span>
+                  <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">{{ c.name }}</span>
+                  <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 13px; color: var(--muted)">{{ c.years }}</span>
+                </a>
+              </sc-for>
+            </div>
+            <a href="#" onClick="{{ toggleAboutFull }}" style="align-self: flex-start; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; color: var(--ink); min-height: 44px; display: inline-flex; align-items: center" style-hover="color: var(--accent, #B8502A)">( {{ aboutFullLabel }} )</a>
+          </div>
+          <figure style="margin: 28px 0 8px; display: flex; flex-direction: column; gap: 8px">
+            <div role="img" aria-label="Timothy Masso outside Severance Hall" style="aspect-ratio: 16 / 7; border-radius: 14px; overflow: hidden; background-image: url('./assets/about-banner.png'); background-size: cover; background-position: center"></div>
+            <figcaption style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">outside Severance Hall, Cleveland</figcaption>
+          </figure>
+          <sc-if value="{{ aboutFull }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; animation: rise 0.5s ease both">
           
-          <article style="display: flex; flex-wrap: wrap; gap: 12px 32px; padding: 36px 0; border-top: 1px solid var(--rule)">
+          <article id="ch-early" style="display: flex; flex-wrap: wrap; gap: 12px 32px; padding: 44px 0; scroll-margin-top: 100px">
             <div style="flex: 1 1 160px; max-width: 220px; display: flex; flex-direction: column; gap: 6px">
               <h2 style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1; letter-spacing: -0.02em; color: var(--ink); margin: 0">early years</h2>
               
@@ -1067,39 +1115,38 @@
               <p style="font-family: 'Newsreader', Georgia, serif; font-size: 18px; line-height: 1.6; color: var(--body); margin: 0; text-wrap: pretty">I grew up in Cleveland surrounded by music. My father plays guitar and is a sound engineer, so every car ride was filled with tunes that sparked my love for music from an early age. I began on clarinet in fifth grade, then moved to alto saxophone at the end of the year, but after a summer camp where I played baritone saxophone for the first time, I fell in love with the horn and its sound. I knew I wanted to do something in music. I used my high school years to figure out what kind of music I wanted to play.</p>
             </div>
           </article>
-          <figure style="margin: 0 0 4px; display: flex; flex-direction: column; gap: 8px">
-            <div role="img" aria-label="Timothy Masso outside Severance Hall" style="aspect-ratio: 16 / 7; border-radius: 14px; overflow: hidden; background-image: url('./assets/about-banner.png'); background-size: cover; background-position: center"></div>
-            <figcaption style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">outside Severance Hall, Cleveland</figcaption>
-          </figure>
-          <article style="display: flex; flex-wrap: wrap; gap: 12px 32px; padding: 36px 0; border-top: 1px solid var(--rule)">
+          
+          <article id="ch-hs" style="display: flex; flex-wrap: wrap; gap: 12px 32px; padding: 44px 0; scroll-margin-top: 100px">
             <div style="flex: 1 1 160px; max-width: 220px; display: flex; flex-direction: column; gap: 6px">
               <h2 style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1; letter-spacing: -0.02em; color: var(--ink); margin: 0">high school</h2>
-              <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; color: var(--muted)">2016—2020</span>
+              <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; color: var(--accent, #B8502A)">2016—2020</span>
             </div>
             <div style="flex: 999 1 380px; display: flex; flex-direction: column; gap: 16px; max-width: 64ch">
               <p style="font-family: 'Newsreader', Georgia, serif; font-size: 18px; line-height: 1.6; color: var(--body); margin: 0; text-wrap: pretty">High school was a wonderful time full of music and growth. I played in concert bands such as the Cleveland Youth Wind Symphony, the premier youth wind ensemble in Northeast Ohio which would perform regularly at Severance Hall. The Shaker Heights Wind Ensemble which was one of only two high school bands that competed at the AA concert band level and the Symphonic Band. I was selected by one of my school band directors who also conducted an adult civic band to play 2nd chair alto as a high schooler. I also played in jazz ensemble programs like the Shaker Heights Jazz Ensemble and Jazz band, The Jazz at The Music Settlement (J@MS) and the Tri-C JazzFest Academy. In Show Choir bands competing at Show Choir invitationals. In pit orchestras for musicals performed at the school. And in summer camps where I taught and played.</p>
               <p style="font-family: 'Newsreader', Georgia, serif; font-size: 18px; line-height: 1.6; color: var(--body); margin: 0; text-wrap: pretty">These were the teachers that guided me and who I looked up to. Who shaped who I am to this day. During summers, I attended jazz and Afro-Cuban jazz camps, taught at band camps, and worked in the school's band office organizing scores, cleaning instruments and getting ready for the coming school year. Music was year round. An example of how close I was with my mentors, Mario Clopton wouldn't even ask me to play for the groups he ran, for two years in a row at the beginning of the year while I was in another class he would knock on the door and ask the other teacher if he could talk to me and say here's the music for this year and place a packet on my desk. Which was a packet of the Show Choir music and the first musical they were having for the year. I didn't even have a chance to say no (not that I wanted to say no anyway).</p>
             </div>
           </article>
-          <article style="display: flex; flex-wrap: wrap; gap: 12px 32px; padding: 36px 0; border-top: 1px solid var(--rule)">
+          <article id="ch-college" style="display: flex; flex-wrap: wrap; gap: 12px 32px; padding: 44px 0; scroll-margin-top: 100px">
             <div style="flex: 1 1 160px; max-width: 220px; display: flex; flex-direction: column; gap: 6px">
-              <h2 style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1; letter-spacing: -0.02em; color: var(--ink); margin: 0">college years</h2>
-              <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; color: var(--muted)">2020—2024</span>
+              <h2 style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1; letter-spacing: -0.02em; color: var(--ink); margin: 0">college</h2>
+              <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; color: var(--accent, #B8502A)">2020—2024</span>
             </div>
             <div style="flex: 999 1 380px; display: flex; flex-direction: column; gap: 16px; max-width: 64ch">
               <p style="font-family: 'Newsreader', Georgia, serif; font-size: 18px; line-height: 1.6; color: var(--body); margin: 0; text-wrap: pretty">I studied jazz and contemporary music at The New School's College of Performing Arts in New York City. I had the privilege of performing in ensembles led by Bobby Sanabria, Rez Abbasi, Marty Ehrlich, Andrew Cyrille, Nir Felder, Allison Miller, Jim Snidero, Andy McKee, Ahmed Abdullah and many more. I took my private lessons with David Schnitter, Darius Jones, Marty Ehrlich and Andrew Gould. Each helped shape my improvisation, composition, and sound exploration.</p>
               <p style="font-family: 'Newsreader', Georgia, serif; font-size: 18px; line-height: 1.6; color: var(--body); margin: 0; text-wrap: pretty">While going to college, I put my other passion for live sound and music production to work. As my father is a sound engineer I had picked up a few things while shadowing him to his gigs. While in NYC, I joined the student-led, Tiny Desk–inspired Sunday Sessions as a backline assistant and assistant live sound engineer. I also mixed performances for artists and students, set up gear for concerts, and ran PA systems outside the school.</p>
             </div>
           </article>
-          <article style="display: flex; flex-wrap: wrap; gap: 12px 32px; padding: 36px 0; border-top: 1px solid var(--rule)">
+          <article id="ch-now" style="display: flex; flex-wrap: wrap; gap: 12px 32px; padding: 44px 0; scroll-margin-top: 100px">
             <div style="flex: 1 1 160px; max-width: 220px; display: flex; flex-direction: column; gap: 6px">
               <h2 style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 32px; line-height: 1; letter-spacing: -0.02em; color: var(--ink); margin: 0">post bachelors</h2>
-              <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; color: var(--muted)">2024—</span>
+              <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; color: var(--accent, #B8502A)">2024—</span>
             </div>
             <div style="flex: 999 1 380px; display: flex; flex-direction: column; gap: 16px; max-width: 64ch">
               <p style="font-family: 'Newsreader', Georgia, serif; font-size: 18px; line-height: 1.6; color: var(--body); margin: 0; text-wrap: pretty">Since graduating from The New School in 2024, I found a new passion in data analysis, math and tech. To start my new exploration to get a good feel for real world application of what I wanted to do, I earned microcredentials in Excel, Minitab, Power BI, and general data analytics. I liked doing all of that so much that I'm currently pursuing the Post-Degree Professional Certificate in Data Analytics at Cuyahoga Community College (Tri-C), with a goal of beginning a Master's degree in Applied Mathematics and Statistics in Fall 2026. As of Oct 2025 I'm still getting everything ready for my application. This all might be tentative as I plan to move back to NYC in summer 2026. In the meantime I work as a LAN (Local Area Network) and Desktop Support Technician for an IT company that oversees more than 250 devices and accounts.</p>
             </div>
           </article>
+            </div>
+          </sc-if>
         </div>
       </section>
     </main>
@@ -1116,7 +1163,7 @@
         <a href="#" onClick="{{ goAll }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">everything</a>
         <a href="#" onClick="{{ goPeople }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">who i played with</a>
       </span>
-      <span style="text-align: right">© {{ year }} timothy masso</span>
+      <span style="text-align: right; display: flex; justify-content: flex-end; align-items: baseline; gap: 10px">© {{ year }} Timothy Masso<span aria-hidden="true" style="font-family: 'Mrs Saint Delafield', cursive; font-style: normal; font-size: 30px; line-height: 0.6; color: var(--ink); opacity: 0.85; transform: rotate(-6deg) translateY(4px); display: inline-block">TM</span></span>
     </footer>
   </sc-if>
   <div ref="{{ railRef }}" aria-hidden="true" style="position: fixed; z-index: 95; top: 0; right: 0; width: 10px; height: 100vh; opacity: 0; transition: opacity 0.35s ease; pointer-events: none">
@@ -1124,7 +1171,7 @@
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#E4571B&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#E4571B&quot;,&quot;#C2352B&quot;,&quot;#1B7F8C&quot;,&quot;#8A6A1F&quot;],&quot;section&quot;:&quot;Look&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#6E8B5E&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#6E8B5E&quot;,&quot;#E4571B&quot;,&quot;#C2352B&quot;,&quot;#1B7F8C&quot;,&quot;#8A6A1F&quot;],&quot;section&quot;:&quot;Look&quot;}}">
 const NS = '5th Floor Performance Space, College of Performing Arts at The New School';
 const NS_ADDR = '55 W 13th St, New York, NY 10011';
 const TISH = 'Tishman Auditorium, The New School University Center';
@@ -1178,9 +1225,9 @@ const PERFS = [
     ]
   },
   {
-    yt: 'HfmpWLo5oo4', start: 6220, slug: 'improv', title: 'Improv Ensemble', date: '08 NOV 2023', year: '2023',
+    yt: 'HfmpWLo5oo4', start: 6220, thumb: './assets/improv-thumb.png', slug: 'improv', title: 'Improv Ensemble', date: '08 NOV 2023', year: '2023',
     when: 'November 8, 2023 — 1pm', venue: NS, address: NS_ADDR,
-    leader: 'Andrew Cyrille', role: 'Alto saxophone', field: '#1B7F8C', img: './assets/5thfloor.webp', repLabel: 'SET LIST',
+    leader: 'Andrew Cyrille', role: 'Alto saxophone', field: '#1B7F8C', img: './assets/improv-thumb.png', repLabel: 'SET LIST',
     repertoire: [
       { t: 'Broccoli', n: 'Composed by Jonathan Telsin' },
       { t: 'Imminent', n: '' },
@@ -1561,12 +1608,12 @@ class Component extends DCLogic {
   _lbKeys() {
     if (this._lbBound) return;
     this._lbBound = true;
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.state.lb) { document.documentElement.style.overflow = ''; this.setState({ lb: null }); } });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.state.lb) { if (this._lbCloseFn) this._lbCloseFn(); else { this._lbShown = false; document.documentElement.style.overflow = ''; this.setState({ lb: null }); } } });
   }
 
   _applyAccent() {
     const dark = (this.state && this.state.theme) === 'dark';
-    const a = (this.props.accent && this.props.accent !== '#E4571B') ? this.props.accent : (dark ? '#E0794A' : '#B8502A');
+    const a = (this.props.accent && this.props.accent !== '#6E8B5E') ? this.props.accent : (dark ? '#9BB27A' : '#5A7044');
     document.documentElement.style.setProperty('--accent', a);
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
     document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
@@ -1602,8 +1649,8 @@ class Component extends DCLogic {
 
   _onScroll = () => {
     this._railIdle = false;
-    if (this._raf) return;
-    this._raf = requestAnimationFrame(() => { this._raf = 0; this._syncRail(); });
+    if (this._railRaf) return;
+    this._railRaf = requestAnimationFrame(() => { this._railRaf = 0; this._syncRail(); });
     clearTimeout(this._idleT);
     this._idleT = setTimeout(() => { this._railIdle = true; this._syncRail(); }, 1400);
   };
@@ -1620,8 +1667,8 @@ class Component extends DCLogic {
     thumb.style.cursor = 'grabbing';
     const move = (ev) => {
       const top = Math.min(trackH - h, Math.max(0, startTop + (ev.clientY - startY)));
-      // instant: html has scroll-behavior smooth, which makes every drag step animate and lag
       window.scrollTo({ top: (top / (trackH - h)) * (total - view), behavior: 'instant' });
+      this._syncRail();
     };
     const up = () => {
       thumb.style.cursor = 'grab';
@@ -1660,9 +1707,11 @@ class Component extends DCLogic {
     }
     document.documentElement.style.overflow = 'hidden';
     const j = list.findIndex((x) => x.id === p.id);
+    const gi = this._photos().findIndex((x) => x.id === p.id);
+    if (gi >= 0 && document.getElementById('ph-stage')) { this._phSet(gi); clearTimeout(this._phCommitT); this._phLive = null; this.setState({ phIdx: gi }); }
     this.setState({ lb: { f: p.src, label: p.label + ' · ' + (j + 1) + ' / ' + list.length, ratio: p.ratio, phId: p.id } });
   }
-  componentWillUnmount() { clearInterval(this._clock); cancelAnimationFrame(this._raf); }
+  componentWillUnmount() { if (this._hdrScroll) window.removeEventListener('scroll', this._hdrScroll); clearInterval(this._clock); cancelAnimationFrame(this._raf); }
   _spin() {
     if (!this._drag) {
       this._ringVel = (this._ringVel || 0) * 0.965;
@@ -1675,12 +1724,17 @@ class Component extends DCLogic {
   _snake(flat) {
     const per = window.innerWidth < 720 ? 2 : 3;
     const rows = [];
-    flat = flat.map((x) => ({ vis: 'visible', hasThumb: 0, hasPdf: 0, pdf: '', bg: 'none', thumbBg: 'var(--panel)', l1: '', l2: '', ...x }));
+    const yrs = []; flat.forEach((x) => { if (x.year != null && yrs.indexOf(String(x.year)) < 0) yrs.push(String(x.year)); });
+    const NOTES = [['var(--accent, #B8502A)', 'block', 'none', 'none'], ['var(--paper)', 'block', 'none', 'none'], ['var(--accent, #B8502A)', 'block', 'block', 'none'], ['var(--paper)', 'none', 'none', 'none'], ['var(--accent, #B8502A)', 'block', 'block', 'block']];
+    flat = flat.map((x) => { const yn = parseInt(String(x.year).slice(0, 4), 10); const nt = NOTES[isNaN(yn) ? 0 : (((2024 - yn) % NOTES.length) + NOTES.length) % NOTES.length]; return { vis: 'visible', hasThumb: 0, hasPdf: 0, pdf: '', bg: 'none', bgSize: 'cover', thumbBg: 'var(--panel)', l1: '', l2: '', tick: (e) => { e.currentTarget.querySelectorAll('[data-note]').forEach((n) => { if (n.animate) n.animate([{ translate: '0 0' }, { translate: '0 -7px' }, { translate: '0 0' }], { duration: 380, easing: 'cubic-bezier(0.3, 1.5, 0.5, 1)' }); }); }, headBg: nt[0], stem: nt[1], flag1: nt[2], flag2: nt[3], ...x }; });
+    flat.forEach((x, i) => { const nx = flat[i + 1]; x.yearEnd = !nx || String(nx.year) !== String(x.year); });
     for (let i = 0; i < flat.length; i += per) rows.push(flat.slice(i, i + per));
     return rows.map((items, i) => {
       while (items.length < per) items.push({ vis: 'hidden', title: '', l1: '', l2: '', hasThumb: 0, open: (e) => e.preventDefault() });
       const odd = i % 2 === 1, more = i < rows.length - 1;
-      return { items: odd ? items.slice().reverse() : items, turnRight: more && !odd, turnLeft: more && odd };
+      const side = (it, k) => { const end = k === items.length - 1, off = end ? '-1px' : '-13px', yo = end ? '9px' : '-3px'; return Object.assign({}, it, { barL: odd ? off : 'auto', barR: odd ? 'auto' : off, yL: odd ? yo : 'auto', yR: odd ? 'auto' : yo }); };
+      const seq = items.map(side);
+      return { first: i === 0 ? 1 : 0, items: odd ? seq.slice().reverse() : seq, turnRight: more && !odd, turnLeft: more && odd };
     });
   }
   _np() {
@@ -1688,6 +1742,7 @@ class Component extends DCLogic {
     fetch(NOW_PLAYING_URL).then((r) => r.json()).then((d) => { if (d && d.title) this.setState({ np: d }); }).catch(() => {});
   }
   componentDidMount() {
+    ['./assets/playing-sm.jpg', './assets/photos/p40.jpg', './assets/portrait-crop-sm.jpg'].forEach((s) => { const i = new Image(); i.src = s; });
     this._np(); this._npT = setInterval(() => this._np(), 30000);
     fetch('./assets/shows.json').then((r) => r.json()).then((shows) => {
       const rows = shows.map((sh) => ({ slug: sh.slug, year: sh.year, title: sh.title, band: sh.band, lineup: sh.lineup, role: 'Live sound engineer, FOH', dates: sh.dates, venue: sh.venue, gear: '', crew: '', img: sh.band === 'MOB' ? './assets/gigs/mob/thumb.png' : './assets/gigs/tavern/thumb.png', kind: 'sound', note: '', docs: [], show: sh }));
@@ -1716,7 +1771,87 @@ class Component extends DCLogic {
     window.addEventListener('popstate', () => { this._readHash(); });
     this._renderPdfs();
   }
-  componentDidUpdate() { this._applyAccent(); this._renderPdfs(); setTimeout(this._syncRail, 80); }
+  _phFan() {
+    const t = this._phTrack; if (!t) return;
+    t.scrollLeft = 0;
+    t.querySelectorAll('[data-ph]').forEach((el, i) => { if (!el.animate) return; el.animate([{ opacity: 0, transform: 'translateX(' + (-120 - i * 24) + 'px) rotateY(28deg) scale(0.86)' }, { opacity: 1, transform: 'none' }], { duration: 760, delay: Math.min(i, 10) * 55, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' }); });
+  }
+  _phSpyFn = () => {
+    const els = document.querySelectorAll('[data-phm]'); if (!els.length) return;
+    let cur = els[0].getAttribute('data-phm');
+    els.forEach((el) => { if (el.getBoundingClientRect().top < window.innerHeight * 0.4) cur = el.getAttribute('data-phm'); });
+    if (cur !== this.state.phSpy) this.setState({ phSpy: cur });
+  };
+  _scrAt(x) {
+    const ticks = document.querySelectorAll('[data-ti]'); if (!ticks.length) return;
+    let best = 0, bd = Infinity, bx = 0;
+    ticks.forEach((el) => { const r = el.getBoundingClientRect(), c = r.left + r.width / 2, d = Math.abs(c - x); if (d < bd) { bd = d; best = +el.getAttribute('data-ti'); bx = c; } });
+    const box = ticks[0].closest('[aria-label="Scrub through photos"]');
+    const scrX = box ? Math.round(bx - box.getBoundingClientRect().left) : 0;
+    this._phSet(best, scrX);
+  }
+  _phCS(o) {
+    const a = Math.abs(o), vis = a <= 4;
+    return { tf: 'translate(-50%, -50%) translateX(calc(' + Math.sign(o) * (a === 0 ? 0 : 0.5 + (a - 1) * 0.36) + ' * min(46vw, 560px))) scale(' + (a === 0 ? 1 : Math.max(0.42, 0.8 - (a - 1) * 0.12)) + ')',
+      op: vis ? [1, 0.9, 0.7, 0.5, 0.3][a] : 0, z: 100 - a, pe: vis ? 'auto' : 'none' };
+  }
+  _phSet(j, scrX) {
+    const ph = this._photos(); j = Math.max(0, Math.min(ph.length - 1, j));
+    const prev = this._phLive != null ? this._phLive : (this.state.phIdx || 0);
+    if (j !== prev || scrX != null) this._phPaint(j, prev, scrX);
+    this._phLive = j;
+    clearTimeout(this._phCommitT);
+    this._phCommitT = setTimeout(() => { const v = this._phLive; this._phLive = null; if (v !== (this.state.phIdx || 0) || (scrX != null && scrX !== this.state.scrX)) this.setState(scrX != null ? { phIdx: v, scrX } : { phIdx: v }); }, 260);
+  }
+  _phPaint(j, prev, scrX) {
+    const st = document.getElementById('ph-stage'); if (!st) return;
+    const ph = this._photos(), p = ph[j];
+    st.querySelectorAll('[data-ci]').forEach((el) => {
+      const i = +el.getAttribute('data-ci'), o = i - j;
+      if (Math.abs(o) > 5 && Math.abs(i - prev) > 5) return;
+      const cs = this._phCS(o), im = el.firstElementChild;
+      el.style.transform = cs.tf; el.style.opacity = cs.op; el.style.zIndex = cs.z; el.style.pointerEvents = cs.pe;
+      if (im && Math.abs(o) <= 5) im.loading = 'eager';
+    });
+    if (j !== prev) {
+      const ga = st.querySelector('[data-phglow="a"]'), gb = st.querySelector('[data-phglow="b"]');
+      if (ga && gb) {
+        const on = this._glowB ? gb : ga, off = this._glowB ? ga : gb;
+        off.style.backgroundImage = "url('" + p.src + "')"; off.style.opacity = '0.6'; on.style.opacity = '0';
+        this._glowB = !this._glowB;
+        clearTimeout(this._glowT); this._glowT = setTimeout(() => { const keep = this._glowB ? gb : ga, other = this._glowB ? ga : gb; ga.style.transition = gb.style.transition = 'none'; ga.style.backgroundImage = keep.style.backgroundImage; ga.style.opacity = '0.6'; gb.style.opacity = '0'; this._glowB = false; void ga.offsetWidth; ga.style.transition = gb.style.transition = ''; }, 900);
+      }
+    }
+    const q = (s) => document.querySelector(s);
+    const cm = q('[data-phcm]'), cn = q('[data-phcn]'); if (cm) cm.textContent = p.m + ' 2025'; if (cn) cn.textContent = (j + 1) + ' / ' + ph.length;
+    document.querySelectorAll('[data-ti]').forEach((a) => {
+      const i = +a.getAttribute('data-ti'), sp = a.firstElementChild; if (!sp) return;
+      const d = Math.abs(i - j); if (d > 2 && Math.abs(i - prev) > 2) return;
+      sp.style.height = i === j ? '28px' : d === 1 ? '16px' : '10px';
+      sp.style.background = i === j ? 'var(--accent, #5A7044)' : 'var(--rule)';
+      sp.style.width = i === j && this.state.scrubbing ? '4px' : '2px';
+    });
+    const tip = q('[data-scrtip]'); if (tip && scrX != null) tip.style.left = scrX + 'px';
+    const ti = q('[data-scrimg]'); if (ti) { ti.src = p.src; ti.style.aspectRatio = p.ratio; }
+    const tl = q('[data-scrlab]'); if (tl) tl.textContent = p.m.slice(0, 3) + ' · ' + (j + 1);
+  }
+  _phGo(d) { this._phSet((this._phLive != null ? this._phLive : (this.state.phIdx || 0)) + d); }
+  _phKeyFn = (e) => {
+    if (this.state.lb || !document.getElementById('ph-stage')) return;
+    if (/input|textarea/i.test((e.target && e.target.tagName) || '')) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); this._phGo(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); this._phGo(-1); }
+  };
+  _phReveal() {
+    if (!this._phKeyOn) { this._phKeyOn = 1; window.addEventListener('keydown', this._phKeyFn); }
+    if (!window.IntersectionObserver) return;
+    if (!this._phIO) this._phIO = new IntersectionObserver((ents) => ents.forEach((en) => {
+      if (!en.isIntersecting) return; this._phIO.unobserve(en.target);
+      const sib = Array.from(en.target.parentNode.children).indexOf(en.target);
+      en.target.animate([{ opacity: 0, transform: 'translateY(28px) scale(0.97)' }, { opacity: 1, transform: 'none' }], { duration: 800, delay: (sib % 6) * 70, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' });
+    }), { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('[data-phi]:not([data-phio])').forEach((el) => { el.setAttribute('data-phio', '1'); this._phIO.observe(el); });
+  }
+  componentDidUpdate(pp, ps) { if (!this._phSpyOn) { this._phSpyOn = 1; window.addEventListener('scroll', this._phSpyFn, { passive: true }); } this._phSpyFn(); this._phReveal(); this._applyAccent(); this._renderPdfs(); setTimeout(this._syncRail, 80); }
 
   /* ── hash routing ── */
 
@@ -1727,7 +1862,8 @@ class Component extends DCLogic {
       case 'detail':        return '#/performances/' + st.slug;
       case 'live':          return '#/live';
       case 'gig':           return '#/live/' + st.gig;
-      case 'sessiondetail': return '#/live/session/' + st.session;
+      case 'sessiondetail': return '#/sessions/' + st.session;
+      case 'sessions':      return '#/sessions';
       case 'comp':          return '#/compositions';
       case 'compdetail':    return '#/compositions/' + st.comp;
       case 'data':          return '#/tech';
@@ -1750,6 +1886,8 @@ class Component extends DCLogic {
       case 'live':
         if (parts[1] === 'session' && parts[2] != null) return { page: 'sessiondetail', session: Number(parts[2]), cue: 0 };
         return parts[1] ? { page: 'gig', gig: parts[1] } : { page: 'live' };
+      case 'sessions':
+        return parts[1] != null ? { page: 'sessiondetail', session: Number(parts[1]), cue: 0 } : { page: 'sessions' };
       case 'compositions':
         return parts[1] ? { page: 'compdetail', comp: parts[1], part: 0 } : { page: 'comp' };
       case 'tech':
@@ -1764,7 +1902,7 @@ class Component extends DCLogic {
   }
 
   _scrollFor(from, to) {
-    const LIST_OF = { compdetail: 'comp', detail: 'perf', gig: 'live', sessiondetail: 'live', project: 'data' };
+    const LIST_OF = { compdetail: 'comp', detail: 'perf', gig: 'live', sessiondetail: 'sessions', sessions: 'live', project: 'data' };
     this._scrollMem = this._scrollMem || {};
     if (!LIST_OF[to] && from === to) return;
     this._scrollMem[from] = window.scrollY;
@@ -1883,7 +2021,7 @@ class Component extends DCLogic {
       const field = FIELDS[n % FIELDS.length];
       return {
         ...x,
-        bg: _ytThumb(x.yt),
+        bg: x.thumb ? 'url("' + x.thumb + '")' : _ytThumb(x.yt),
         field,
         ink: INKS[field],
         no: String(n + 1).padStart(2, '0'),
@@ -1899,7 +2037,7 @@ class Component extends DCLogic {
     const next = PERFS[(i - 1 + PERFS.length) % PERFS.length];
     const cur = {
       ...c,
-      bg: (c.img && c.img.indexOf('5thfloor') === -1)
+      bg: c.thumb ? "url('" + c.thumb + "')" : (c.img && c.img.indexOf('5thfloor') === -1)
         ? "url('" + c.img + "')"
         : 'url("https://i.ytimg.com/vi/' + c.yt + '/hq2.jpg")',
       embed: `https://www.youtube.com/embed/${c.yt}?enablejsapi=1&rel=0${c.start ? '&start=' + c.start : ''}`,
@@ -1951,7 +2089,17 @@ class Component extends DCLogic {
     };
     return {
       isIndex: p === 'index', notIndex: p !== 'index', isGig: p === 'gig', isProject: p === 'project', isPeople: p === 'people', isAll: p === 'all', isColophon: p === 'colophon', isGraphic: p === 'graphic', goGraphic: this.go('graphic'),
-      goGraphicRecital: (e) => { e.preventDefault(); this._nav({ page: 'detail', slug: 'recital' }); this.setState({ pcue: 0 }); }, isPerf: p === 'perf', isDetail: p === 'detail', isLive: p === 'live', isComp: p === 'comp', isCompDetail: p === 'compdetail', isSessionDetail: p === 'sessiondetail', isData: p === 'data', isAbout: p === 'about',
+      goGraphicRecital: (e) => { e.preventDefault(); this._nav({ page: 'detail', slug: 'recital' }); this.setState({ pcue: 0 }); }, isPerf: p === 'perf', isDetail: p === 'detail', isSessions: p === 'sessions', isLive: p === 'live', isComp: p === 'comp', isCompDetail: p === 'compdetail', isSessionDetail: p === 'sessiondetail', isData: p === 'data', isAbout: p === 'about',
+      aboutFull: this.state.aboutFull ? 1 : 0, aboutFullLabel: this.state.aboutFull ? 'show less ↑' : 'read the full story ↓',
+      toggleAboutFull: (e) => {
+        e.preventDefault();
+        const opening = !this.state.aboutFull;
+        this.setState({ aboutFull: opening }, () => {
+          if (!opening) return;
+          setTimeout(() => { const el = document.getElementById('ch-early'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' }); }, 60);
+        });
+      },
+      aboutChapters: [['early years', '', 'ch-early'], ['high school', '2016—2020', 'ch-hs'], ['college', '2020—2024', 'ch-college'], ['post bachelors', '2024—', 'ch-now']].map(([name, years, id], k) => { const ty = [34, 30, 26, 22][k]; return { name, years, noteTop: (ty - 4.5) + 'px', stemTop: (ty - 4.5 - 20) + 'px', go: (e) => { e.preventDefault(); const jump = () => { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' }); }; if (!this.state.aboutFull) { this.setState({ aboutFull: true }, () => setTimeout(() => { jump(); setTimeout(jump, 700); }, 520)); } else jump(); } }; }),
       a1: p === 'index' ? 1 : 0, a2: (p === 'perf' || p === 'detail') ? 1 : 0, a3: p === 'work' ? 1 : 0, a4: p === 'about' ? 1 : 0,
       techCells: [[2, 2, 0.55], [3, 3, 0.32], [5, 4, 0.55], [6, 6, 0.32]].map((c) => ({
         x: (c[0] * 12.5) + '%', y: (c[1] * 12.5) + '%', o: c[2]
@@ -2017,7 +2165,7 @@ class Component extends DCLogic {
         const rows = [];
         PERFS.forEach((p) => rows.push({ year: p.year, kind: 'Performance', title: p.title, meta: p.leader, open: this.open(p.slug) }));
         SESSIONS.forEach((x, n) => rows.push({ year: String(x.date).slice(-4), kind: 'Sunday Sessions', title: x.artist + ' · ' + x.ep, meta: 'Backline', open: this.openSession(n) }));
-        GIGS.forEach((g) => rows.push({ year: String(g.year).slice(0, 4), kind: 'Live sound', title: g.title, meta: g.role, open: this.openGig(g.slug) }));
+        GIGS.forEach((g) => rows.push({ year: String(g.year).slice(0, 4), kind: 'Live sound', title: g.title, meta: 'Live sound engineer, FOH', open: this.openGig(g.slug) }));
         COMPS.forEach((c) => rows.push({ year: c.y, kind: c.g === 'Hemphill book' ? 'Hemphill book' : c.g, title: c.t, meta: c.p.length + (c.p.length === 1 ? ' file' : ' files'), open: this.openComp(c.s) }));
         if (SHOW_TECH) PROJECTS.forEach((p) => rows.push({ year: p.year, kind: p.kind, title: p.title, meta: p.org, open: this.openProject(p.slug) }));
         rows.push({ year: '2024', kind: 'Original', title: 'Untitled Graphic Score', meta: 'drawn score', open: this.go('graphic') });
@@ -2034,41 +2182,101 @@ class Component extends DCLogic {
       photoCount: this._photos().length,
       np: (() => {
         const d = this.state.np;
-        if (d) return { show: 1, url: d.url || SPOTIFY_PROFILE, art: d.art || '', hasArt: d.art ? 1 : 0, playing: d.playing ? 1 : 0, label: d.playing ? 'listening now on Spotify' : 'last played on Spotify', line: d.title + ' — ' + d.artist };
+        if (d) return { show: 1, url: d.url || SPOTIFY_PROFILE, art: d.art || '', hasArt: d.art ? 1 : 0, playing: d.playing ? 1 : 0, spin: d.playing ? 'running' : 'paused', label: d.playing ? 'listening now on Spotify' : 'last played on Spotify', line: d.title + ' — ' + d.artist };
         if (SPOTIFY_PROFILE) return { show: 1, url: SPOTIFY_PROFILE, art: '', hasArt: 0, playing: 0, label: 'on Spotify', line: 'what I’m listening to →' };
         return { show: 0 };
       })(),
       ...(() => {
-        const rows = [['01', 'music', 'goMusic', String(PERFS.length + SESSIONS.length + COMPS.length + 1), './assets/playing-tight2.png', 'Playing alto'], ['02', 'photos', 'goPhotos', String(this._photos().length), './assets/photos/p25.jpg', 'Photograph by Timothy Masso'], ['03', 'about', 'goAbout', '→', './assets/portrait-crop.png', 'Timothy Masso portrait']];
+        const rows = [['01', 'music', 'goMusic', String(PERFS.length + SESSIONS.length + COMPS.length + 1), './assets/playing-sm.jpg', 'Timothy Masso playing alto with his quartet', 'auto 175%', '48% 58%'], ['02', 'photos', 'goPhotos', String(this._photos().length), (() => { const ring = [25, 34, 7, 42, 26, 12, 22, 47, 14, 56, 29, 35, 62, 52]; const pool = []; for (let k = 1; k <= 65; k++) if (ring.indexOf(k) < 0) pool.push(k); return './assets/photos/p' + String(pool[Math.floor(Date.now() / 86400000) % pool.length]).padStart(2, '0') + '.jpg'; })(), 'Photograph by Timothy Masso'], ['03', 'about', 'goAbout', '→', './assets/portrait-crop-sm.jpg', 'Timothy Masso portrait']];
         const cur = this.state.workHover || 'music';
         const pick = rows.find((r) => r[1] === cur) || rows[0];
         return {
           workRows: rows.map(([n, title, fn, count]) => ({ n, title, count, color: title === cur ? 'var(--ink)' : 'var(--muted)', go: this.go(fn === 'goMusic' ? 'music' : fn === 'goPhotos' ? 'photos' : 'about'), enter: () => { if (this.state.workHover !== title) this.setState({ workHover: title }); } })),
-          workPreview: { img: pick[4], label: pick[5] }
+          workPreview: { img: pick[4], label: pick[5], size: pick[6] || 'cover', pos: pick[7] || 'center' }
         };
       })(),
       goPhotos: this.go('photos'), isPhotos: p === 'photos', goMusic: this.go('music'), isMusic: p === 'music',
       ...(() => {
         const ph = this._photos();
-        const sel = this.state.phMonth || 'all';
-        const shown = sel === 'all' ? ph : ph.filter((p) => p.m === sel);
+        const idx = Math.min(this.state.phIdx || 0, ph.length - 1);
+        const sel = ph[idx].m;
+        const shown = ph;
+        const tap = (fn) => (e) => { if (e && e.preventDefault) e.preventDefault(); if (this._phDragged) return; fn(); };
+        const firsts = {}; ph.forEach((p, i) => { if (firsts[p.m] == null) firsts[p.m] = i; });
+        const phStage = {
+          phSlides: ph.map((p, i) => {
+            const o = i - idx, a = Math.abs(o), cs = this._phCS(o);
+            return { i, src: p.src, label: p.label, ratio: p.ratio, load: a <= 5 ? 'eager' : 'lazy', ...cs,
+              go: (e) => { if (e && e.preventDefault) e.preventDefault(); if (this._phDragged) return; const cur = this._phLive != null ? this._phLive : idx; if (i === cur) { this._lbFrom = e.currentTarget.getBoundingClientRect(); this._openPhoto(p, ph); } else this._phSet(i); } };
+          }),
+          phGlow: this._glow0 || (this._glow0 = ph[idx].src), phGlowRatio: ph[idx].ratio, phCapMonth: sel + ' 2025', phCapNum: (idx + 1) + ' / ' + ph.length,
+          phPrev: tap(() => this._phGo(-1)), phNext: tap(() => this._phGo(1)),
+          scrCursor: this.state.scrubbing ? 'grabbing' : 'grab',
+          scrTip: { x: (this.state.scrX || 0) + 'px', o: this.state.scrubbing ? 1 : 0, s: this.state.scrubbing ? 1 : 0.85, y: this.state.scrubbing ? '0px' : '8px', src: ph[idx].src, ratio: ph[idx].ratio, label: ph[idx].m.slice(0, 3) + ' · ' + (idx + 1) },
+          scrDown: (e) => { e.preventDefault(); this._scrY = e.clientY; this._scrMoved = false; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} this.setState({ scrubbing: true }); this._scrAt(e.clientX); },
+          scrMove: (e) => { if (!this.state.scrubbing) return; this._scrMoved = true; this._scrAt(e.clientX); },
+          scrUp: () => { if (!this.state.scrubbing) return; this.setState({ scrubbing: false }); this._phDragged = true; setTimeout(() => { this._phDragged = false; }, 50); },
+          phDown: (e) => { if (e.button) return; this._phX = e.clientX; this._phX0 = this._phLive != null ? this._phLive : (this.state.phIdx || 0); this._phMoved = false; },
+          phMove: (e) => {
+            if (this._phX == null) return;
+            const d = e.clientX - this._phX; if (Math.abs(d) > 6 && !this._phMoved) { this._phMoved = true; try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} this.setState({ phGrab: true }); }
+            if (!this._phMoved) return;
+            const step = Math.max(70, Math.min(window.innerWidth * 0.12, 150));
+            const n = ph.length, j = Math.max(0, Math.min(n - 1, this._phX0 - Math.round(d / step)));
+            this._phSet(j);
+          },
+          phUp: () => { if (this._phX == null) return; this._phX = null; if (this._phMoved) { this.setState({ phGrab: false }); this._phDragged = true; setTimeout(() => { this._phDragged = false; }, 50); } },
+          phStageCursor: this.state.phGrab ? 'grabbing' : 'grab',
+          phStageRef: this._phStageRefFn || (this._phStageRefFn = (el) => {
+            if (!el || el._wheelOn) return; el._wheelOn = 1; let acc = 0; this._glowB = false;
+            const g0 = el.querySelector('[data-phglow="a"]'), cur = this._photos()[this.state.phIdx || 0]; if (g0 && cur) g0.style.backgroundImage = "url('" + cur.src + "')";
+            el.addEventListener('wheel', (e) => {
+              const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+              const i = this._phLive != null ? this._phLive : (this.state.phIdx || 0), n = this._photos().length;
+              if ((d < 0 && i === 0) || (d > 0 && i === n - 1)) return;
+              e.preventDefault(); acc += d;
+              if (Math.abs(acc) >= 60) { this._phGo(acc > 0 ? 1 : -1); acc = 0; }
+            }, { passive: false });
+          }),
+          phScrub: this._MONTHS.map(([m, n]) => ({ n, short: m.slice(0, 3), go: tap(() => this._phSet(firsts[m])), color: m === sel ? 'var(--ink)' : 'var(--muted)',
+            ticks: ph.map((p, i) => ({ p, i })).filter((x) => x.p.m === m).map(({ i }) => ({ i, label: 'Photo ' + (i + 1), w: i === idx && this.state.scrubbing ? '4px' : '2px', h: i === idx ? '28px' : Math.abs(i - idx) === 1 ? '16px' : '10px', c: i === idx ? 'var(--accent, #5A7044)' : 'var(--rule)', go: tap(() => this.setState({ phIdx: i })) })) }))
+        };
+        const sz = this.state.phSize || 'medium';
+        const phB = { small: 130, medium: 220, large: 380 }[sz];
         return {
-          photoMonths: ['all', ...this._MONTHS.map((m) => m[0])].map((m) => ({
-            label: m === 'all' ? 'all [ ' + ph.length + ' )' : m,
-            text: m === sel ? '( ' + (m === 'all' ? 'all ' + ph.length : m) + ' )' : (m === 'all' ? 'all ' + ph.length : m),
-            color: m === sel ? 'var(--ink)' : 'var(--muted)',
-            pick: (e) => { e.preventDefault(); this.setState({ phMonth: m }); }
+          phSizes: ['small', 'medium', 'large'].map((s) => ({ name: s, color: s === sz ? 'var(--ink)' : 'var(--muted)', on: s === sz ? 1 : 0, pick: (e) => { e.preventDefault(); this.setState({ phSize: s }); } })),
+          phMaxH: { small: '220px', medium: '420px', large: '640px' }[sz],
+          phLeave: () => this.setState({ phHover: null }),
+          phShuffle: (e) => { e.preventDefault(); let j = idx; while (j === idx) j = Math.floor(Math.random() * ph.length); this._phSet(j); },
+          photoMonths: this._MONTHS.map((m) => m[0]).map((m) => ({
+            color: m === sel ? 'var(--ink)' : 'var(--muted)', name: m, on: m === sel ? 1 : 0,
+            pick: (e) => { e.preventDefault(); this.setState({ phIdx: firsts[m] }); }
           })),
+          ...phStage,
           photos: shown.map((p) => ({ ...p, pop: (e) => { e.preventDefault(); this._openPhoto(p, shown); } })),
-          photoGroups: this._MONTHS.map((m) => m[0]).filter((m) => sel === 'all' || m === sel).map((m) => {
+          phCards: shown.map((p) => ({ src: p.src, label: p.label, ratio: p.ratio, pop: (e) => { e.preventDefault(); this._openPhoto(p, shown); } })),
+          phCount: shown.length + (shown.length === 1 ? ' photo' : ' photos') + (sel === 'all' ? ', jan — aug 2025' : ', ' + sel + ' 2025'),
+          phTrackRef: this._phRefFn || (this._phRefFn = (el) => { const first = !this._phTrack && el; this._phTrack = el; if (first) setTimeout(() => this._phFan(), 30); }),
+          photoGroups: this._MONTHS.map((m) => m[0]).map((m) => {
             const items = shown.filter((p) => p.m === m);
-            return { month: m, count: items.length + (items.length === 1 ? ' photo' : ' photos'), items: items.map((p) => { const [w, hh] = String(p.ratio).split('/').map(Number); const r = (w / hh) || 0.75; return { ...p, grow: r.toFixed(3), basis: Math.round(r * 260) + 'px', pop: (e) => { e.preventDefault(); this._openPhoto(p, shown); } }; }) };
+            const hv = this.state.phHover, hvM = hv && (ph.find((x) => x.id === hv) || {}).m;
+            return { month: m, anchor: 'ph-' + m, count: items.length + (items.length === 1 ? ' photo' : ' photos'), items: items.map((p) => { const [w, hh] = String(p.ratio).split('/').map(Number); const r = (w / hh) || 0.75; const off = hvM === m && hv !== p.id; return { ...p, dim: off ? 0.4 : 1, sat: off ? 0.3 : 1, enter: () => this.setState({ phHover: p.id }), grow: r.toFixed(3), basis: Math.round(r * phB) + 'px', pop: (e) => { e.preventDefault(); this._openPhoto(p, shown); } }; }) };
           }).filter((g) => g.items.length)
         };
       })(),
       ring: (() => {
         const ph = this._photos();
-        const cards = [25, 34, 7, 42, 26, 12, 22, 47, 14, 56, 29, 35, 62, 52].map((n) => ph[n - 1]).map((p, i, arr) => ({ f: 'photos/' + p.id + '.jpg', l: p.m + ' 2025', go: () => this._openPhoto(p, arr) }));
+        const phs = [25, 34, 7, 42, 26, 12, 22, 47, 14, 56, 29].map((n) => ph[n - 1]);
+        const photoCards = phs.map((p) => { const [rw, rh] = String(p.ratio).split('/').map(Number); return { k: p.id, wide: rw > rh, ratio: p.ratio, bg: "url('./assets/photos/" + p.id + ".jpg')", l: 'photo · ' + p.m + ' 2025', go: () => this._openPhoto(p, phs) }; });
+        const yt = (id) => "url('https://i.ytimg.com/vi/" + id + "/maxresdefault.jpg')";
+        const nav = (st) => () => this._nav(st);
+        const perfs = PERFS.filter((x) => x.yt).slice(0, 3).map((x) => ({ k: 'p-' + x.slug, wide: true, ratio: x.thumb ? '4 / 3' : '16 / 9', bg: x.thumb ? "url('" + x.thumb + "')" : yt(x.yt), l: 'performance · ' + x.title.toLowerCase(), go: nav({ page: 'detail', slug: x.slug }) }));
+        const lives = GIGS.filter((g) => g.show && g.show.photos && g.show.photos.length).slice(0, 2).map((g) => ({ k: 'g-' + g.slug, ...(() => { const [rw, rh] = String(g.show.photos[0].r || '3/4').split('/').map(Number); return { wide: rw > rh, ratio: rw + ' / ' + rh }; })(), bg: "url('" + g.show.photos[0].f + "')", l: 'live sound · ' + String(g.title).toLowerCase(), go: nav({ page: 'gig', gig: g.slug }) }));
+        const sess = SESSIONS[0] ? [{ k: 'ss', bg: yt(SESSIONS[0].yt), l: 'sunday sessions · ' + SESSIONS[0].artist.toLowerCase(), go: nav({ page: 'sessions' }) }] : [];
+        const comps = COMPS.slice(0, 2).map((c) => ({ k: 'c-' + c.s, bg: 'none', text: c.t, sub: 'sheet music', l: 'sheet music · ' + c.t.toLowerCase(), go: nav({ page: 'compdetail', comp: c.s, part: 0 }) }));
+        const about = [{ k: 'about', bg: "url('./assets/portrait-crop-sm.jpg')", l: 'about', go: nav({ page: 'about' }) }];
+        const extra = [perfs[0], null, lives[0], null, perfs[1], null, lives[1], null, perfs[2]];
+        const cards = []; photoCards.forEach((p, i) => { cards.push(p); if (extra[i]) cards.push(extra[i]); });
         const n = cards.length, w = 230, r = Math.round(w / (2 * Math.tan(Math.PI / n))) + 30;
         const h = React.createElement;
         const hover = (on) => (e) => {
@@ -2088,7 +2296,7 @@ class Component extends DCLogic {
               if (!this._drag) return;
               const dx = e.clientX - this._drag.x; this._drag.x = e.clientX; this._drag.moved += Math.abs(dx);
               if (this._drag.moved > 4 && !this._drag.cap) { try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} this._drag.cap = 1; e.currentTarget.style.cursor = 'grabbing'; }
-              this._ringVel = this._ringVel * 0.6 + dx * 0.35 * 0.4; this._ringAng = (this._ringAng || 0) + dx * 0.35;
+              this._ringVel = this._ringVel * 0.6 + dx * 0.14 * 0.4; this._ringAng = (this._ringAng || 0) + dx * 0.14;
             },
             onPointerUp: (e) => { this._dragMoved = this._drag ? this._drag.moved : 0; this._drag = null; e.currentTarget.style.cursor = 'grab'; },
             onPointerCancel: () => { this._drag = null; }
@@ -2098,13 +2306,23 @@ class Component extends DCLogic {
             cards.map((c, i) => {
               const base = 'rotateY(' + (i * 360 / n) + 'deg) translateZ(' + r + 'px)';
               return h('a', {
-                  key: c.f, href: '#', draggable: false, 'data-base': base, 'aria-label': c.l,
+                  key: c.k, href: '#', draggable: false, 'data-base': base, 'aria-label': c.l,
                   onClick: (e) => { e.preventDefault(); if (this._dragMoved > 6) { this._dragMoved = 0; return; } c.go(e); },
                   onMouseEnter: hover(true), onMouseLeave: hover(false),
                   style: { position: 'absolute', inset: 0, display: 'block', transform: base, transition: 'transform 0.35s cubic-bezier(0.2, 0.85, 0.2, 1)', transformStyle: 'preserve-3d' }
                 },
-                h('div', { style: { position: 'absolute', inset: 0, backgroundImage: "url('./assets/" + c.f + "')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: 'var(--panel)', transition: 'filter 0.3s ease', boxShadow: '0 0 0 1px rgba(var(--ink-rgb), 0.12)' , borderRadius: '12px'} }),
-                h('span', { style: { position: 'absolute', left: 0, top: '100%', marginTop: '10px', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', textTransform: 'none', letterSpacing: 0, fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.02em', color: 'var(--ink)', opacity: 0, transition: 'opacity 0.25s ease', whiteSpace: 'nowrap' } }, '( ' + c.l + ' )'));
+                h('div', { style: { position: 'absolute', inset: 0, backgroundImage: c.wide ? 'none' : c.bg, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: 'var(--panel)', transition: 'filter 0.3s ease', borderRadius: '12px', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: c.text ? '22px 20px' : 0, boxSizing: 'border-box', overflow: 'hidden', boxShadow: '0 0 0 1px rgba(var(--ink-rgb), 0.12)' } },
+                  c.wide ? [
+                    h('div', { key: 'wb', 'aria-hidden': true, style: { position: 'absolute', inset: '-24px', backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(18px) saturate(1.2) brightness(0.55)' } }),
+                    h('div', { key: 'wi', style: { position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', aspectRatio: c.ratio, backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.6)' } })
+                  ] : c.text ? [
+                    h('span', { key: 'st', 'aria-hidden': true, style: { display: 'block', height: '33px', background: 'repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 8px)' } }),
+                    h('span', { key: 'tt', style: { fontFamily: "'Gambarino', Georgia, serif", fontSize: '34px', lineHeight: 0.95, letterSpacing: '-0.025em', color: 'var(--ink)' } }, c.text, h('span', { style: { color: 'var(--accent, #B8502A)' } }, '.')),
+                    h('span', { key: 'sb', style: { fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '14px', color: 'var(--muted)' } }, c.sub)
+                  ] : null),
+                h('div', { 'aria-hidden': true, style: { position: 'absolute', inset: 0, borderRadius: '12px', background: 'var(--panel)', transform: 'rotateY(180deg)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', boxShadow: '0 0 0 1px rgba(var(--ink-rgb), 0.12)', overflow: 'hidden' } },
+                  c.text ? null : h('span', { style: { position: 'absolute', inset: '-20px', backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(14px) saturate(1.1) brightness(0.4)', transform: 'scaleX(-1)' } })),
+                h('span', { style: { position: 'absolute', left: '10px', bottom: '10px', maxWidth: 'calc(100% - 20px)', boxSizing: 'border-box', padding: '5px 10px', borderRadius: '999px', background: 'rgba(22,21,15,0.72)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '13px', fontWeight: 400, color: '#F2EFE4', opacity: 0, transition: 'opacity 0.25s ease', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } }, c.l));
             }))));
       })(),
       latest: (() => {
@@ -2119,19 +2337,26 @@ class Component extends DCLogic {
       showTech: SHOW_TECH ? 1 : 0,
       lastAdded: GIGS.some((g) => g.slug === 'mob') ? { title: 'MOB', when: 'October 2025', open: this.openGig('mob') } : { title: PERFS[0].title, when: PERFS[0].year, open: this.open(PERFS[0].slug) },
       navItems: [
-        { label: 'Music', page: 'music', on: ['music', 'perf', 'detail', 'live', 'gig', 'sessiondetail', 'comp', 'compdetail', 'graphic'] },
+        { label: 'Music', page: 'music', on: ['music', 'perf', 'detail', 'live', 'gig', 'sessions', 'sessiondetail', 'comp', 'compdetail', 'graphic'] },
         { label: 'Photos', page: 'photos', on: ['photos'] },
         { label: 'Tech', page: 'data', on: ['data', 'project'] },
         { label: 'About', page: 'about', on: ['about'] }
-      ].filter((n) => SHOW_TECH || n.page !== 'data').map((n) => ({
-        label: n.label,
-        text: n.on.indexOf(p) > -1 ? '( ' + n.label.toLowerCase() + ' )' : n.label.toLowerCase(),
-        color: n.on.indexOf(p) > -1 ? 'var(--accent, #B8502A)' : 'var(--ink)',
-        rule: n.on.indexOf(p) > -1 ? '-3px' : '0',
-        go: this.go(n.page)
-      })),
-      inMusic: ['perf', 'detail', 'live', 'gig', 'sessiondetail', 'comp', 'compdetail', 'graphic'].indexOf(p) > -1,
-      subNav: [['performances', 'perf', ['perf', 'detail', 'graphic']], ['live sound', 'live', ['live', 'gig', 'sessiondetail']], ['sheet music', 'comp', ['comp', 'compdetail']]].map(([t, pg, on]) => ({ text: on.indexOf(p) > -1 ? '( ' + t + ' )' : t, color: on.indexOf(p) > -1 ? 'var(--accent, #B8502A)' : 'var(--ink)', go: this.go(pg) })),
+      ].filter((n) => SHOW_TECH || n.page !== 'data').map((n) => { const on = n.on.indexOf(p) > -1; return {
+        label: n.label, text: n.label.toLowerCase(), current: on ? 'page' : undefined, dot: on ? 1 : 0,
+        color: on ? 'var(--ink)' : 'var(--muted)', go: this.go(n.page)
+      }; }),
+      inMusic: ['perf', 'detail', 'live', 'gig', 'sessions', 'sessiondetail', 'comp', 'compdetail', 'graphic'].indexOf(p) > -1,
+      inMusicAny: ['music', 'perf', 'detail', 'live', 'gig', 'sessions', 'sessiondetail', 'comp', 'compdetail', 'graphic'].indexOf(p) > -1 ? 1 : 0,
+      back: (() => { const m = { detail: ['performances', 'perf'], graphic: ['performances', 'perf'], gig: ['live sound', 'live'], sessions: ['live sound', 'live'], sessiondetail: ['sunday sessions', 'sessions'], compdetail: ['sheet music', 'comp'] }[p]; return m ? { show: 1, text: m[0], go: this.go(m[1]) } : { show: 0 }; })(),
+      subNav: [['performances', 'perf', ['perf', 'detail', 'graphic']], ['live sound', 'live', ['live', 'gig', 'sessions', 'sessiondetail']], ['sheet music', 'comp', ['comp', 'compdetail']]].map(([t, pg, on]) => { const a = on.indexOf(p) > -1; const det = a && p !== pg; return { text: det ? '← ' + t : t, current: a ? 'page' : undefined, bar: a ? 1 : 0, color: a ? 'var(--ink)' : 'var(--muted)', go: this.go(pg) }; }),
+      hdrRef: this._hdrRefFn || (this._hdrRefFn = (el) => {
+        this._hdr = el;
+        if (el && !this._hdrScroll) {
+          let last = window.scrollY;
+          this._hdrScroll = () => { const y = window.scrollY; if (!this._hdr) return; this._hdr.style.boxShadow = y > 8 ? '0 1px 0 var(--rule)' : 'none'; last = y; };
+          window.addEventListener('scroll', this._hdrScroll, { passive: true });
+        }
+      }),
       performances: list, recent: list.slice(0, 3),
       snakeRows: (() => { let last = null; return this._snake(list.map((p) => { const m = p.year !== last; last = p.year; return { year: p.year, yearMark: m, title: p.title, l1: p.date, l2: p.role, open: p.open, bg: p.bg, hasThumb: 1 }; })); })(),
       perfYears: (() => {
@@ -2146,7 +2371,20 @@ class Component extends DCLogic {
       lbOpen: this.state.lb ? 1 : 0, lbSrc: this.state.lb ? this.state.lb.f : '', lbLabel: this.state.lb ? this.state.lb.label : '',
       lbRatio: this.state.lb ? (this.state.lb.ratio || '4 / 3') : '4 / 3',
       lbAspect: (() => { const r = String((this.state.lb && this.state.lb.ratio) || '4 / 3').split('/').map(Number); return (r[0] / r[1]) || 1.33; })(),
-      lbClose: (e) => { if (e) { e.preventDefault(); e.stopPropagation(); } document.documentElement.style.overflow = ''; this.setState({ lb: null }); },
+      lbClose: this._lbCloseFn = (e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        if (this._lbClosing) return;
+        const done = () => { this._lbClosing = false; this._lbShown = false; document.documentElement.style.overflow = ''; this.setState({ lb: null }); };
+        const ov = document.querySelector('[role="dialog"][aria-modal="true"]'), img = ov && ov.querySelector('[data-lbimg]');
+        if (!img || !img.animate) return done();
+        this._lbClosing = true;
+        const E = 'cubic-bezier(0.22, 1, 0.36, 1)', t = img.getBoundingClientRect();
+        let tgt = null; document.querySelectorAll('#ph-stage > a').forEach((a) => { if (a.style.zIndex === '100') tgt = a.getBoundingClientRect(); });
+        const end = tgt ? 'translate(' + (tgt.left - t.left) + 'px, ' + (tgt.top - t.top) + 'px) scale(' + (tgt.width / t.width) + ', ' + (tgt.height / t.height) + ')' : 'translateY(10px) scale(0.96)';
+        if (img.nextElementSibling) img.nextElementSibling.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' });
+        ov.animate([{ backgroundColor: 'rgba(22,21,15,0.86)' }, { backgroundColor: 'rgba(22,21,15,0)' }], { duration: 420, easing: 'ease', fill: 'forwards' });
+        img.animate([{ transform: 'none', transformOrigin: '0 0', opacity: 1 }, { transform: end, transformOrigin: '0 0', opacity: tgt ? 1 : 0 }], { duration: tgt ? 480 : 300, easing: E, fill: 'forwards' }).onfinish = done;
+      },
       lbHasNav: (this.state.lb && this.state.lb.phId && this._phList && this._phList.length > 1) ? 1 : 0,
       lbPrev: (e) => { e.preventDefault(); e.stopPropagation(); this._lbStep(-1); },
       lbNext: (e) => { e.preventDefault(); e.stopPropagation(); this._lbStep(1); },
@@ -2155,6 +2393,17 @@ class Component extends DCLogic {
         el.style.top = '0px'; el.style.bottom = 'auto'; el.style.height = window.innerHeight + 'px';
         const r = el.getBoundingClientRect();
         if (Math.abs(r.top) > 0.5) el.style.top = (-r.top) + 'px';
+        if (this._lbShown || !el.animate) return;
+        this._lbShown = true;
+        const img = el.querySelector('[data-lbimg]'), cap = img && img.nextElementSibling, from = this._lbFrom; this._lbFrom = null;
+        const E = 'cubic-bezier(0.22, 1, 0.36, 1)';
+        el.animate([{ backgroundColor: 'rgba(22,21,15,0)' }, { backgroundColor: 'rgba(22,21,15,0.86)' }], { duration: 420, easing: 'ease' });
+        if (img) {
+          const t = img.getBoundingClientRect();
+          const start = from ? 'translate(' + (from.left - t.left) + 'px, ' + (from.top - t.top) + 'px) scale(' + (from.width / t.width) + ', ' + (from.height / t.height) + ')' : 'translateY(14px) scale(0.96)';
+          img.animate([{ transform: start, transformOrigin: '0 0', opacity: from ? 1 : 0 }, { transform: 'none', transformOrigin: '0 0', opacity: 1 }], { duration: from ? 560 : 420, easing: E });
+        }
+        if (cap) cap.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 360, delay: 260, easing: E, fill: 'backwards' });
       },
       ...(() => {
         const z = this.state.zoom ?? 0.8;
@@ -2169,18 +2418,18 @@ class Component extends DCLogic {
           zoomIn: set(LV.find((v) => v > cur + 0.001) || LV[LV.length - 1]),
           zoomOut: set([...LV].reverse().find((v) => v < cur - 0.001) || LV[0]),
           zoomWidth: set(1), zoomPage: set('page'),
-          fitWidthBg: on(z === 1), fitWidthFg: onFg(z === 1),
-          fitPageBg: on(z === 'page'), fitPageFg: onFg(z === 'page'),
+          fitWidthBg: on(z === 1), fitWidthFg: z === 1 ? 'var(--accent, #B8502A)' : 'var(--muted)',
+          fitPageBg: on(z === 'page'), fitPageFg: z === 'page' ? 'var(--accent, #B8502A)' : 'var(--muted)',
         };
       })(),
       compViewRef: (el) => {
         if (!el) return;
         const fit = () => {
           const top = el.getBoundingClientRect().top + window.scrollY;
-          el.style.height = Math.max(320, window.innerHeight - top - 24) + 'px';
+          el.style.height = Math.max(560, window.innerHeight - 160) + 'px';
         };
         fit();
-        if (!this._compFitBound) { this._compFitBound = true; window.addEventListener('resize', () => { const v = document.querySelector('[data-pdf="page"]'); if (v) { const t = v.getBoundingClientRect().top + window.scrollY; v.style.height = Math.max(320, window.innerHeight - t - 24) + 'px'; } }); }
+        if (!this._compFitBound) { this._compFitBound = true; window.addEventListener('resize', () => { const v = document.querySelector('[data-pdf="page"]'); if (v) { const t = v.getBoundingClientRect().top + window.scrollY; v.style.height = Math.max(560, window.innerHeight - 160) + 'px'; } }); }
       },
       lbStop: (e) => e.stopPropagation(),
       cur: { ...cur, images: (cur.images || []).map((im) => ({ ...im, pop: (e) => { e.preventDefault(); this._lbKeys(); document.documentElement.style.overflow = 'hidden'; this.setState({ lb: im }); } })), hasImages: (cur.images || []).length ? 1 : 0 }, prevTitle: prev.title, nextTitle: next.title,
@@ -2188,7 +2437,7 @@ class Component extends DCLogic {
         const active = [
           p === 'index',
           p === 'perf' || p === 'detail',
-          p === 'live' || p === 'sessiondetail',
+          p === 'live' || p === 'sessions' || p === 'sessiondetail',
           p === 'comp' || p === 'compdetail',
           p === 'data',
           p === 'about'
@@ -2312,7 +2561,7 @@ class Component extends DCLogic {
           parts: c.p.map((pt, k) => ({
             no: String(k + 1).padStart(2, '0'),
             delay: (0.04 * k).toFixed(2) + 's',
-            name: pt.n,
+            name: pt.n, label: k === pi ? '( ' + pt.n.toLowerCase() + ' )' : pt.n.toLowerCase(), labelColor: k === pi ? 'var(--accent, #B8502A)' : 'var(--muted)',
             bg: k === pi ? 'var(--accent, #B8502A)' : 'transparent',
             fg: k === pi ? 'var(--panel)' : 'var(--ink)',
             dim: k === pi ? 'var(--muted)' : 'var(--faint)',
@@ -2393,12 +2642,12 @@ class Component extends DCLogic {
         });
         return years;
       })(),
-      get sessionSnake() { return __self._snake(SESSIONS.map((x, n) => ({ year: x.ep, yearMark: false, title: x.artist, l1: x.ep, l2: x.date, hasThumb: 1, bg: 'url("https://i.ytimg.com/vi/' + x.yt + '/hqdefault.jpg")', open: __self.openSession(n) }))); },
+      get sessionSnake() { return __self._snake(SESSIONS.map((x, n) => ({ year: x.ep, yearMark: false, title: x.artist, l1: x.ep, l2: x.date, hasThumb: 1, bg: 'url("https://i.ytimg.com/vi/' + x.yt + '/hqdefault.jpg")', bgSize: 'auto 134%', open: __self.openSession(n) }))); },
       get liveSnake() {
         const out = []; let last = null;
         const add = (o) => { out.push({ ...o, yearMark: o.year !== last }); last = o.year; };
-        this.timelineYears.forEach((y) => y.rows.forEach((g) => add({ year: y.year, title: g.title, l1: g.dates, l2: g.band || g.role, open: g.open })));
-        add({ year: '2024', title: 'Sunday Sessions S2', l1: '10 episodes', l2: 'Backline & assistant live sound', open: (e) => { e.preventDefault(); const el = document.getElementById('sessions'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' }); } });
+        this.timelineYears.forEach((y) => y.rows.forEach((g) => { const ph = g.show && g.show.photos && g.show.photos[0]; add({ year: y.year, title: g.title, l1: g.dates, l2: g.band || g.role, open: g.open, ...(ph ? { hasThumb: 1, bg: "url('" + ph.f + "')" } : {}) }); }));
+        add({ year: '2024', title: 'Sunday Sessions S2', l1: '10 episodes', l2: 'Backline & assistant live sound', open: __self.go('sessions') });
         if (this.ohioGig.show) add({ year: this.ohioGig.year, title: this.ohioGig.title, l1: this.ohioGig.dates, l2: this.ohioGig.role, open: this.ohioGig.open });
         return __self._snake(out);
       },
@@ -2437,8 +2686,8 @@ class Component extends DCLogic {
               multiVer: sh.versions.length > 1 ? 1 : 0,
               verTabs: sh.versions.map((v, i) => { const t = v.label.split(' — ')[0].toLowerCase(); return { text: i === vi ? '( ' + t + ' )' : t, color: i === vi ? 'var(--accent, #B8502A)' : 'var(--ink)', pick: (e) => { e.preventDefault(); this.setState({ gigVer: i }); } }; }),
               ver: sh.versions.length ? mapVer(sh.versions[vi]) : { label: '', sets: [], notes: [], hasNotes: 0 },
-              isShow: 1, hasMissing: sh.missing ? 1 : 0, missing: sh.missing || '',
-              hasPlotImg: sh.band === 'Moonshine Groove' ? 1 : 0,
+              isShow: 1, hasPhotos: (sh.photos || []).length ? 1 : 0, photos: (sh.photos || []).map((ph, i, all) => { const [w, hh] = String(ph.r).split('/').map(Number); const lb = { f: ph.f, label: sh.title + ' · ' + (i + 1) + ' / ' + all.length, ratio: ph.r }; return { f: ph.f, ratio: ph.r, grow: (w / hh).toFixed(3), label: sh.title, pop: (e) => { e.preventDefault(); this._lbKeys(); document.documentElement.style.overflow = 'hidden'; this.setState({ lb }); } }; }), hasMissing: sh.missing ? 1 : 0, missing: sh.missing || '',
+              hasPlotImg: String(sh.band).indexOf('Moonshine Groove') === 0 ? 1 : 0,
               plot: sh.plot.map(([k, v]) => ({ k, v })),
               versions: sh.versions.map((v) => ({
                 label: v.label, hasNotes: v.notes.length ? 1 : 0, notes: v.notes.map((t) => ({ t })),
