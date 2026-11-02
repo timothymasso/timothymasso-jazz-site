@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="dark" style="color-scheme: dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,16 +27,10 @@
 <style>
 
   :root {
-    --paper: #F4ECDF; --ink: #2A1E16; --panel: #EADFCD; --body: #4A3A2E;
-    --muted: #7D6A5A; --faint: #9C8875; --rule: #DCCDB7;
-    --ink-rgb: 42, 30, 22; --paper-rgb: 244, 236, 223; --panel-rgb: 234, 223, 205;
-    --blend: multiply; --img-op: 0.5; --accent: #E4571B;
-  }
-  :root[data-theme="dark"] {
     --paper: #1E1712; --ink: #F2E7D7; --panel: #2A211A; --body: #D9CAB6;
     --muted: #A8957F; --faint: #857462; --rule: #3A2E25;
     --ink-rgb: 242, 231, 215; --paper-rgb: 30, 23, 18; --panel-rgb: 42, 33, 26;
-    --blend: screen; --img-op: 0.34; --pdf-invert: invert(1);
+    --blend: screen; --img-op: 0.34; --pdf-invert: invert(1); --accent: #9BB27A;
   }
   :root {
     --gutter: max(52px, calc((100% - 1280px) / 2));
@@ -114,11 +108,15 @@
   @keyframes wipeIn { from { opacity: 0; clip-path: inset(-0.35em 100% -0.35em -0.15em); } to { opacity: 1; clip-path: none; } }
   @keyframes marquee { to { transform: translateX(-50%); } }
   @keyframes blink { 0%, 62% { opacity: 1; } 63%, 100% { opacity: 0.15; } }
+  :focus-visible { outline: 2px solid var(--accent, #9BB27A); outline-offset: 3px; border-radius: 4px; }
+  :focus:not(:focus-visible) { outline: none; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+  @keyframes squiggle { from { -webkit-mask-position: 0 center; mask-position: 0 center; } to { -webkit-mask-position: 24px center; mask-position: 24px center; } }
   @keyframes ringSpin { from { transform: rotateX(-8deg) rotateY(0deg); } to { transform: rotateX(-8deg) rotateY(-360deg); } }
   @keyframes sleeveIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 </style>
 </helmet>
-<div style="min-height: 100vh; background: var(--paper); color: var(--ink); font-family: 'Newsreader', Georgia, serif; overflow-x: clip">
+<div style="min-height: 100vh; display: flex; flex-direction: column; background: var(--paper); color: var(--ink); font-family: 'Newsreader', Georgia, serif; overflow-x: clip">
   
   <header ref="{{ hdrRef }}" style="position: sticky; top: 0; z-index: 50; background: var(--paper); font-family: 'Newsreader', Georgia, serif; color: var(--ink); transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)">
     <div style="display: grid; grid-template-columns: var(--hdr-cols); grid-template-areas: var(--hdr-areas); gap: 6px 16px; align-items: center; padding: 14px var(--gutter)">
@@ -130,7 +128,7 @@
       </nav>
       <span style="grid-area: end; display: flex; gap: 18px; justify-content: flex-end; align-items: center; font-size: 14px; font-style: italic; color: var(--muted)">
         
-        <a href="#" onClick="{{ toggleTheme }}" title="Switch theme" style="color: var(--ink); min-height: 44px; display: inline-flex; align-items: center" style-hover="color: var(--accent, #B8502A)">( {{ themeLabel }} )</a>
+        
       </span>
     </div>
     <sc-if value="{{ inMusic }}" hint-placeholder-val="{{ false }}">
@@ -156,8 +154,9 @@
         
         
       </section>
-      <section style="padding: 24px var(--gutter) 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: end; border-top: 1px solid var(--rule); margin: 0 var(--gutter);  padding-left: 0; padding-right: 0">
-        <p style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-size: clamp(22px, 2.4vw, 34px); line-height: 1.15; letter-spacing: -0.022em; color: var(--ink); text-wrap: pretty">I play saxophone, write and arrange music, mix live shows, and take photos. This is an archive of all of it.</p>
+      <section style="position: relative; padding: 24px var(--gutter) 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: end; margin: 0 var(--gutter);  padding-left: 0; padding-right: 0">
+        <span aria-hidden="true" style="position: absolute; left: 0; right: 0; height: 6px; background: var(--accent, #9BB27A); -webkit-mask: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E&quot;) repeat-x left center / 24px 6px; mask: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E&quot;) repeat-x left center / 24px 6px; top: -3px; animation: squiggle 2.4s linear infinite"></span>
+        <p style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-size: clamp(22px, 2.4vw, 34px); line-height: 1.15; letter-spacing: -0.022em; color: var(--ink); text-wrap: pretty">I play the saxophone, write and arrange music, mix live shows, and take photos. This is an archive of all of it.</p>
         <sc-if value="{{ np.show }}" hint-placeholder-val="{{ false }}">
           <a href="{{ np.url }}" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 14px; width: fit-content; max-width: 100%; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
             <sc-if value="{{ np.hasArt }}" hint-placeholder-val="{{ false }}">
@@ -174,8 +173,9 @@
         <div style="display: grid; grid-template-columns: var(--work-cols); gap: 32px; align-items: start">
           <div style="display: flex; flex-direction: column">
             <sc-for list="{{ workRows }}" as="w" hint-placeholder-count="3">
-              <a href="#" onClick="{{ w.go }}" onMouseEnter="{{ w.enter }}" style="display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--rule); color: {{ w.color }}; transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1), padding 0.3s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="color: var(--accent, #B8502A); padding-left: 12px">
+              <a href="#" onClick="{{ w.go }}" onMouseEnter="{{ w.enter }}" style="position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 0; color: {{ w.color }}; transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1), padding 0.3s cubic-bezier(0.2, 0.85, 0.2, 1)" style-hover="color: var(--accent, #B8502A); padding-left: 12px">
                 <span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 8vw, 128px); line-height: 1.05; letter-spacing: -0.035em">{{ w.title }}</span>
+                <span aria-hidden="true" style="position: absolute; left: 0; right: 0; height: 6px; background: var(--accent, #9BB27A); -webkit-mask: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E&quot;) repeat-x left center / 24px 6px; mask: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E&quot;) repeat-x left center / 24px 6px; bottom: -3px; animation: squiggle 2.4s linear infinite"></span>
               </a>
             </sc-for>
           </div>
@@ -273,10 +273,10 @@
         </div>
         <sc-if value="{{ cur.hasMarkers }}">
           <div style="max-width: 1180px; margin-top: 14px">
-            <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); border-bottom: 1px solid var(--rule); padding-bottom: 7px; font-style: italic">Where the music starts</div>
+            <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; padding-bottom: 7px; font-style: italic">Where the music starts</div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; background: var(--paper)">
               <sc-for list="{{ cur.markers }}" as="mk" hint-placeholder-count="6">
-                <a href="#" onClick="{{ mk.cue }}" style="background: {{ mk.on }}; color: {{ mk.onFg }}; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; border-right: 1px solid rgba(var(--ink-rgb), 0.18); border-bottom: 1px solid rgba(var(--ink-rgb), 0.18); transition: background 0.22s ease, color 0.22s ease" style-hover="background: var(--accent, #B8502A); color: var(--paper)">
+                <a href="#" onClick="{{ mk.cue }}" style="background: {{ mk.on }}; color: {{ mk.onFg }}; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; border-right: 1px solid rgba(var(--ink-rgb), 0.18); border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; transition: background 0.22s ease, color 0.22s ease" style-hover="background: var(--accent, #B8502A); color: var(--paper)">
                   <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: {{ mk.onMuted }}; font-style: italic">{{ mk.no }}</span>
                   <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 22px; letter-spacing: -0.03em; font-variant-numeric: tabular-nums">{{ mk.inT }}</span>
                   <span style="font-family: 'Newsreader', Georgia, serif; font-size: 13px; color: {{ mk.onMuted }}">{{ mk.len }} long</span>
@@ -287,34 +287,32 @@
         </sc-if>
       </section>
 
-      <section style="display: grid; grid-template-columns: var(--split-1-1)">
-        <div style="background: var(--paper); color: var(--ink); padding: 20px 26px 22px">
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ cur.repLabel }}</div>
-          <div style="display: flex; flex-direction: column; margin-top: 10px">
+      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 48px clamp(40px, 6vw, 96px); padding: 40px var(--gutter) 24px; align-items: start">
+        <div style="min-width: 0">
+          <h3 style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: clamp(18px, 1.9vw, 24px); line-height: 1; letter-spacing: -0.04em; text-transform: lowercase; margin: 0 0 14px; color: var(--ink)">{{ cur.repLabel }}</h3>
+          <div style="display: flex; flex-direction: column">
             <sc-for list="{{ cur.repertoire }}" as="r" hint-placeholder-count="7">
-              <a href="#" onClick="{{ r.open }}" style="display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 14px; align-items: baseline; padding: 10px 8px 10px 0; border-bottom: 1px solid rgba(var(--ink-rgb), 0.18); color: var(--ink); cursor: {{ r.cursor }}; transition: background 0.18s ease, box-shadow 0.18s ease" style-hover="background: var(--panel); box-shadow: inset 6px 0 0 {{ r.edge }}; color: var(--ink)">
-                <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ r.no }}</span>
-                <div>
-                  <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 19px; letter-spacing: 0; line-height: 1.1; font-style: italic">{{ r.t }}</div>
-                  <div style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 16px; color: var(--muted); margin-top: 4px">{{ r.n }}</div>
+              <a href="#" onClick="{{ r.open }}" style="display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 12px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; color: var(--ink); cursor: {{ r.cursor }}; transition: color 0.2s ease" style-hover="color: var(--accent, #9BB27A)">
+                <span style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; color: var(--muted); font-style: italic">{{ r.no }}</span>
+                <div style="min-width: 0">
+                  <div style="font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.15; font-style: italic">{{ r.t }}</div>
+                  <div style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; line-height: 1.35; color: var(--muted); margin-top: 3px; text-wrap: pretty">{{ r.n }}</div>
                 </div>
-                <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); opacity: {{ r.hasScore }}; white-space: nowrap; font-style: italic">Score →</span>
+                <span style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; color: var(--muted); opacity: {{ r.hasScore }}; white-space: nowrap; font-style: italic">score →</span>
               </a>
             </sc-for>
           </div>
         </div>
-        <div style="background: var(--panel); color: var(--ink); padding: 20px 26px 22px">
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-style: italic">PERSONNEL</div>
-          <div style="display: flex; flex-direction: column; margin-top: 10px">
+        <div style="min-width: 0; position: sticky; top: calc(var(--hdr-h, 54px) + 24px)">
+          <h3 style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: clamp(18px, 1.9vw, 24px); line-height: 1; letter-spacing: -0.04em; text-transform: lowercase; margin: 0 0 14px; color: var(--ink)">personnel</h3>
+          <div style="display: flex; flex-direction: column">
             <sc-for list="{{ cur.personnel }}" as="m" hint-placeholder-count="8">
-              <div style="display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid rgba(var(--ink-rgb), 0.22)">
-                <span style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap">
-                  <span style="font-size: 17px; font-weight: 500">{{ m.name }}</span>
-                  <sc-if value="{{ m.hasIg }}">
-                    <a href="{{ m.ig }}" target="_blank" rel="noopener noreferrer" style="font-family: 'Newsreader', Georgia, serif; font-size: 12px; font-weight: 400; letter-spacing: 0.04em; color: var(--accent, #B8502A); text-decoration: none; white-space: nowrap" style-hover="color: var(--ink)">{{ m.igLabel }}</a>
-                  </sc-if>
-                </span>
-                <span style="font-family: 'Newsreader', Georgia, serif; font-size: 15px; color: var(--muted); text-align: right">{{ m.part }}</span>
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; align-items: baseline; padding: 10px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.3' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
+                <span style="font-size: 17px; color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{ m.name }}</span>
+                <span style="font-family: 'Newsreader', Georgia, serif; font-size: 15px; font-style: italic; color: var(--muted); text-align: right">{{ m.part }}</span>
+                <sc-if value="{{ m.hasIg }}">
+                  <a href="{{ m.ig }}" target="_blank" rel="noopener noreferrer" style="grid-column: 1 / -1; justify-self: start; font-family: 'Newsreader', Georgia, serif; font-size: 13px; font-style: italic; color: var(--accent, #9BB27A); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis" style-hover="color: var(--ink)">{{ m.igLabel }}</a>
+                </sc-if>
               </div>
             </sc-for>
           </div>
@@ -323,7 +321,7 @@
 
       <sc-if value="{{ cur.hasImages }}" hint-placeholder-val="{{ true }}">
         <section style="padding: 8px var(--gutter) 20px">
-          <div style="display: flex; align-items: baseline; gap: 14px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; margin-bottom: 18px">
+          <div style="display: flex; align-items: baseline; gap: 14px; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; padding-bottom: 8px; margin-bottom: 18px">
             <h3 style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: clamp(16px, 1.9vw, 24px); line-height: 1; letter-spacing: -0.06em; text-transform: lowercase; margin: 0">Poster, program &amp; stage plot</h3>
           </div>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px">
@@ -339,14 +337,14 @@
         </section>
       </sc-if>
 
-      <section style="display: grid; grid-template-columns: var(--g2); background: var(--panel)">
-        <a href="#" onClick="{{ goPrev }}" style="padding: 13px var(--gutter); color: var(--ink); display: block; border-right: 1px solid rgba(var(--ink-rgb), 0.2)" style-hover="background: var(--accent, #B8502A); color: var(--panel)">
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-style: italic">← PREVIOUS</div>
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 800; font-size: 17px; letter-spacing: 0; margin-top: 5px; line-height: 1; font-style: italic">{{ prevTitle }}</div>
+      <section style="display: grid; grid-template-columns: var(--g2); gap: 0 var(--gutter); padding: 22px var(--gutter) 8px; margin-top: 28px; border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round">
+        <a href="#" onClick="{{ goPrev }}" style="display: flex; flex-direction: column; gap: 4px; padding: 4px 0; color: var(--ink); transition: color 0.2s ease" style-hover="color: var(--accent, #B8502A)">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">← previous</span>
+          <span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 22px; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance">{{ prevTitle }}<span style="color: var(--accent, #B8502A)">.</span></span>
         </a>
-        <a href="#" onClick="{{ goNext }}" style="padding: 13px var(--gutter); color: var(--ink); display: block; text-align: right" style-hover="background: var(--accent, #B8502A); color: var(--panel)">
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-style: italic">NEXT →</div>
-          <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 800; font-size: 17px; letter-spacing: 0; margin-top: 5px; line-height: 1; font-style: italic">{{ nextTitle }}</div>
+        <a href="#" onClick="{{ goNext }}" style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding: 4px 0; color: var(--ink); text-align: right; transition: color 0.2s ease" style-hover="color: var(--accent, #B8502A)">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">next →</span>
+          <span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 22px; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance">{{ nextTitle }}<span style="color: var(--accent, #B8502A)">.</span></span>
         </a>
       </section>
     </main>
@@ -468,7 +466,7 @@
       <section style="padding: 26px var(--gutter) 18px; display: grid; grid-template-columns: var(--split-wide); gap: 24px; align-items: start">
         <div role="img" aria-label="{{ gig.title }}" style="aspect-ratio: 4 / 3; background-color: var(--panel); background-image: url('{{ gig.img }}'); background-size: cover; background-position: center; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden"></div>
         <div>
-          <dl style="display: grid; grid-template-columns: var(--spec); gap: 12px 22px; margin: 0; border-top: 1px solid var(--rule); padding-top: 16px">
+          <dl style="display: grid; grid-template-columns: var(--spec); gap: 12px 22px; margin: 0; border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round; padding-top: 16px">
             <sc-for list="{{ gig.facts }}" as="x" hint-placeholder-count="3">
               <dt style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ x.k }}</dt>
               <dd style="font-size: 16px; line-height: 1.45; margin: 0; color: var(--body)">{{ x.v }}</dd>
@@ -483,7 +481,7 @@
 
 
       <sc-if value="{{ gig.isShow }}">
-        <section style="padding: 4px var(--gutter) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px 24px; border-bottom: 1px solid var(--rule); padding-bottom: 20px; margin: 0 var(--gutter); padding-left: 0; padding-right: 0">
+        <section style="padding: 4px var(--gutter) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px 24px; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; padding-bottom: 20px; margin: 0 var(--gutter); padding-left: 0; padding-right: 0">
           <sc-for list="{{ gig.meta }}" as="x" hint-placeholder-count="4">
             <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ x.k }}</span><span style="font-size: 15px; line-height: 1.35; color: var(--ink)">{{ x.v }}</span></div>
           </sc-for>
@@ -505,7 +503,7 @@
             </sc-for>
           </section>
         </sc-if>
-        <nav style="position: sticky; top: var(--hdr-h, 54px); z-index: 5; background: var(--paper); margin: 24px var(--gutter) 0; padding: 12px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); display: flex; gap: 8px 22px; flex-wrap: wrap; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-style: italic">
+        <nav style="position: sticky; top: var(--hdr-h, 54px); z-index: 5; background: var(--paper); margin: 24px var(--gutter) 0; padding: 12px 0; border-top: 1px solid var(--ink); border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; display: flex; gap: 8px 22px; flex-wrap: wrap; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; font-style: italic">
           <sc-for list="{{ gig.tabs }}" as="tb" hint-placeholder-count="3">
             <a href="#" onClick="{{ tb.pick }}" style="color: {{ tb.color }}" style-hover="color: var(--accent, #B8502A)">{{ tb.text }}</a>
           </sc-for>
@@ -534,7 +532,7 @@
                   <div style="display: flex; flex-direction: column">
                     <div style="display: flex; justify-content: space-between; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--ink); padding: 0 0 8px; border-bottom: 1px solid var(--ink); font-style: italic"><span>{{ s.name }}</span><span style="color: var(--muted)">{{ s.count }}</span></div>
                     <sc-for list="{{ s.songs }}" as="x" hint-placeholder-count="10">
-                      <div style="display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--rule)">
+                      <div style="display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
                         <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ x.n }}</span>
                         <span style="font-size: 15px; line-height: 1.3; color: var(--ink); font-weight: 500; letter-spacing: -0.01em">{{ x.song }}</span>
                         <span style="font-size: 12px; color: var(--muted)">{{ x.vocal }}</span>
@@ -551,7 +549,7 @@
                 <div style="display: flex; flex-direction: column">
                   <div style="display: flex; justify-content: space-between; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--ink); padding: 0 0 8px; border-bottom: 1px solid var(--ink); font-style: italic"><span>{{ s.name }}</span><span style="color: var(--muted)">{{ s.count }}</span></div>
                   <sc-for list="{{ s.songs }}" as="x" hint-placeholder-count="8">
-                    <div style="display: grid; grid-template-columns: 28px minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 0.5fr) minmax(0, 2fr); gap: 16px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 14px; line-height: 1.4; transition: background 0.35s cubic-bezier(0.22, 1, 0.36, 1)" style-hover="background: var(--panel)">
+                    <div style="display: grid; grid-template-columns: 28px minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 0.5fr) minmax(0, 2fr); gap: 16px; align-items: baseline; padding: 8px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; font-size: 14px; line-height: 1.4; transition: background 0.35s cubic-bezier(0.22, 1, 0.36, 1)" style-hover="background: var(--panel)">
                       <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ x.n }}</span>
                       <span style="color: var(--ink); font-weight: 500">{{ x.song }}</span>
                       <span style="color: var(--muted)">{{ x.artist }}</span>
@@ -581,7 +579,7 @@
               <div style="overflow-x: auto"><div style="min-width: 680px">
                 <div style="display: grid; grid-template-columns: 80px minmax(0, 1.2fr) minmax(0, 0.7fr) 80px minmax(0, 0.7fr) minmax(0, 1.6fr); gap: 16px; padding: 0 0 8px; border-bottom: 1px solid var(--ink); font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic"><span>input</span><span>source</span><span>notes</span><span>output</span><span>mix for</span><span>iem / destination</span></div>
                 <sc-for list="{{ ip.rows }}" as="row" hint-placeholder-count="10">
-                  <div style="display: grid; grid-template-columns: 80px minmax(0, 1.2fr) minmax(0, 0.7fr) 80px minmax(0, 0.7fr) minmax(0, 1.6fr); gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 14px; line-height: 1.4; color: var(--body)">
+                  <div style="display: grid; grid-template-columns: 80px minmax(0, 1.2fr) minmax(0, 0.7fr) 80px minmax(0, 0.7fr) minmax(0, 1.6fr); gap: 16px; padding: 8px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; font-size: 14px; line-height: 1.4; color: var(--body)">
                     <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ row.i }}</span><span style="color: var(--ink)">{{ row.src }}</span><span>{{ row.n }}</span><span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ row.o }}</span><span style="color: var(--ink)">{{ row.mix }}</span><span>{{ row.dest }}</span>
                   </div>
                 </sc-for>
@@ -611,7 +609,7 @@
         <section style="padding: 0 var(--gutter) 20px; display: grid; gap: 26px">
           <sc-for list="{{ gig.docs }}" as="d" hint-placeholder-count="2">
             <div>
-              <div style="display: flex; align-items: baseline; gap: 14px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; margin-bottom: 14px">
+              <div style="display: flex; align-items: baseline; gap: 14px; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; padding-bottom: 8px; margin-bottom: 14px">
                 <h3 style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: clamp(16px, 1.9vw, 24px); line-height: 1; letter-spacing: -0.06em; text-transform: lowercase; margin: 0">{{ d.label }}</h3>
                 <a href="{{ d.f }}" target="_blank" rel="noopener" style="font-family: 'Newsreader', Georgia, serif; margin-left: auto; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); border-bottom: 1px solid currentColor; font-style: italic">Open PDF →</a>
               </div>
@@ -621,7 +619,7 @@
         </section>
       </sc-if>
 
-      <section style="padding: 0 var(--gutter) 26px; display: flex; justify-content: space-between; gap: 18px; border-top: 1px solid var(--rule); padding-top: 18px; margin: 0 var(--gutter)">
+      <section style="padding: 0 var(--gutter) 26px; display: flex; justify-content: space-between; gap: 18px; border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round; padding-top: 18px; margin: 0 var(--gutter)">
         <a href="#" onClick="{{ gig.goPrev }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); font-style: italic" style-hover="color: var(--accent, #B8502A)">← {{ gig.prevTitle }}</a>
         <a href="#" onClick="{{ gig.goNext }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); text-align: right; font-style: italic" style-hover="color: var(--accent, #B8502A)">{{ gig.nextTitle }} →</a>
       </section>
@@ -635,7 +633,7 @@
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">sheet music<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="padding: clamp(20px, 3vh, 19px) var(--gutter) 0">
-        <div style="display: flex; gap: 6px 16px; flex-wrap: wrap; border-bottom: 1px solid var(--rule); padding-bottom: 12px; font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; font-style: italic">
+        <div style="display: flex; gap: 6px 16px; flex-wrap: wrap; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; padding-bottom: 12px; font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; font-style: italic">
           <sc-for list="{{ compFilters }}" as="f" hint-placeholder-count="4">
             <a href="#" onClick="{{ f.pick }}" style="color: {{ f.color }}" style-hover="color: var(--accent, #B8502A)">{{ f.text }}</a>
           </sc-for>
@@ -764,13 +762,13 @@
       <section style="padding: 6px var(--gutter) 24px; max-width: 1180px">
         <p style="font-family: 'Newsreader', Georgia, serif; font-size: 18px; line-height: 1.55; color: var(--body); margin: 0; max-width: 76ch; text-wrap: pretty">{{ session.blurb }}</p>
       </section>
-      <section style="display: grid; grid-template-columns: var(--split-narrow); border-top: 1px solid var(--rule)">
+      <section style="display: grid; grid-template-columns: var(--split-narrow); border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round">
         <div style="padding: 20px 26px 24px; border-right: 1px solid var(--rule)">
           <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">Set list</div>
           <sc-if value="{{ session.hasSongs }}" hint-placeholder-val="{{ true }}">
             <div style="display: flex; flex-direction: column; margin-top: 10px">
               <sc-for list="{{ session.songs }}" as="t" hint-placeholder-count="5">
-                <a href="#" onClick="{{ t.cue }}" style="display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 9px 0 9px 8px; border-bottom: 1px solid rgba(var(--ink-rgb), 0.18); color: var(--ink); box-shadow: inset 3px 0 0 {{ t.on }}; transition: background 0.18s ease" style-hover="background: var(--panel); color: var(--ink)">
+                <a href="#" onClick="{{ t.cue }}" style="display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 9px 0 9px 8px; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; color: var(--ink); box-shadow: inset 3px 0 0 {{ t.on }}; transition: background 0.18s ease" style-hover="background: var(--panel); color: var(--ink)">
                   <span style="font-weight: 500; font-size: 10px; letter-spacing: 0.22em; color: var(--accent, #B8502A)">{{ t.no }}</span>
                   <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 17px; letter-spacing: -0.03em">{{ t.title }}</span>
                   <span style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; color: var(--muted); white-space: nowrap">{{ t.time }} ▶</span>
@@ -783,7 +781,7 @@
           <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">Crew</div>
           <div style="display: flex; flex-direction: column; margin-top: 10px">
             <sc-for list="{{ session.crew }}" as="m" hint-placeholder-count="10">
-              <div style="display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid rgba(var(--ink-rgb), 0.18)">
+              <div style="display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding: 7px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
                 <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 15px; letter-spacing: -0.02em">{{ m.name }}</span>
                 <span style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; color: var(--muted); text-align: right; white-space: nowrap">{{ m.role }}</span>
               </div>
@@ -791,7 +789,7 @@
           </div>
         </div>
       </section>
-      <section style="display: grid; grid-template-columns: var(--g2); border-top: 1px solid var(--rule)">
+      <section style="display: grid; grid-template-columns: var(--g2); border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round">
         <a href="#" onClick="{{ session.goPrev }}" style="padding: 22px var(--gutter); border-right: 1px solid var(--rule); color: var(--ink); display: block" style-hover="background: var(--panel); color: var(--ink)">
           <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--faint); font-style: italic">← PREVIOUS</div>
           <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 20px; letter-spacing: 0; margin-top: 6px; font-style: italic">{{ session.prevTitle }}</div>
@@ -806,7 +804,7 @@
 
   <sc-if value="{{ isData }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
-      <section style="position: relative; overflow: hidden; padding: 24px var(--gutter) 20px; border-bottom: 1px solid var(--rule)">
+      <section style="position: relative; overflow: hidden; padding: 24px var(--gutter) 20px; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
         <div>
           <h2 style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(28px, 4.4vw, 60px); line-height: 0.89; letter-spacing: -0.032em; margin: 8px 0 0; text-transform: lowercase">Tech</h2>
         </div>
@@ -849,7 +847,7 @@
 
       <section style="padding: 26px var(--gutter) 20px; display: grid; grid-template-columns: var(--split-11); gap: 28px; align-items: start">
         <div>
-          <dl style="display: grid; grid-template-columns: var(--spec); gap: 12px 22px; margin: 0; border-top: 1px solid var(--rule); padding-top: 16px">
+          <dl style="display: grid; grid-template-columns: var(--spec); gap: 12px 22px; margin: 0; border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round; padding-top: 16px">
             <dt style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">Year</dt>
             <dd style="font-size: 16px; line-height: 1.45; margin: 0; color: var(--body)">{{ project.year }}</dd>
             <dt style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">Where</dt>
@@ -880,7 +878,7 @@
         <section style="padding: 0 var(--gutter) 20px; display: grid; gap: 26px">
           <sc-for list="{{ project.docs }}" as="pd" hint-placeholder-count="2">
             <div>
-              <div style="display: flex; align-items: baseline; gap: 14px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; margin-bottom: 14px">
+              <div style="display: flex; align-items: baseline; gap: 14px; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; padding-bottom: 8px; margin-bottom: 14px">
                 <h3 style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: clamp(16px, 1.9vw, 24px); line-height: 1; letter-spacing: -0.06em; text-transform: lowercase; margin: 0">{{ pd.label }}</h3>
                 <a href="{{ pd.f }}" target="_blank" rel="noopener" style="font-family: 'Newsreader', Georgia, serif; margin-left: auto; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); border-bottom: 1px solid currentColor; font-style: italic">Open PDF →</a>
               </div>
@@ -890,7 +888,7 @@
         </section>
       </sc-if>
 
-      <section style="margin: 0 var(--gutter) 26px; padding-top: 18px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 18px">
+      <section style="margin: 0 var(--gutter) 26px; padding-top: 18px; border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round; display: flex; justify-content: space-between; gap: 18px">
         <a href="#" onClick="{{ project.goPrev }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); font-style: italic" style-hover="color: var(--accent, #B8502A)">← {{ project.prevTitle }}</a>
         <a href="#" onClick="{{ project.goNext }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); text-align: right; font-style: italic" style-hover="color: var(--accent, #B8502A)">{{ project.nextTitle }} →</a>
       </section>
@@ -955,7 +953,7 @@
             </div>
           </sc-for>
         </div>
-        <div id="ph-stage" ref="{{ phStageRef }}" onPointerDown="{{ phDown }}" onPointerMove="{{ phMove }}" onPointerUp="{{ phUp }}" onPointerCancel="{{ phUp }}" style="position: relative; height: clamp(300px, calc(100svh - 300px), 660px); margin-top: 8px; overflow-x: clip; overflow-y: visible; touch-action: pan-y; user-select: none; cursor: {{ phStageCursor }}">
+        <div id="ph-stage" ref="{{ phStageRef }}" onPointerDown="{{ phDown }}" onPointerMove="{{ phMove }}" onPointerUp="{{ phUp }}" onPointerCancel="{{ phUp }}" style="position: relative; height: clamp(300px, calc(100svh - 300px), 660px); margin-top: 8px; margin-bottom: -24px; overflow-x: clip; overflow-y: visible; touch-action: pan-y; user-select: none; cursor: {{ phStageCursor }}">
           <div aria-hidden="true" data-phglow="a" style="position: absolute; left: 50%; top: 52%; height: 22%; aspect-ratio: 5 / 4; transform: translate(-50%, -50%) scale(4.4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.8) brightness(1); opacity: 0.85; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
           <div aria-hidden="true" data-phglow="b" style="position: absolute; left: 50%; top: 52%; height: 22%; aspect-ratio: 5 / 4; transform: translate(-50%, -50%) scale(4.4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.8) brightness(1); opacity: 0; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
           <sc-for list="{{ phSlides }}" as="c" hint-placeholder-count="5">
@@ -976,7 +974,7 @@
       </section>
       <section style="padding: 24px var(--gutter) 26px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px 34px">
         <sc-for list="{{ people }}" as="pp" hint-placeholder-count="24">
-          <div style="padding: 11px 0; border-bottom: 1px solid rgba(var(--ink-rgb), 0.16)">
+          <div style="padding: 11px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
             <div style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 18px; letter-spacing: -0.035em">{{ pp.name }}</div>
             <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-top: 3px">
               <span style="font-size: 14px; color: var(--muted)">{{ pp.part }}</span>
@@ -1002,7 +1000,7 @@
       </section>
       <section style="padding: 20px var(--gutter) 26px">
         <sc-for list="{{ everything }}" as="y" hint-placeholder-count="6">
-          <div style="display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 0 20px; padding: 14px 0; border-bottom: 1px solid rgba(var(--ink-rgb), 0.2)">
+          <div style="display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 0 20px; padding: 14px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
             <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 11px; letter-spacing: 0.02em; color: var(--accent, #B8502A); padding-top: 6px">{{ y.year }}</span>
             <div style="display: flex; flex-direction: column">
               <sc-for list="{{ y.rows }}" as="r" hint-placeholder-count="8">
@@ -1021,7 +1019,7 @@
 
   <sc-if value="{{ isColophon }}">
     <main style="animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both">
-      <section style="padding: 24px var(--gutter) 20px; border-bottom: 1px solid var(--rule)">
+      <section style="padding: 24px var(--gutter) 20px; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
         <h2 style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(28px, 4.4vw, 60px); line-height: 0.89; letter-spacing: -0.032em; margin: 8px 0 0; text-transform: lowercase">About this site</h2>
       </section>
       <section style="padding: 26px var(--gutter) 28px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: start">
@@ -1138,7 +1136,9 @@
     </main>
   </sc-if>
 
-    <footer style="display: grid; grid-template-columns: var(--footer-cols); align-items: center; gap: 16px; padding: 24px var(--gutter) 24px; font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); border-top: 1px solid var(--rule); margin: 24px var(--gutter) 0; padding-left: 0; padding-right: 0; font-style: italic">
+    <div aria-hidden="true" style="flex: 1 0 8px"></div>
+    <footer style="flex: none; margin: 0 var(--gutter); padding: 24px 0 30px; font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); font-style: italic">
+      <div style="display: grid; grid-template-columns: var(--footer-cols); align-items: center; gap: 16px">
       <span style="display: flex; gap: 18px; flex-wrap: wrap">
         <a href="https://www.instagram.com/himothymasso/" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">instagram</a>
         <a href="https://github.com/timothymasso" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">github</a>
@@ -1149,6 +1149,7 @@
         <a href="#" onClick="{{ goPeople }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">who i played with</a>
       </span>
       <span style="text-align: right; display: flex; justify-content: flex-end; align-items: baseline; gap: 10px">© {{ year }} Timothy Masso<span aria-hidden="true" style="font-family: 'Mrs Saint Delafield', cursive; font-style: normal; font-size: 30px; line-height: 0.6; color: var(--ink); opacity: 0.85; transform: rotate(-6deg) translateY(4px); display: inline-block">TM</span></span>
+      </div>
     </footer>
   <div ref="{{ railRef }}" aria-hidden="true" style="position: fixed; z-index: 95; top: 0; right: 0; width: 10px; height: 100vh; opacity: 0; transition: opacity 0.35s ease; pointer-events: none">
     <div ref="{{ thumbRef }}" onMouseDown="{{ startDrag }}" style="position: absolute; right: 0; width: 3px; top: 0; height: 40px; background: var(--accent, #B8502A); cursor: grab; pointer-events: auto; transition: width 0.18s ease" style-hover="width: 6px"></div>
@@ -1587,7 +1588,7 @@ const SPOTIFY_PROFILE = ''; // https://open.spotify.com/user/…
 const GIGS = ALL_GIGS.filter((g) => HIDDEN_GIGS.indexOf(g.slug) < 0);
 
 class Component extends DCLogic {
-  state = { page: 'index', slug: 'recital', gig: 'mob', project: 'calculus', session: 0, cue: 0, comp: 'resolute', part: 0, cgroup: 'All', theme: (() => { try { return localStorage.getItem('tm-theme') === 'dark' ? 'dark' : 'light'; } catch (e) { return 'light'; } })() };
+  state = { page: 'index', slug: 'recital', gig: 'mob', project: 'calculus', session: 0, cue: 0, comp: 'resolute', part: 0, cgroup: 'All', theme: 'dark' };
 
   _lbKeys() {
     if (this._lbBound) return;
@@ -1596,19 +1597,11 @@ class Component extends DCLogic {
   }
 
   _applyAccent() {
-    const dark = (this.state && this.state.theme) === 'dark';
-    const a = (this.props.accent && this.props.accent !== '#6E8B5E') ? this.props.accent : (dark ? '#9BB27A' : '#5A7044');
+    const a = (this.props.accent && this.props.accent !== '#6E8B5E') ? this.props.accent : '#9BB27A';
     document.documentElement.style.setProperty('--accent', a);
-    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.style.colorScheme = 'dark';
   }
-
-  toggleTheme = (e) => {
-    if (e) e.preventDefault();
-    const next = (this.state.theme === 'dark') ? 'light' : 'dark';
-    try { localStorage.setItem('tm-theme', next); } catch (err) {}
-    this.setState({ theme: next }, () => this._applyAccent());
-  };
 
   railRef = React.createRef();
   thumbRef = React.createRef();
@@ -1669,7 +1662,7 @@ class Component extends DCLogic {
   _photos() {
     if (this._ph) return this._ph;
     const out = []; let i = 0;
-    this._MONTHS.forEach(([m, c]) => { for (let k = 0; k < c; k++) { const id = 'p' + String(i + 1).padStart(2, '0'); out.push({ id, m, src: './assets/photos/' + id + '.jpg', ratio: this._DIMS[i].replace('/', ' / '), label: m + ' 2025' }); i++; } });
+    this._MONTHS.forEach(([m, c]) => { for (let k = 0; k < c; k++) { const id = 'p' + String(i + 1).padStart(2, '0'); out.push({ id, m, src: './assets/photos/' + id + '.jpg', sm: './assets/photos/sm/' + id + '.jpg', ratio: this._DIMS[i].replace('/', ' / '), label: m + ' 2025' }); i++; } });
     return (this._ph = out);
   }
   _lbStep(d) {
@@ -1699,7 +1692,7 @@ class Component extends DCLogic {
   _spin() {
     if (!this._drag) {
       this._ringVel = (this._ringVel || 0) * 0.965;
-      this._idle = (this._idle == null ? -0.04 : this._idle) + (((this._ringHover ? 0 : -0.04)) - (this._idle == null ? -0.04 : this._idle)) * 0.04;
+      this._idle = (this._idle == null ? -0.04 : this._idle) + (((this._ringHover || this._rm ? 0 : -0.04)) - (this._idle == null ? -0.04 : this._idle)) * 0.04;
       this._ringAng = (this._ringAng || 0) + this._ringVel + this._idle;
     }
     if (this._ringEl) this._ringEl.style.transform = 'translateZ(' + (-(this._ringR || 0)) + 'px) rotateX(-8deg) rotateY(' + this._ringAng + 'deg)';
@@ -1725,7 +1718,7 @@ class Component extends DCLogic {
     if (!NOW_PLAYING_URL) return;
     fetch(NOW_PLAYING_URL).then((r) => r.json()).then((d) => { if (d && d.title) this.setState({ np: d }); }).catch(() => {});
   }
-  componentDidMount() {
+  componentDidMount() { try { this._rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {} setTimeout(() => this._setTitle(), 0);
     ['./assets/playing-sm.jpg', './assets/photos/p40.jpg', './assets/portrait-2025.jpg'].forEach((s) => { const i = new Image(); i.src = s; });
     this._np(); this._npT = setInterval(() => this._np(), 30000);
     fetch('./assets/shows.json').then((r) => r.json()).then((shows) => {
@@ -1804,7 +1797,7 @@ class Component extends DCLogic {
         ga.style.opacity = gb.style.opacity = '0';
         clearTimeout(this._glowDelay);
         this._glowDelay = setTimeout(() => {
-          ga.style.transition = 'none'; ga.style.backgroundImage = "url('" + p.src + "')"; void ga.offsetWidth;
+          ga.style.transition = 'none'; ga.style.backgroundImage = "url('" + (p.sm || p.src) + "')"; void ga.offsetWidth;
           ga.style.transition = 'opacity 0.35s ease'; ga.style.opacity = '0.85'; this._glowB = false;
         }, 320);
       }
@@ -1838,7 +1831,20 @@ class Component extends DCLogic {
     }), { rootMargin: '0px 0px -8% 0px' });
     document.querySelectorAll('[data-phi]:not([data-phio])').forEach((el) => { el.setAttribute('data-phio', '1'); this._phIO.observe(el); });
   }
-  componentDidUpdate(pp, ps) { if (!this._phSpyOn) { this._phSpyOn = 1; window.addEventListener('scroll', this._phSpyFn, { passive: true }); } this._phSpyFn(); this._phReveal(); this._applyAccent(); this._renderPdfs(); setTimeout(this._syncRail, 80); }
+  _setTitle() {
+    const st = this.state, p = st.page, base = 'Timothy Masso';
+    const L = { music: 'music', photos: 'photos', about: 'about', perf: 'performances', live: 'live sound', sessions: 'sunday sessions', comp: 'sheet music', people: 'who i played with', all: 'everything', colophon: 'colophon', data: 'data', project: 'projects' };
+    let t = L[p];
+    try {
+      if (p === 'detail' || p === 'graphic') { const x = PERFS.find((q) => q.slug === st.slug); t = x && x.title; }
+      else if (p === 'gig') { const x = GIGS.find((q) => q.slug === st.gig); t = x && x.title; }
+      else if (p === 'compdetail') { const x = COMPS.find((q) => q.s === st.comp); t = x && x.t; }
+      else if (p === 'sessiondetail') { const x = SESSIONS[st.session]; t = x && ('sunday sessions · ' + x.artist); }
+    } catch (e) {}
+    const next = p === 'index' || !t ? 'Timothy Masso · saxophone, composition, live sound' : String(t).toLowerCase() + ' · ' + base;
+    if (document.title !== next) document.title = next;
+  }
+  componentDidUpdate(pp, ps) { this._setTitle(); if (!this._phSpyOn) { this._phSpyOn = 1; window.addEventListener('scroll', this._phSpyFn, { passive: true }); } this._phSpyFn(); this._phReveal(); this._applyAccent(); this._renderPdfs(); setTimeout(this._syncRail, 80); }
 
   /* ── hash routing ── */
 
@@ -2095,9 +2101,6 @@ class Component extends DCLogic {
       thumbRef: this.thumbRef,
 
       startDrag: this.startDrag,
-      toggleTheme: this.toggleTheme,
-      isDark: this.state.theme === 'dark' ? 1 : 0,
-      themeLabel: this.state.theme === 'dark' ? 'Light' : 'Dark',
       knobPos: this.state.theme === 'dark' ? '15px' : '2px',
       goIndex: this.go('index'), goPerf: this.go('perf'), goLive: this.go('live'), goComp: this.go('comp'), goData: this.go('data'), goAbout: this.go('about'), goPeople: this.go('people'), goAll: this.go('all'), goColophon: this.go('colophon'),
       people: (() => {
@@ -2178,7 +2181,7 @@ class Component extends DCLogic {
         const cur = this.state.workHover || 'music';
         const pick = rows.find((r) => r[1] === cur) || rows[0];
         return {
-          workRows: rows.map(([n, title, fn, count]) => ({ n, title, count, color: title === cur ? 'var(--ink)' : 'var(--muted)', go: this.go(fn === 'goMusic' ? 'music' : fn === 'goPhotos' ? 'photos' : 'about'), enter: () => { if (this.state.workHover !== title) this.setState({ workHover: title }); } })),
+          workRows: rows.map(([n, title, fn, count]) => ({ n, title, count, color: 'var(--muted)', go: this.go(fn === 'goMusic' ? 'music' : fn === 'goPhotos' ? 'photos' : 'about'), enter: () => { if (this.state.workHover !== title) this.setState({ workHover: title }); } })),
           workPreview: { img: pick[4], label: pick[5], size: pick[6] || 'cover', pos: pick[7] || 'center' }
         };
       })(),
@@ -2193,10 +2196,10 @@ class Component extends DCLogic {
         const phStage = {
           phSlides: ph.map((p, i) => {
             const o = i - idx, a = Math.abs(o), cs = this._phCS(o);
-            return { i, src: p.src, label: p.label, ratio: p.ratio, load: a <= 5 ? 'eager' : 'lazy', ...cs,
+            return { i, src: a === 0 ? p.src : p.sm, label: p.label, ratio: p.ratio, load: a <= 5 ? 'eager' : 'lazy', ...cs,
               go: (e) => { if (e && e.preventDefault) e.preventDefault(); if (this._phDragged) return; const cur = this._phLive != null ? this._phLive : idx; if (i === cur) { this._lbFrom = e.currentTarget.getBoundingClientRect(); this._openPhoto(p, ph); } else this._phSet(i); } };
           }),
-          phGlow: this._glow0 || (this._glow0 = ph[idx].src), phGlowRatio: ph[idx].ratio, phCapMonth: sel + ' 2025', phCapNum: (idx + 1) + ' / ' + ph.length,
+          phGlow: this._glow0 || (this._glow0 = ph[idx].sm), phGlowRatio: ph[idx].ratio, phCapMonth: sel + ' 2025', phCapNum: (idx + 1) + ' / ' + ph.length,
           phPrev: tap(() => this._phGo(-1)), phNext: tap(() => this._phGo(1)),
           scrCursor: this.state.scrubbing ? 'grabbing' : 'grab',
           scrTip: { x: (this.state.scrX || 0) + 'px', o: this.state.scrubbing ? 1 : 0, s: this.state.scrubbing ? 1 : 0.85, y: this.state.scrubbing ? '0px' : '8px', src: ph[idx].src, ratio: ph[idx].ratio, label: ph[idx].m.slice(0, 3) + ' · ' + (idx + 1) },
@@ -2216,7 +2219,7 @@ class Component extends DCLogic {
           phStageCursor: this.state.phGrab ? 'grabbing' : 'grab',
           phStageRef: this._phStageRefFn || (this._phStageRefFn = (el) => {
             if (!el || el._wheelOn) return; el._wheelOn = 1; let acc = 0; this._glowB = false;
-            const g0 = el.querySelector('[data-phglow="a"]'), cur = this._photos()[this.state.phIdx || 0]; if (g0 && cur) g0.style.backgroundImage = "url('" + cur.src + "')";
+            const g0 = el.querySelector('[data-phglow="a"]'), cur = this._photos()[this.state.phIdx || 0]; if (g0 && cur) g0.style.backgroundImage = "url('" + (cur.sm || cur.src) + "')";
             el.addEventListener('wheel', (e) => {
               const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
               const i = this._phLive != null ? this._phLive : (this.state.phIdx || 0), n = this._photos().length;
@@ -2311,7 +2314,7 @@ class Component extends DCLogic {
                     h('span', { key: 'sb', style: { fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '14px', color: 'var(--muted)' } }, c.sub)
                   ] : null),
                 h('div', { 'aria-hidden': true, style: { position: 'absolute', inset: 0, borderRadius: '12px', background: 'var(--panel)', transform: 'translateZ(-2px) rotateY(180deg) scale(0.985)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', boxShadow: '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)', transition: 'box-shadow 0.12s ease-out, filter 0.45s ease', overflow: 'hidden' } },
-                  c.text ? null : h('span', { style: { position: 'absolute', inset: '-20px', backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(14px) saturate(1.1) brightness(0.4)', transform: 'scaleX(-1)' } })),
+                  c.text ? null : h('span', { style: { position: 'absolute', inset: '-20px', backgroundImage: String(c.bg).replace('/photos/', '/photos/sm/'), backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(14px) saturate(1.1) brightness(0.4)', transform: 'scaleX(-1)' } })),
                 h('span', { style: { position: 'absolute', left: '10px', bottom: '10px', maxWidth: 'calc(100% - 20px)', boxSizing: 'border-box', padding: '6px 12px', borderRadius: '999px', background: 'rgba(22,21,15,0.72)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '15px', fontWeight: 400, color: '#F2EFE4', opacity: 0, transform: 'translateY(8px)', transition: 'opacity 0.25s ease 0.06s, transform 0.4s cubic-bezier(0.34, 1.45, 0.5, 1) 0.06s', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } }, c.l));
             }))));
       })(),
