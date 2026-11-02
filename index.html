@@ -2269,8 +2269,11 @@ class Component extends DCLogic {
         const hover = (on) => (e) => {
           const el = e.currentTarget, img = el.firstChild, cap = el.lastChild;
           
-          el.style.transform = el.dataset.base + (on ? ' translateZ(36px)' : '');
+          el.style.transform = el.dataset.base + (on ? ' translateY(-22px) scale(1.04)' : '');
           cap.style.opacity = on ? '1' : '0';
+          cap.style.transform = on ? 'translateY(0)' : 'translateY(8px)';
+          Array.from(el.parentNode.children).forEach((c) => { if (c.firstChild) c.firstChild.style.filter = !on ? '' : c === el ? 'brightness(1.06) saturate(1.08)' : 'brightness(0.55) saturate(0.7)'; });
+          img.style.boxShadow = on ? '0 0 0 2px var(--paper), 0 0 0 3.5px var(--accent, #9BB27A), 0 30px 50px -22px rgba(0,0,0,0.7)' : '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)';
           this._ringHover = on;
           if (this._ringWrap) this._ringWrap.style.cursor = on ? 'pointer' : 'grab';
         };
@@ -2296,9 +2299,9 @@ class Component extends DCLogic {
                   key: c.k, href: '#', draggable: false, 'data-base': base, 'aria-label': c.l,
                   onClick: (e) => { e.preventDefault(); if (this._dragMoved > 6) { this._dragMoved = 0; return; } c.go(e); },
                   onMouseEnter: hover(true), onMouseLeave: hover(false),
-                  style: { position: 'absolute', inset: 0, display: 'block', transform: base, transition: 'transform 0.35s cubic-bezier(0.2, 0.85, 0.2, 1)', transformStyle: 'preserve-3d' }
+                  style: { position: 'absolute', inset: 0, display: 'block', transform: base, transition: 'transform 0.5s cubic-bezier(0.34, 1.45, 0.5, 1)', transformStyle: 'preserve-3d' }
                 },
-                h('div', { style: { position: 'absolute', inset: 0, backgroundImage: c.wide ? 'none' : c.bg, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: 'var(--panel)', transition: 'filter 0.3s ease', borderRadius: '12px', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: c.text ? '22px 20px' : 0, boxSizing: 'border-box', overflow: 'hidden', boxShadow: '0 0 0 1px rgba(var(--ink-rgb), 0.12)' } },
+                h('div', { style: { position: 'absolute', inset: 0, backgroundImage: c.wide ? 'none' : c.bg, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: 'var(--panel)', borderRadius: '12px', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: c.text ? '22px 20px' : 0, boxSizing: 'border-box', overflow: 'hidden', boxShadow: '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)', transition: 'box-shadow 0.12s ease-out, filter 0.45s ease' } },
                   c.wide ? [
                     h('div', { key: 'wb', 'aria-hidden': true, style: { position: 'absolute', inset: '-24px', backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(18px) saturate(1.2) brightness(0.55)' } }),
                     h('div', { key: 'wi', style: { position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', aspectRatio: c.ratio, backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.6)' } })
@@ -2307,9 +2310,9 @@ class Component extends DCLogic {
                     h('span', { key: 'tt', style: { fontFamily: "'Gambarino', Georgia, serif", fontSize: '34px', lineHeight: 0.95, letterSpacing: '-0.025em', color: 'var(--ink)' } }, c.text, h('span', { style: { color: 'var(--accent, #B8502A)' } }, '.')),
                     h('span', { key: 'sb', style: { fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '14px', color: 'var(--muted)' } }, c.sub)
                   ] : null),
-                h('div', { 'aria-hidden': true, style: { position: 'absolute', inset: 0, borderRadius: '12px', background: 'var(--panel)', transform: 'rotateY(180deg)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', boxShadow: '0 0 0 1px rgba(var(--ink-rgb), 0.12)', overflow: 'hidden' } },
+                h('div', { 'aria-hidden': true, style: { position: 'absolute', inset: 0, borderRadius: '12px', background: 'var(--panel)', transform: 'translateZ(-2px) rotateY(180deg) scale(0.985)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', boxShadow: '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)', transition: 'box-shadow 0.12s ease-out, filter 0.45s ease', overflow: 'hidden' } },
                   c.text ? null : h('span', { style: { position: 'absolute', inset: '-20px', backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(14px) saturate(1.1) brightness(0.4)', transform: 'scaleX(-1)' } })),
-                h('span', { style: { position: 'absolute', left: '10px', bottom: '10px', maxWidth: 'calc(100% - 20px)', boxSizing: 'border-box', padding: '5px 10px', borderRadius: '999px', background: 'rgba(22,21,15,0.72)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '13px', fontWeight: 400, color: '#F2EFE4', opacity: 0, transition: 'opacity 0.25s ease', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } }, c.l));
+                h('span', { style: { position: 'absolute', left: '10px', bottom: '10px', maxWidth: 'calc(100% - 20px)', boxSizing: 'border-box', padding: '6px 12px', borderRadius: '999px', background: 'rgba(22,21,15,0.72)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '15px', fontWeight: 400, color: '#F2EFE4', opacity: 0, transform: 'translateY(8px)', transition: 'opacity 0.25s ease 0.06s, transform 0.4s cubic-bezier(0.34, 1.45, 0.5, 1) 0.06s', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } }, c.l));
             }))));
       })(),
       latest: (() => {
