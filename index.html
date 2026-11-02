@@ -2348,7 +2348,7 @@ class Component extends DCLogic {
             const on = window.scrollY > 40; if (on === this._hdrMin) return; this._hdrMin = on;
             h.style.background = on ? 'transparent' : 'var(--paper)'; h.style.pointerEvents = on ? 'none' : '';
             const name = h.querySelector('[style*="grid-area: name"]'), end = h.querySelector('[style*="grid-area: end"]'), nav = h.querySelector('nav[aria-label="Main"]'), sub = h.children[1];
-            [name, end, sub].forEach((el) => { if (!el) return; el.style.transition = 'opacity 0.3s ease'; el.style.opacity = on ? '0' : ''; el.style.visibility = on ? 'hidden' : ''; });
+            [name, end, sub].forEach((el) => { if (!el || (el === name && el.getAttribute('aria-hidden') === 'true')) return; el.style.transition = 'opacity 0.3s ease'; el.style.opacity = on ? '0' : ''; el.style.visibility = on ? 'hidden' : ''; });
             if (nav) { nav.style.transition = 'background 0.3s ease, box-shadow 0.3s ease'; nav.style.pointerEvents = 'auto'; nav.style.justifySelf = 'center'; nav.style.padding = '0 18px'; nav.style.borderRadius = '999px'; nav.style.background = on ? 'color-mix(in srgb, var(--paper) 82%, transparent)' : ''; nav.style.backdropFilter = nav.style.webkitBackdropFilter = on ? 'blur(10px)' : ''; nav.style.boxShadow = on ? '0 0 0 1px var(--rule)' : ''; }
             last = window.scrollY;
           };
