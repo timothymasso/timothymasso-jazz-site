@@ -1841,7 +1841,7 @@ class Component extends DCLogic {
       else if (p === 'compdetail') { const x = COMPS.find((q) => q.s === st.comp); t = x && x.t; }
       else if (p === 'sessiondetail') { const x = SESSIONS[st.session]; t = x && ('sunday sessions · ' + x.artist); }
     } catch (e) {}
-    const next = p === 'index' || !t ? 'Timothy Masso · saxophone, composition, live sound' : String(t).toLowerCase() + ' · ' + base;
+    const next = p === 'index' || !t ? base : String(t).toLowerCase() + ' · ' + base;
     if (document.title !== next) document.title = next;
   }
   componentDidUpdate(pp, ps) { this._setTitle(); if (!this._phSpyOn) { this._phSpyOn = 1; window.addEventListener('scroll', this._phSpyFn, { passive: true }); } this._phSpyFn(); this._phReveal(); this._applyAccent(); this._renderPdfs(); setTimeout(this._syncRail, 80); }
