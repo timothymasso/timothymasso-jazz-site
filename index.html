@@ -111,6 +111,7 @@
   :focus-visible { outline: 2px solid var(--accent, #9BB27A); outline-offset: 3px; border-radius: 4px; }
   :focus:not(:focus-visible) { outline: none; }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+  @keyframes sway { from { transform: skewX(-1.4deg); } to { transform: skewX(1.4deg); } }
   @keyframes squiggle { from { -webkit-mask-position: 0 center; mask-position: 0 center; } to { -webkit-mask-position: 24px center; mask-position: 24px center; } }
   @keyframes ringSpin { from { transform: rotateX(-8deg) rotateY(0deg); } to { transform: rotateX(-8deg) rotateY(-360deg); } }
   @keyframes sleeveIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
@@ -149,8 +150,8 @@
       <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 12.4vw, 215px); line-height: 0.9; letter-spacing: -0.035em; color: var(--ink); white-space: nowrap; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">Timothy Masso<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
-      <section style="position: relative; z-index: 0; isolation: isolate; padding: 0 0 calc(130px * var(--ring-scale)); overflow: hidden">
-        <div style="position: relative; height: calc(580px * var(--ring-scale)); display: flex; align-items: center; justify-content: center; margin-top: calc(-60px * var(--ring-scale))">{{ ring }}</div>
+      <section style="position: relative; z-index: 0; isolation: isolate; padding: 0; overflow: hidden">
+        <div style="position: relative; height: calc(640px * var(--ring-scale)); display: flex; align-items: center; justify-content: center; margin-top: calc(-60px * var(--ring-scale))">{{ ring }}</div>
         
         
       </section>
@@ -619,9 +620,15 @@
         </section>
       </sc-if>
 
-      <section style="padding: 0 var(--gutter) 26px; display: flex; justify-content: space-between; gap: 18px; border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round; padding-top: 18px; margin: 0 var(--gutter)">
-        <a href="#" onClick="{{ gig.goPrev }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); font-style: italic" style-hover="color: var(--accent, #B8502A)">← {{ gig.prevTitle }}</a>
-        <a href="#" onClick="{{ gig.goNext }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); text-align: right; font-style: italic" style-hover="color: var(--accent, #B8502A)">{{ gig.nextTitle }} →</a>
+      <section style="display: grid; grid-template-columns: var(--g2); gap: 0 var(--gutter); padding: 22px var(--gutter) 8px; margin-top: 28px; border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round">
+        <a href="#" onClick="{{ gig.goPrev }}" style="display: flex; flex-direction: column; gap: 4px; padding: 4px 0; color: var(--ink); transition: color 0.2s ease" style-hover="color: var(--accent, #B8502A)">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">← previous</span>
+          <span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 22px; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance">{{ gig.prevTitle }}<span style="color: var(--accent, #B8502A)">.</span></span>
+        </a>
+        <a href="#" onClick="{{ gig.goNext }}" style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding: 4px 0; color: var(--ink); text-align: right; transition: color 0.2s ease" style-hover="color: var(--accent, #B8502A)">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">next →</span>
+          <span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 22px; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance">{{ gig.nextTitle }}<span style="color: var(--accent, #B8502A)">.</span></span>
+        </a>
       </section>
     </main>
   </sc-if>
@@ -888,9 +895,15 @@
         </section>
       </sc-if>
 
-      <section style="margin: 0 var(--gutter) 26px; padding-top: 18px; border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round; display: flex; justify-content: space-between; gap: 18px">
-        <a href="#" onClick="{{ project.goPrev }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); font-style: italic" style-hover="color: var(--accent, #B8502A)">← {{ project.prevTitle }}</a>
-        <a href="#" onClick="{{ project.goNext }}" style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--ink); text-align: right; font-style: italic" style-hover="color: var(--accent, #B8502A)">{{ project.nextTitle }} →</a>
+      <section style="display: grid; grid-template-columns: var(--g2); gap: 0 var(--gutter); padding: 22px var(--gutter) 8px; margin-top: 28px; border-top: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 6 0 0 0 / 6px 0 0 0 / 0 round">
+        <a href="#" onClick="{{ project.goPrev }}" style="display: flex; flex-direction: column; gap: 4px; padding: 4px 0; color: var(--ink); transition: color 0.2s ease" style-hover="color: var(--accent, #B8502A)">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">← previous</span>
+          <span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 22px; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance">{{ project.prevTitle }}<span style="color: var(--accent, #B8502A)">.</span></span>
+        </a>
+        <a href="#" onClick="{{ project.goNext }}" style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px; padding: 4px 0; color: var(--ink); text-align: right; transition: color 0.2s ease" style-hover="color: var(--accent, #B8502A)">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">next →</span>
+          <span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: 22px; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance">{{ project.nextTitle }}<span style="color: var(--accent, #B8502A)">.</span></span>
+        </a>
       </section>
     </main>
   </sc-if>
@@ -922,11 +935,36 @@
       <section style="padding: 20px var(--gutter) 12px; display: flex; flex-direction: column; gap: 12px">
         <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap">
           <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(40px, 6vw, 84px); line-height: 0.84; letter-spacing: -0.032em; color: var(--ink); animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">photos<span style="color: var(--accent, #B8502A)">.</span></h1>
-          <nav aria-label="Photo tools" style="display: flex; align-items: center; gap: 22px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
-                        <a href="#" onClick="{{ phShuffle }}" style="display: inline-flex; align-items: center; min-height: 44px; line-height: 1; color: var(--muted)" style-hover="color: var(--accent, #B8502A)">surprise me</a>
+          <nav aria-label="Photo tools" style="display: flex; flex-wrap: wrap; align-items: center; gap: 0 18px; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
+            <sc-for list="{{ phYears }}" as="y" hint-placeholder-count="5">
+              <a href="#" onClick="{{ y.go }}" aria-current="{{ y.cur }}" style="display: inline-flex; align-items: center; min-height: 44px; line-height: 1; color: {{ y.color }}; transition: color 0.25s ease" style-hover="color: var(--accent, #B8502A)">{{ y.y }}</a>
+            </sc-for>
+            <span aria-hidden="true" style="width: 1px; height: 16px; background: var(--rule)"></span>
+            <a href="#" onClick="{{ phToggleView }}" style="display: inline-flex; align-items: center; min-height: 44px; line-height: 1; color: var(--muted)" style-hover="color: var(--accent, #B8502A)">{{ phViewLabel }}</a>
+            <a href="#" onClick="{{ phShuffle }}" style="display: inline-flex; align-items: center; min-height: 44px; line-height: 1; color: var(--muted)" style-hover="color: var(--accent, #B8502A)">surprise me</a>
           </nav>
         </div>
       </section>
+      <sc-if value="{{ phIsGrid }}" hint-placeholder-val="{{ false }}">
+      <section style="padding: 8px var(--gutter) 40px; display: flex; flex-direction: column; gap: 44px">
+        <sc-for list="{{ phGrid }}" as="g" hint-placeholder-count="3">
+          <div id="{{ g.anchor }}" style="display: flex; flex-direction: column; gap: 16px">
+            <div style="display: flex; align-items: baseline; gap: 14px">
+              <h2 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(28px, 3vw, 40px); line-height: 1; letter-spacing: -0.025em; color: var(--ink)">{{ g.y }}<span style="color: var(--accent, #9BB27A)">.</span></h2>
+              <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">{{ g.count }}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px">
+              <sc-for list="{{ g.items }}" as="p" hint-placeholder-count="8">
+                <a href="{{ p.src }}" onClick="{{ p.pop }}" aria-label="{{ p.label }}" style="display: block; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--panel)" style-hover="opacity: 0.85">
+                  <img src="{{ p.sm }}" alt="{{ p.label }}" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: cover"></img>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </section>
+      </sc-if>
+      <sc-if value="{{ phNotGrid }}" hint-placeholder-val="{{ true }}">
       <section id="photos" style="padding: 0 0 40px; display: flex; flex-direction: column; gap: 6px">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 0 var(--gutter); font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px">
           <span style="color: var(--ink)"><span data-phcm="1">{{ phCapMonth }}</span> <span data-phcn="1" style="color: var(--muted)">{{ phCapNum }}</span></span>
@@ -957,12 +995,13 @@
           <div aria-hidden="true" data-phglow="a" style="position: absolute; left: 50%; top: 52%; height: 22%; aspect-ratio: 5 / 4; transform: translate(-50%, -50%) scale(4.4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.8) brightness(1); opacity: 0.85; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
           <div aria-hidden="true" data-phglow="b" style="position: absolute; left: 50%; top: 52%; height: 22%; aspect-ratio: 5 / 4; transform: translate(-50%, -50%) scale(4.4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.8) brightness(1); opacity: 0; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
           <sc-for list="{{ phSlides }}" as="c" hint-placeholder-count="5">
-            <a href="#" onClick="{{ c.go }}" draggable="false" data-ci="{{ c.i }}" aria-label="{{ c.label }}" style="position: absolute; left: 50%; top: 50%; height: 80%; max-width: 86vw; aspect-ratio: {{ c.ratio }}; border-radius: 16px; overflow: hidden; background: var(--panel); display: block; transform: {{ c.tf }}; opacity: {{ c.op }}; z-index: {{ c.z }}; pointer-events: {{ c.pe }}; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease; will-change: transform">
-              <img src="{{ c.src }}" alt="{{ c.label }}" loading="{{ c.load }}" draggable="false" style="display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none"></img>
+            <a href="#" onClick="{{ c.go }}" draggable="false" data-ci="{{ c.i }}" aria-label="{{ c.label }}" style="position: absolute; left: 50%; top: 50%; height: 80%; max-width: 86vw; aspect-ratio: {{ c.ratio }}; border-radius: 16px; overflow: hidden; background: var(--panel); display: block; transform: {{ c.tf }}; opacity: {{ c.op }}; filter: {{ c.br }}; z-index: {{ c.z }}; pointer-events: {{ c.pe }}; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease, filter 0.5s ease; will-change: transform">
+              <img src="{{ c.src }}" data-sm="{{ c.sm }}" alt="{{ c.label }}" loading="{{ c.load }}" draggable="false" style="display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none"></img>
             </a>
           </sc-for>
         </div>
       </section>
+      </sc-if>
     </main>
   </sc-if>
 
@@ -1588,7 +1627,7 @@ const SPOTIFY_PROFILE = ''; // https://open.spotify.com/user/…
 const GIGS = ALL_GIGS.filter((g) => HIDDEN_GIGS.indexOf(g.slug) < 0);
 
 class Component extends DCLogic {
-  state = { page: 'index', slug: 'recital', gig: 'mob', project: 'calculus', session: 0, cue: 0, comp: 'resolute', part: 0, cgroup: 'All', theme: 'dark' };
+  state = { page: 'index', slug: 'recital', gig: 'mob', project: 'calculus', session: 0, cue: 0, comp: 'resolute', part: 0, cgroup: 'All', theme: 'dark', phIdx: 0 };
 
   _lbKeys() {
     if (this._lbBound) return;
@@ -1657,13 +1696,16 @@ class Component extends DCLogic {
   };
 
   _tick() { this.setState({ nyTime: new Date().toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZoneName: 'short' }) }); }
-  _MONTHS = [['january', 4], ['february', 9], ['march', 9], ['april', 6], ['may', 24], ['june', 5], ['july', 6], ['august', 2]];
+  _MONTHS = [['march 2019', 3, 'q'], ['april 2019', 10, 'q'], ['july 2019', 2, 'q'], ['april 2020', 2, 'q'], ['july 2021', 1, 'q'], ['june 2022', 1, 'q'], ['july 2022', 1, 'q'], ['january 2025', 4, 'p'], ['february 2025', 9, 'p'], ['march 2025', 9, 'p'], ['april 2025', 6, 'p'], ['may 2025', 24, 'p'], ['june 2025', 5, 'p'], ['july 2025', 6, 'p'], ['august 2025', 2, 'p']];
+  _CAPS = {};
+  _QDAYS = '29,30,30,1,1,2,2,2,3,3,3,3,3,21,23,24,24,21,14,22'.split(',');
+  _QDIMS = '1200/900,900/1200,900/1200,900/1200,1200/900,1200/900,1200/900,1200/900,1200/900,900/1200,900/1200,900/1200,1200/900,1200/900,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200'.split(',');
   _DIMS = "900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,576/768,576/768,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200,900/1200,1086/1200,1186/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200,1200/900,900/1200,900/1200,1200/900,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,1200/900,1200/900,900/1200,900/1200,1200/900,1200/900,900/1200,900/1200,1200/900,1200/900".split(',');
   _photos() {
     if (this._ph) return this._ph;
-    const out = []; let i = 0;
-    this._MONTHS.forEach(([m, c]) => { for (let k = 0; k < c; k++) { const id = 'p' + String(i + 1).padStart(2, '0'); out.push({ id, m, src: './assets/photos/' + id + '.jpg', sm: './assets/photos/sm/' + id + '.jpg', ratio: this._DIMS[i].replace('/', ' / '), label: m + ' 2025' }); i++; } });
-    return (this._ph = out);
+    const out = []; const n = { p: 0, q: 0 };
+    this._MONTHS.forEach(([m, c, pre]) => { for (let k = 0; k < c; k++) { const i = n[pre]++; const id = pre + String(i + 1).padStart(2, '0'); out.push({ id, m, cap: this._CAPS[id] || '', src: './assets/photos/' + id + '.jpg', sm: './assets/photos/sm/' + id + '.jpg', ratio: (pre === 'q' ? this._QDIMS : this._DIMS)[i].replace('/', ' / '), label: pre === 'q' && this._QDAYS[i] ? m.split(' ')[0] + ' ' + this._QDAYS[i] + ', ' + m.split(' ')[1] : m }); } });
+    return (this._ph = out.reverse());
   }
   _lbStep(d) {
     const lb = this.state.lb; const L = this._phList; if (!lb || !lb.phId || !L) return;
@@ -1688,15 +1730,39 @@ class Component extends DCLogic {
     if (gi >= 0 && document.getElementById('ph-stage')) { this._phSet(gi); clearTimeout(this._phCommitT); this._phLive = null; this.setState({ phIdx: gi }); }
     this.setState({ lb: { f: p.src, label: p.label + ' · ' + (j + 1) + ' / ' + list.length, ratio: p.ratio, phId: p.id } });
   }
-  componentWillUnmount() { if (this._hdrScroll) window.removeEventListener('scroll', this._hdrScroll); clearInterval(this._clock); cancelAnimationFrame(this._raf); }
+  componentWillUnmount() { if (this._hdrScroll) window.removeEventListener('scroll', this._hdrScroll); clearInterval(this._clock); cancelAnimationFrame(this._raf); this._raf = 0; if (this._fIO) this._fIO.disconnect(); if (this._fRO) this._fRO.disconnect(); document.removeEventListener('visibilitychange', this._onVis); }
+  // Field loop runs only while something is moving; _kick() restarts it.
+  _kick() { if (!this._raf) this._raf = requestAnimationFrame(() => this._spin()); }
   _spin() {
-    if (!this._drag) {
-      this._ringVel = (this._ringVel || 0) * 0.965;
-      this._idle = (this._idle == null ? -0.04 : this._idle) + (((this._ringHover || this._rm ? 0 : -0.04)) - (this._idle == null ? -0.04 : this._idle)) * 0.04;
-      this._ringAng = (this._ringAng || 0) + this._ringVel + this._idle;
+    this._raf = 0;
+    const wrap = this._ringWrap;
+    if (!wrap || !wrap.isConnected) return;
+    if (this._fObsEl !== wrap) {
+      if (this._fIO) this._fIO.disconnect(); if (this._fRO) this._fRO.disconnect();
+      this._fObsEl = wrap; this._fVis = true; this._fW = wrap.clientWidth; this._fH = wrap.clientHeight;
+      if (window.IntersectionObserver) { this._fIO = new IntersectionObserver((es) => { this._fVis = es[0].isIntersecting; if (this._fVis) this._kick(); }); this._fIO.observe(wrap); }
+      if (window.ResizeObserver) { this._fRO = new ResizeObserver((es) => { const r = es[0].contentRect; this._fW = r.width; this._fH = r.height; this._fDirty = 1; this._kick(); }); this._fRO.observe(wrap); }
     }
-    if (this._ringEl) this._ringEl.style.transform = 'translateZ(' + (-(this._ringR || 0)) + 'px) rotateX(-8deg) rotateY(' + this._ringAng + 'deg)';
-    this._raf = requestAnimationFrame(() => this._spin());
+    if (!this._fItems || !this._fItems.length || this._fVis === false || document.hidden) return;
+    const W = this._fW, H = this._fH, P = this._fP || 900, oy = H * 0.2, G = H - 30;
+    const tx = this._fTarget || 0, cam0 = this._fCam || 0, dc = tx - cam0;
+    const cam = this._fCam = Math.abs(dc) < 0.05 ? tx : cam0 + dc * (this._rm ? 1 : 0.07);
+    let moving = cam !== tx, stale = false;
+    for (const it of this._fItems) {
+      const el = it.el; if (!el.isConnected) { stale = true; continue; }
+      if (it.grp) {
+        if (el._W && el._W !== W && el._repaint && !el._rp) { el._rp = 1; setTimeout(() => { el._rp = 0; el._repaint(); }, 200); }
+        const tf = 'translate3d(' + Math.round(cam * it.gs - 48) + 'px,0,0)'; if (el._tf !== tf) { el._tf = tf; el.style.transform = tf; }
+        continue;
+      }
+      const lt = el._liftT || 0, l0 = el._lift || 0, dl = lt - l0;
+      const lift = el._lift = Math.abs(dl) < 0.1 || this._rm ? lt : l0 + dl * 0.18; if (lift !== lt) moving = true;
+      const sc = it.sc || (it.sc = P / (P - it.z)), sx = W / 2 + (it.X + cam) * sc, sy = oy + (G + it.sink + lift - oy) * sc - it.h * sc;
+      const tf = 'translate3d(' + sx.toFixed(1) + 'px,' + sy.toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')';
+      if (el._tf !== tf) { el._tf = tf; el.style.transform = tf; }
+    }
+    if (stale) this._fItems = this._fItems.filter((q) => q.el.isConnected);
+    if (moving || this._fDirty) { this._fDirty = 0; this._kick(); }
   }
   _snake(flat) {
     const per = window.innerWidth < 720 ? 2 : 3;
@@ -1728,7 +1794,8 @@ class Component extends DCLogic {
     }).catch(() => {});
     this._onRs = () => { const w = window.innerWidth < 720; if (w !== this._narrow) { this._narrow = w; this.forceUpdate(); } };
     this._narrow = window.innerWidth < 720; window.addEventListener('resize', this._onRs);
-    this._spin();
+    this._onVis = () => { if (!document.hidden) this._kick(); }; document.addEventListener('visibilitychange', this._onVis);
+    this._kick();
     this._tick(); this._clock = setInterval(() => this._tick(), 1000);
     this._applyAccent();
     // track the embedded player so marker clicks seek without re-issuing play
@@ -1770,7 +1837,7 @@ class Component extends DCLogic {
   _phCS(o) {
     const a = Math.abs(o), vis = a <= 4;
     return { tf: 'translate(-50%, -50%) translateX(calc(' + Math.sign(o) * (a === 0 ? 0 : 0.5 + (a - 1) * 0.36) + ' * min(46vw, 560px))) scale(' + (a === 0 ? 1 : Math.max(0.42, 0.8 - (a - 1) * 0.12)) + ')',
-      op: vis ? [1, 0.9, 0.7, 0.5, 0.3][a] : 0, z: 100 - a, pe: vis ? 'auto' : 'none' };
+      op: vis ? 1 : 0, br: 'brightness(' + (vis ? [1, 0.82, 0.62, 0.45, 0.3][a] : 0.3) + ')', z: 100 - a, pe: vis ? 'auto' : 'none' };
   }
   _phSet(j, scrX) {
     const ph = this._photos(); j = Math.max(0, Math.min(ph.length - 1, j));
@@ -1787,8 +1854,8 @@ class Component extends DCLogic {
       const i = +el.getAttribute('data-ci'), o = i - j;
       if (Math.abs(o) > 5 && Math.abs(i - prev) > 5) return;
       const cs = this._phCS(o), im = el.firstElementChild;
-      el.style.transform = cs.tf; el.style.opacity = cs.op; el.style.zIndex = cs.z; el.style.pointerEvents = cs.pe;
-      if (im && Math.abs(o) <= 5) im.loading = 'eager';
+      el.style.transform = cs.tf; el.style.opacity = cs.op; el.style.filter = cs.br; el.style.zIndex = cs.z; el.style.pointerEvents = cs.pe;
+      if (im && Math.abs(o) <= 6) { im.loading = 'eager'; if (!im.getAttribute('src') && im.dataset.sm) im.src = im.dataset.sm; }
     });
     if (j !== prev) {
       const ga = st.querySelector('[data-phglow="a"]'), gb = st.querySelector('[data-phglow="b"]');
@@ -1803,7 +1870,7 @@ class Component extends DCLogic {
       }
     }
     const q = (s) => document.querySelector(s);
-    const cm = q('[data-phcm]'), cn = q('[data-phcn]'); if (cm) cm.textContent = p.m + ' 2025'; if (cn) cn.textContent = (j + 1) + ' / ' + ph.length;
+    const cm = q('[data-phcm]'), cn = q('[data-phcn]'); if (cm) cm.textContent = p.label + (p.cap ? ' · ' + p.cap : ''); if (cn) cn.textContent = (j + 1) + ' / ' + ph.length;
     document.querySelectorAll('[data-ti]').forEach((a) => {
       const i = +a.getAttribute('data-ti'), sp = a.firstElementChild; if (!sp) return;
       const d = Math.abs(i - j); if (d > 2 && Math.abs(i - prev) > 2) return;
@@ -1813,13 +1880,13 @@ class Component extends DCLogic {
     });
     const tip = q('[data-scrtip]'); if (tip && scrX != null) tip.style.left = scrX + 'px';
     const ti = q('[data-scrimg]'); if (ti) { ti.src = p.src; ti.style.aspectRatio = p.ratio; }
-    const tl = q('[data-scrlab]'); if (tl) tl.textContent = p.m.slice(0, 3) + ' · ' + (j + 1);
+    const tl = q('[data-scrlab]'); if (tl) tl.textContent = p.m.slice(0, 3) + ' ’' + p.m.slice(-2) + ' · ' + (j + 1);
   }
   _phGo(d) { this._phSet((this._phLive != null ? this._phLive : (this.state.phIdx || 0)) + d); }
   _phKeyFn = (e) => {
     if (this.state.lb || !document.getElementById('ph-stage')) return;
     if (/input|textarea/i.test((e.target && e.target.tagName) || '')) return;
-    if (e.key === 'ArrowRight') { e.preventDefault(); this._phGo(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); this._phGo(-1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); this._phGo(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); this._phGo(-1); } else if (e.key === 'Enter' && !(e.target && e.target.closest && e.target.closest('a,button'))) { const c = this._phLive != null ? this._phLive : (this.state.phIdx || 0); const el = document.querySelector('[data-ci="' + c + '"]'); if (el) { e.preventDefault(); el.click(); } }
   };
   _phReveal() {
     if (!this._phKeyOn) { this._phKeyOn = 1; window.addEventListener('keydown', this._phKeyFn); }
@@ -2186,10 +2253,14 @@ class Component extends DCLogic {
         const phStage = {
           phSlides: ph.map((p, i) => {
             const o = i - idx, a = Math.abs(o), cs = this._phCS(o);
-            return { i, src: a === 0 ? p.src : p.sm, label: p.label, ratio: p.ratio, load: a <= 5 ? 'eager' : 'lazy', ...cs,
+            return { i, src: a === 0 ? p.src : a <= 6 ? p.sm : undefined, sm: p.sm, label: p.label, ratio: p.ratio, load: a <= 6 ? 'eager' : 'lazy', ...cs,
               go: (e) => { if (e && e.preventDefault) e.preventDefault(); if (this._phDragged) return; const cur = this._phLive != null ? this._phLive : idx; if (i === cur) { this._lbFrom = e.currentTarget.getBoundingClientRect(); this._openPhoto(p, ph); } else this._phSet(i); } };
           }),
-          phGlow: this._glow0 || (this._glow0 = ph[idx].sm), phGlowRatio: ph[idx].ratio, phCapMonth: sel + ' 2025', phCapNum: (idx + 1) + ' / ' + ph.length,
+          phGlow: this._glow0 || (this._glow0 = ph[idx].sm), phGlowRatio: ph[idx].ratio, phCapMonth: ph[idx].label + (ph[idx].cap ? ' · ' + ph[idx].cap : ''), phCapNum: (idx + 1) + ' / ' + ph.length,
+          phIsGrid: this.state.phView === 'grid' ? 1 : 0, phNotGrid: this.state.phView === 'grid' ? 0 : 1, phViewLabel: this.state.phView === 'grid' ? 'carousel' : 'grid',
+          phToggleView: (e) => { e.preventDefault(); this.setState({ phView: this.state.phView === 'grid' ? 'carousel' : 'grid' }); },
+          phYears: (() => { const ys = []; ph.forEach((p, i) => { const y = p.m.split(' ')[1]; if (!ys.find((x) => x.y === y)) ys.push({ y, i }); }); const cy = sel.split(' ')[1]; return ys.map(({ y, i }) => ({ y, cur: y === cy && this.state.phView !== 'grid' ? 'true' : 'false', color: y === cy && this.state.phView !== 'grid' ? 'var(--ink)' : 'var(--muted)', go: (e) => { e.preventDefault(); if (this.state.phView === 'grid') { const el = document.getElementById('phg-' + y); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' }); } else { this._phSet(i); } } })); })(),
+          phGrid: (() => { const gs = []; ph.forEach((p) => { const y = p.m.split(' ')[1]; let g = gs.find((x) => x.y === y); if (!g) { g = { y, anchor: 'phg-' + y, items: [] }; gs.push(g); } g.items.push({ ...p, pop: (e) => { e.preventDefault(); this._openPhoto(p, ph); } }); }); return gs.map((g) => ({ ...g, count: g.items.length + (g.items.length === 1 ? ' photo' : ' photos') })); })(),
           phPrev: tap(() => this._phGo(-1)), phNext: tap(() => this._phGo(1)),
           scrCursor: this.state.scrubbing ? 'grabbing' : 'grab',
           scrTip: { x: (this.state.scrX || 0) + 'px', o: this.state.scrubbing ? 1 : 0, s: this.state.scrubbing ? 1 : 0.85, y: this.state.scrubbing ? '0px' : '8px', src: ph[idx].src, ratio: ph[idx].ratio, label: ph[idx].m.slice(0, 3) + ' · ' + (idx + 1) },
@@ -2218,8 +2289,8 @@ class Component extends DCLogic {
               if (Math.abs(acc) >= 60) { this._phGo(acc > 0 ? 1 : -1); acc = 0; }
             }, { passive: false });
           }),
-          phScrub: this._MONTHS.map(([m, n]) => ({ n, short: m.slice(0, 3), go: tap(() => this._phSet(firsts[m])), color: m === sel ? 'var(--ink)' : 'var(--muted)',
-            ticks: ph.map((p, i) => ({ p, i })).filter((x) => x.p.m === m).map(({ i }) => ({ i, label: 'Photo ' + (i + 1), w: i === idx && this.state.scrubbing ? '4px' : '2px', h: i === idx ? '28px' : Math.abs(i - idx) === 1 ? '16px' : '10px', c: i === idx ? 'var(--accent, #5A7044)' : 'var(--rule)', go: tap(() => this.setState({ phIdx: i })) })) }))
+          phScrub: this._MONTHS.slice().reverse().map(([m, n], gi, all) => { const y = m.split(' ')[1], newY = gi === 0 || all[gi - 1][0].split(' ')[1] !== y; return { n: Math.max(n, newY ? (y === '2025' ? 7 : 4) : 2), short: y === '2025' ? m.slice(0, 3) + (newY ? ' ’25' : '') : (newY ? '’' + y.slice(2) : ''), go: tap(() => this._phSet(firsts[m])), color: m === sel ? 'var(--ink)' : 'var(--muted)',
+            ticks: ph.map((p, i) => ({ p, i })).filter((x) => x.p.m === m).map(({ i }) => ({ i, label: 'Photo ' + (i + 1), w: i === idx && this.state.scrubbing ? '4px' : '2px', h: i === idx ? '28px' : Math.abs(i - idx) === 1 ? '16px' : '10px', c: i === idx ? 'var(--accent, #5A7044)' : 'var(--rule)', go: tap(() => this.setState({ phIdx: i })) })) }; })
         };
         const sz = this.state.phSize || 'medium';
         const phB = { small: 130, medium: 220, large: 380 }[sz];
@@ -2228,26 +2299,26 @@ class Component extends DCLogic {
           phMaxH: { small: '220px', medium: '420px', large: '640px' }[sz],
           phLeave: () => this.setState({ phHover: null }),
           phShuffle: (e) => { e.preventDefault(); let j = idx; while (j === idx) j = Math.floor(Math.random() * ph.length); this._phSet(j); },
-          photoMonths: this._MONTHS.map((m) => m[0]).map((m) => ({
+          photoMonths: this._MONTHS.slice().reverse().map((m) => m[0]).map((m) => ({
             color: m === sel ? 'var(--ink)' : 'var(--muted)', name: m, on: m === sel ? 1 : 0,
             pick: (e) => { e.preventDefault(); this.setState({ phIdx: firsts[m] }); }
           })),
           ...phStage,
           photos: shown.map((p) => ({ ...p, pop: (e) => { e.preventDefault(); this._openPhoto(p, shown); } })),
           phCards: shown.map((p) => ({ src: p.src, label: p.label, ratio: p.ratio, pop: (e) => { e.preventDefault(); this._openPhoto(p, shown); } })),
-          phCount: shown.length + (shown.length === 1 ? ' photo' : ' photos') + (sel === 'all' ? ', jan — aug 2025' : ', ' + sel + ' 2025'),
+          phCount: shown.length + (shown.length === 1 ? ' photo' : ' photos') + (sel === 'all' ? '' : ', ' + sel),
           phTrackRef: this._phRefFn || (this._phRefFn = (el) => { const first = !this._phTrack && el; this._phTrack = el; if (first) setTimeout(() => this._phFan(), 30); }),
-          photoGroups: this._MONTHS.map((m) => m[0]).map((m) => {
+          photoGroups: this._MONTHS.slice().reverse().map((m) => m[0]).map((m) => {
             const items = shown.filter((p) => p.m === m);
             const hv = this.state.phHover, hvM = hv && (ph.find((x) => x.id === hv) || {}).m;
-            return { month: m, anchor: 'ph-' + m, count: items.length + (items.length === 1 ? ' photo' : ' photos'), items: items.map((p) => { const [w, hh] = String(p.ratio).split('/').map(Number); const r = (w / hh) || 0.75; const off = hvM === m && hv !== p.id; return { ...p, dim: off ? 0.4 : 1, sat: off ? 0.3 : 1, enter: () => this.setState({ phHover: p.id }), grow: r.toFixed(3), basis: Math.round(r * phB) + 'px', pop: (e) => { e.preventDefault(); this._openPhoto(p, shown); } }; }) };
+            return { month: m, anchor: 'ph-' + m.replace(' ', '-'), count: items.length + (items.length === 1 ? ' photo' : ' photos'), items: items.map((p) => { const [w, hh] = String(p.ratio).split('/').map(Number); const r = (w / hh) || 0.75; const off = hvM === m && hv !== p.id; return { ...p, dim: off ? 0.4 : 1, sat: off ? 0.3 : 1, enter: () => this.setState({ phHover: p.id }), grow: r.toFixed(3), basis: Math.round(r * phB) + 'px', pop: (e) => { e.preventDefault(); this._openPhoto(p, shown); } }; }) };
           }).filter((g) => g.items.length)
         };
       })(),
       ring: (() => {
         const ph = this._photos();
-        const phs = [25, 34, 7, 42, 26, 12, 22, 47, 14, 56, 29].map((n) => ph[n - 1]);
-        const photoCards = phs.map((p) => { const [rw, rh] = String(p.ratio).split('/').map(Number); return { k: p.id, wide: rw > rh, ratio: p.ratio, bg: "url('./assets/photos/" + p.id + ".jpg')", l: 'photo · ' + p.m + ' 2025', go: () => this._openPhoto(p, phs) }; });
+        const phs = [25, 34, 7, 42, 26, 12, 22, 47, 14, 56, 29].map((n) => ph.find((x) => x.id === 'p' + String(n).padStart(2, '0')));
+        const photoCards = phs.map((p) => { const [rw, rh] = String(p.ratio).split('/').map(Number); return { k: p.id, wide: rw > rh, ratio: p.ratio, bg: "url('./assets/photos/" + p.id + ".jpg')", l: 'photo · ' + p.m, go: () => this._openPhoto(p, phs) }; });
         const yt = (id) => "url('https://i.ytimg.com/vi/" + id + "/maxresdefault.jpg')";
         const nav = (st) => () => this._nav(st);
         const perfs = PERFS.filter((x) => x.yt).slice(0, 3).map((x) => ({ k: 'p-' + x.slug, wide: true, ratio: x.thumb ? '4 / 3' : '16 / 9', bg: x.thumb ? "url('" + x.thumb + "')" : yt(x.yt), l: 'performance · ' + x.title.toLowerCase(), go: nav({ page: 'detail', slug: x.slug }) }));
@@ -2257,44 +2328,126 @@ class Component extends DCLogic {
         const about = [{ k: 'about', bg: "url('./assets/portrait-crop-sm.jpg')", l: 'about', go: nav({ page: 'about' }) }];
         const extra = [perfs[0], null, lives[0], null, perfs[1], null, lives[1], null, perfs[2]];
         const cards = []; photoCards.forEach((p, i) => { cards.push(p); if (extra[i]) cards.push(extra[i]); });
-        const n = cards.length, w = 370, r = Math.round(w / (2 * Math.tan(Math.PI / n))) + 40; this._ringR = r;
-        const h = React.createElement;
+        const n = cards.length, h = React.createElement;
         const hover = (on) => (e) => {
-          const el = e.currentTarget, img = el.firstChild, cap = el.lastChild;
+          const el = e.currentTarget, img = el.firstChild, cap = el.querySelector('[data-cap]') || el.lastChild;
           
-          el.style.transform = el.dataset.base + (on ? ' translateY(-22px) scale(1.04)' : '');
+          el._liftT = on ? -60 : 0; this._kick();
+          if (el.dataset.z == null) el.dataset.z = el.style.zIndex; el.style.zIndex = on ? '9000' : el.dataset.z;
+          let hit = el.querySelector('[data-hit]'); if (!hit) { hit = document.createElement('span'); hit.setAttribute('data-hit', ''); hit.style.cssText = 'position:absolute;left:0;right:0;top:100%;height:0;'; el.appendChild(hit); } hit.style.height = on ? '90px' : '0';
           cap.style.opacity = on ? '1' : '0';
-          cap.style.transform = on ? 'translateY(0)' : 'translateY(8px)';
-          Array.from(el.parentNode.children).forEach((c) => { if (c.firstChild) c.firstChild.style.filter = !on ? '' : c === el ? 'brightness(1.06) saturate(1.08)' : 'brightness(0.55) saturate(0.7)'; });
+          cap.style.transform = on ? 'translateY(0)' : 'translateY(-8px)';
+          Array.from(el.parentNode.children).forEach((c) => { if (c.dataset && c.dataset.base && c.firstChild) c.firstChild.style.filter = !on ? '' : c === el ? 'brightness(1.06) saturate(1.08)' : 'brightness(0.55) saturate(0.7)'; });
           img.style.boxShadow = on ? '0 0 0 2px var(--paper), 0 0 0 3.5px var(--accent, #9BB27A), 0 30px 50px -22px rgba(0,0,0,0.7)' : '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)';
-          this._ringHover = on;
-          if (this._ringWrap) this._ringWrap.style.cursor = on ? 'pointer' : 'grab';
+          if (this._ringWrap) this._ringWrap.style.cursor = on ? 'pointer' : 'default';
         };
+        const SW = Math.min(1800, window.innerWidth || 1200), sm = SW < 720, P = 900; this._fP = P; const CW = sm ? 150 : 230, CH = sm ? 200 : 300;
+        const sAt = (z) => P / (P - z);
+        let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+        const bands = sm ? [[-150, 2], [-700, 3], [-1400, 4], [-2300, 7]] : [[-200, 3], [-800, 4], [-1450, 4], [-2200, 5]];
+        const place = []; let ci = 0;
+        const placed = [];
+        bands.forEach(([z0, c]) => { for (let i = 0; i < c && ci < n; i++, ci++) {
+          const z = z0 + (rnd() - 0.5) * 60, sc = sAt(z), cw = CW * sc, sink = 40 + rnd() * 60, HH = 640, ty = HH * 0.2 + (HH - 30 + sink - HH * 0.2) * sc - CH * sc, ch = Math.max(0, HH - 30 - ty) * 0.9, lo = SW * 0.06 + cw / 2, hi = SW * 0.94 - cw / 2;
+          let best = null, bestScore = Infinity;
+          for (let k = 0; k <= 96; k++) { const sx = lo + (hi - lo) * k / 96; let sco = 0;
+            for (const q of placed) { const ox = Math.max(0, Math.min(sx + cw / 2, q.sx + q.cw / 2) - Math.max(sx - cw / 2, q.sx - q.cw / 2)), oyy = Math.max(0, Math.min(ty + ch, q.ty + q.ch) - Math.max(ty, q.ty)), ov = (ox * oyy) / (cw * ch); sco += ov * ov * (q.z > z ? 3 : 1.5); }
+            sco += Math.abs(k / 96 - 0.5) * 0.02 + rnd() * 0.01; if (sco < bestScore) { bestScore = sco; best = sx; } }
+          placed.push({ sx: best, cw, z, ty, ch }); place.push({ x: (best - SW / 2) / sc - CW / 2, z, sink });
+        } });
+        const rows = []; for (let z = -3400; z <= 140; z += 185) rows.push(z);
+        const mix = (a, b, t) => { const p = (h, i) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16); return 'rgb(' + [0, 1, 2].map((i) => Math.round(p(a, i) * (1 - t) + p(b, i) * t)).join(',') + ')'; };
+        const greens = ['#4E6338', '#5A7044', '#6E8752', '#7F9A5E', '#9BB27A'], petals = ['#E9A6B8', '#F2E7D7', '#C9A6E0', '#F0C66B', '#E58C6E'];
+        const drawRow = (z, ri) => (cv) => {
+          if (!cv || cv.dataset.drawn) return; cv.dataset.drawn = '1'; if (!cv._go) { cv._go = 1; const run = () => { cv.dataset.drawn = ''; drawRow(z, ri)(cv); }; cv.dataset.drawn = 'wait'; (window.requestIdleCallback || ((fn) => setTimeout(fn, 1)))(run, { timeout: 200 + ri * 40 }); return; }
+          const s = sAt(z), dpr = Math.min(2, window.devicePixelRatio || 1), rw = 2.8 * (SW / 2) / s, rh = 270;
+          const cw = Math.min(5000, Math.round(rw * s * dpr)), full = Math.round(rh * s * dpr), gy = full * 150 / 270; cv.width = cw; cv.height = full;
+          const c = cv.getContext('2d'); let sd = 97 + ri * 131; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+          const near = Math.max(0, Math.min(1, s / 0.75)), px = s * dpr;
+          const ink = (l, a) => 'hsla(' + (88 + r() * 14) + ',' + (16 + near * 10) + '%,' + l + '%,' + a + ')';
+          c.fillStyle = 'hsl(90, 14%, ' + (6 + near * 4) + '%)'; c.fillRect(0, gy, cw, full - gy);
+          const g2 = c.createLinearGradient(0, gy * 0.6, 0, gy); g2.addColorStop(0, 'hsla(90,14%,' + (6 + near * 4) + '%,0)'); g2.addColorStop(1, 'hsl(90, 14%, ' + (6 + near * 4) + '%)'); c.fillStyle = g2; c.fillRect(0, gy * 0.6, cw, gy * 0.4);
+          const nb = Math.round(cw / Math.max(0.9, 1.1 * dpr));
+          for (let layer = 0; layer < 3; layer++) {
+            const L = [7, 11, 16][layer] + near * [3, 6, 10][layer], A = [0.9, 0.85, 0.8][layer], hMul = [0.55, 0.8, 1][layer];
+            c.lineCap = 'round'; const buckets = [];
+            for (let i = 0; i < nb * [0.9, 0.7, 0.35][layer]; i++) {
+              const x = r() * cw, root = gy + Math.pow(r(), 1.5) * (full - gy) * 0.9, hh = gy * hMul * (0.35 + 0.65 * r()), lean = (r() - 0.5) * hh * 0.5 + Math.sin(x * 0.004 + ri) * hh * 0.12;
+              const bk = Math.floor(r() * 6); (buckets[bk] = buckets[bk] || []).push(x, root, lean, hh);
+            }
+            for (let bk = 0; bk < 6; bk++) { const B = buckets[bk]; if (!B) continue; c.strokeStyle = ink(L + bk * 0.7, A); c.lineWidth = Math.max(0.55, (0.8 + (bk % 3) * 0.45) * px); c.beginPath(); for (let j = 0; j < B.length; j += 4) { const x = B[j], root = B[j + 1], lean = B[j + 2], hh = B[j + 3]; c.moveTo(x, root); c.quadraticCurveTo(x + lean * 0.15, root - hh * 0.6, x + lean, root - hh); } c.stroke(); }
+          }
+          const fl = [[340, 40, 76], [40, 25, 88], [330, 30, 84], [276, 22, 74]];
+          const nfl = Math.round(cw / dpr / (near > 0.6 ? 220 : 160));
+          for (let i = 0; i < nfl; i++) {
+            const x = r() * cw, root = gy + Math.pow(r(), 1.6) * (full - gy) * 0.8, hh = gy * (0.55 + 0.5 * r()), lean = (r() - 0.5) * hh * 0.35;
+            const hx = x + lean, hy = root - hh, f = fl[Math.floor(r() * fl.length)], fade = 0.35 + 0.65 * near, rr = (7 + r() * 6) * px, kind = r() * 0.8;
+            const col = (dl) => 'hsla(' + f[0] + ',' + Math.round(f[1] * fade) + '%,' + Math.round((f[2] + dl) * (0.45 + 0.55 * near)) + '%,1)';
+            c.strokeStyle = 'hsla(92, 22%, ' + (14 + near * 10) + '%, 0.95)'; c.lineWidth = Math.max(0.5, 0.9 * px); c.beginPath(); c.moveTo(x, root); c.quadraticCurveTo(x + lean * 0.1, root - hh * 0.6, hx, hy); c.stroke();
+            if (rr < 1.4) { c.fillStyle = col(0); c.beginPath(); c.arc(hx, hy, Math.max(0.8, rr * 0.7), 0, 6.283); c.fill(); continue; }
+            if (kind < 0.55) {
+              const np = 5 + Math.floor(r() * 3), rot = r() * 6.283, tilt = 0.55 + r() * 0.35;
+              c.fillStyle = col(-6); c.beginPath(); for (let p = 0; p < np; p++) { const a = rot + p * 6.283 / np; c.moveTo(hx, hy); c.ellipse(hx + Math.cos(a) * rr * 0.62, hy + Math.sin(a) * rr * 0.62 * tilt, rr * 0.6, rr * 0.28, Math.atan2(Math.sin(a) * tilt, Math.cos(a)), 0, 6.283); } c.fill();
+              c.fillStyle = col(6); c.beginPath(); for (let p = 0; p < np; p++) { const a = rot + p * 6.283 / np; c.moveTo(hx, hy); c.ellipse(hx + Math.cos(a) * rr * 0.5, hy + Math.sin(a) * rr * 0.5 * tilt, rr * 0.42, rr * 0.16, Math.atan2(Math.sin(a) * tilt, Math.cos(a)), 0, 6.283); } c.fill();
+              c.fillStyle = 'hsla(44, 70%, ' + Math.round(48 * (0.5 + 0.5 * near)) + '%, 1)'; c.beginPath(); c.arc(hx, hy, rr * 0.2, 0, 6.283); c.fill();
+            } else if (kind < 0.8) {
+              c.fillStyle = col(-4); c.beginPath(); c.ellipse(hx, hy + rr * 0.15, rr * 0.55, rr * 0.75, 0, 0, 6.283); c.fill();
+              c.fillStyle = col(6); c.beginPath(); c.ellipse(hx - rr * 0.18, hy - rr * 0.1, rr * 0.28, rr * 0.5, -0.3, 0, 6.283); c.ellipse(hx + rr * 0.18, hy - rr * 0.1, rr * 0.28, rr * 0.5, 0.3, 0, 6.283); c.fill();
+            } else {
+              for (let k = 0; k < 6; k++) { const yy = hy + k * rr * 0.55, xx = hx + (k % 2 ? 1 : -1) * rr * 0.25; c.fillStyle = col(k * 2 - 4); c.beginPath(); c.arc(xx, yy, rr * (0.42 - k * 0.03), 0, 6.283); c.fill(); }
+            }
+          }
+          if (near > 0.5) { c.strokeStyle = 'hsla(80, 30%, 62%, ' + (0.18 * near) + ')'; c.lineWidth = Math.max(0.5, 0.6 * px); c.beginPath(); for (let i = 0; i < nb * 0.04; i++) { const x = r() * cw, hh = gy * (0.6 + 0.4 * r()), lean = (r() - 0.5) * hh * 0.4, root = gy + r() * (full - gy) * 0.3; c.moveTo(x + lean * 0.5, root - hh * 0.6); c.quadraticCurveTo(x + lean * 0.8, root - hh * 0.85, x + lean, root - hh); } c.stroke(); }
+        };
+        const GM = 48, cz = place.map((p) => p.z).sort((x, y) => y - x);
+        const groups = []; rows.slice().sort((x, y) => x - y).forEach((z) => { const k = cz.filter((q) => q > z).length; let g = groups.find((q) => q.k === k); if (!g) { g = { k, rows: [] }; groups.push(g); } g.rows.push(z); });
+        groups.forEach((g) => { g.zi = 1000 + Math.round(Math.max(...g.rows) / 10) * 2; g.gs = g.rows.reduce((t, z) => t + sAt(z), 0) / g.rows.length; });
+        const drawGroup = (g, gi) => (cv) => {
+          if (!cv) return; if (!(this._fItems || []).some((q) => q.el === cv)) (this._fItems = this._fItems || []).push({ el: cv, grp: 1, gs: g.gs }); if (cv._done) return; cv._done = 1;
+          const paint = () => {
+            const wrap = this._ringWrap; if (!wrap || !cv.isConnected) return; const W = wrap.clientWidth, H = wrap.clientHeight; if (!W || !H) { setTimeout(paint, 60); return; }
+            const dpr = Math.min(2, window.devicePixelRatio || 1), CWd = W + 2 * GM; cv.width = Math.round(CWd * dpr); cv.height = Math.round(H * dpr); cv._W = W; cv._H = H;
+            const c = cv.getContext('2d'), oy = H * 0.2, G = H - 30;
+            g.rows.forEach((z) => {
+              const ri = rows.indexOf(z), sc = sAt(z), rw = 2.8 * (SW / 2) / sc, tmp = document.createElement('canvas'); tmp._go = 1; drawRow(z, ri)(tmp);
+              const sx = W / 2 - (rw / 2) * sc + GM, sy = oy + (G + 8 - oy) * sc - 150 * sc, dw = rw * sc, dh = 270 * sc;
+              c.drawImage(tmp, sx * dpr, sy * dpr, dw * dpr, dh * dpr);
+              c.fillStyle = 'hsl(90, 14%, ' + (6 + Math.max(0, Math.min(1, sc / 0.75)) * 4) + '%)'; c.fillRect(sx * dpr, (sy + dh - 2) * dpr, dw * dpr, (H - sy - dh + 2) * dpr);
+            });
+            cv._repaint = () => { cv._done = 1; paint(); };
+          };
+          (window.requestIdleCallback || ((fn) => setTimeout(fn, 1)))(paint, { timeout: 150 + gi * 60 });
+        };
+        this._fItems = [];
         return h('div', {
             key: 'ringsurface', ref: (el) => { this._ringWrap = el; },
-            style: { position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'grab', touchAction: 'pan-y', userSelect: 'none', WebkitUserSelect: 'none' },
+            style: { position: 'absolute', inset: 0, overflow: 'hidden', contain: 'strict', cursor: 'default', touchAction: 'pan-y', userSelect: 'none', WebkitUserSelect: 'none' },
             onDragStart: (e) => e.preventDefault(),
             onPointerDown: (e) => { this._drag = { x: e.clientX, moved: 0, id: e.pointerId }; this._dragMoved = 0; },
             onPointerMove: (e) => {
+              this._fTarget = -((e.clientX / (window.innerWidth || 1)) - 0.5) * 40; this._kick();
               if (!this._drag) return;
               const dx = e.clientX - this._drag.x; this._drag.x = e.clientX; this._drag.moved += Math.abs(dx);
-              if (this._drag.moved > 4 && !this._drag.cap) { try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} this._drag.cap = 1; e.currentTarget.style.cursor = 'grabbing'; }
-              this._ringVel = this._ringVel * 0.6 + dx * 0.14 * 0.4; this._ringAng = (this._ringAng || 0) + dx * 0.14;
+              if (this._drag.moved > 4 && !this._drag.cap) { try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} this._drag.cap = 1;  }
+              
             },
-            onPointerUp: (e) => { this._dragMoved = this._drag ? this._drag.moved : 0; this._drag = null; e.currentTarget.style.cursor = 'grab'; },
-            onPointerCancel: () => { this._drag = null; }
+            onPointerUp: (e) => { this._dragMoved = this._drag ? this._drag.moved : 0; this._drag = null; },
+            onPointerCancel: () => { this._drag = null; },
+            onPointerLeave: () => { this._fTarget = 0; this._kick(); }
           },
-          h('div', { style: { perspective: '2600px', width: w + 'px', height: '492px', scale: 'var(--ring-scale)' } },
-          h('div', { ref: (el) => { this._ringEl = el; }, style: { position: 'relative', width: '100%', height: '100%', transformStyle: 'preserve-3d', transform: 'translateZ(' + (-r) + 'px) rotateX(-8deg) rotateY(' + (this._ringAng || 0) + 'deg)' } },
+          h('div', { 'aria-hidden': true, style: { position: 'absolute', left: 0, right: 0, top: '35%', bottom: 0, pointerEvents: 'none', background: 'linear-gradient(to bottom, rgba(20,22,15,0) 0%, hsl(90,14%,7%) 18%, hsl(90,14%,9%) 100%)' } }),
+          h('div', { style: { position: 'absolute', inset: 0 } },
+            groups.map((g, gi) => h('canvas', { key: 'g' + gi + '-' + g.rows.length, 'aria-hidden': true, ref: drawGroup(g, gi), style: { position: 'absolute', left: 0, top: 0, width: 'calc(100% + ' + (2 * GM) + 'px)', height: '100%', zIndex: g.zi, pointerEvents: 'none', willChange: 'transform' } })),
             cards.map((c, i) => {
-              const base = 'rotateY(' + (i * 360 / n) + 'deg) translateZ(' + r + 'px)';
+              const p = place[i]; if (!p) return null;
               return h('a', {
-                  key: c.k, href: '#', draggable: false, 'data-base': base, 'aria-label': c.l,
+                  key: c.k, href: '#', draggable: false, 'aria-label': c.l, 'data-base': '1',
+                  ref: (el) => { if (el && !(this._fItems || []).some((q) => q.el === el)) { (this._fItems = this._fItems || []).push({ el, X: p.x, z: p.z, sink: p.sink, h: CH }); this._kick(); } },
                   onClick: (e) => { e.preventDefault(); if (this._dragMoved > 6) { this._dragMoved = 0; return; } c.go(e); },
                   onMouseEnter: hover(true), onMouseLeave: hover(false),
-                  style: { position: 'absolute', inset: 0, display: 'block', transform: base, transition: 'transform 0.5s cubic-bezier(0.34, 1.45, 0.5, 1)', transformStyle: 'preserve-3d' }
+                  style: { position: 'absolute', left: 0, top: 0, width: CW + 'px', height: CH + 'px', display: 'block', transformOrigin: '0 0', zIndex: 1001 + Math.round(p.z / 10) * 2, willChange: 'transform' }
                 },
-                h('div', { style: { position: 'absolute', inset: 0, backgroundImage: c.wide ? 'none' : c.bg, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: 'var(--panel)', borderRadius: '12px', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: c.text ? '22px 20px' : 0, boxSizing: 'border-box', overflow: 'hidden', boxShadow: '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)', transition: 'box-shadow 0.12s ease-out, filter 0.45s ease' } },
+                h('div', { style: { position: 'absolute', inset: 0, backgroundImage: c.wide ? 'none' : c.bg, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: 'var(--panel)', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: c.text ? '22px 20px' : 0, boxSizing: 'border-box', overflow: 'hidden', boxShadow: '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)', transition: 'box-shadow 0.12s ease-out, filter 0.45s ease' } },
                   c.wide ? [
                     h('div', { key: 'wb', 'aria-hidden': true, style: { position: 'absolute', inset: '-24px', backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(18px) saturate(1.2) brightness(0.55)' } }),
                     h('div', { key: 'wi', style: { position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', aspectRatio: c.ratio, backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.6)' } })
@@ -2303,10 +2456,8 @@ class Component extends DCLogic {
                     h('span', { key: 'tt', style: { fontFamily: "'Gambarino', Georgia, serif", fontSize: '34px', lineHeight: 0.95, letterSpacing: '-0.025em', color: 'var(--ink)' } }, c.text, h('span', { style: { color: 'var(--accent, #B8502A)' } }, '.')),
                     h('span', { key: 'sb', style: { fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '14px', color: 'var(--muted)' } }, c.sub)
                   ] : null),
-                h('div', { 'aria-hidden': true, style: { position: 'absolute', inset: 0, borderRadius: '12px', background: 'var(--panel)', transform: 'translateZ(-2px) rotateY(180deg) scale(0.985)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', boxShadow: '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)', transition: 'box-shadow 0.12s ease-out, filter 0.45s ease', overflow: 'hidden' } },
-                  c.text ? null : h('span', { style: { position: 'absolute', inset: '-20px', backgroundImage: String(c.bg).replace('/photos/', '/photos/sm/'), backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(14px) saturate(1.1) brightness(0.4)', transform: 'scaleX(-1)' } })),
-                h('span', { style: { position: 'absolute', left: '10px', bottom: '10px', maxWidth: 'calc(100% - 20px)', boxSizing: 'border-box', padding: '6px 12px', borderRadius: '999px', background: 'rgba(22,21,15,0.72)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '15px', fontWeight: 400, color: '#F2EFE4', opacity: 0, transform: 'translateY(8px)', transition: 'opacity 0.25s ease 0.06s, transform 0.4s cubic-bezier(0.34, 1.45, 0.5, 1) 0.06s', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } }, c.l));
-            }))));
+                  h('span', { 'data-cap': '', style: { position: 'absolute', left: '10px', top: '10px', maxWidth: 'calc(100% - 20px)', boxSizing: 'border-box', padding: '6px 12px', borderRadius: '999px', background: 'rgba(22,21,15,0.86)', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '15px', fontWeight: 400, color: '#F2EFE4', opacity: 0, transform: 'translateY(-8px)', transition: 'opacity 0.25s ease 0.06s, transform 0.4s cubic-bezier(0.34, 1.45, 0.5, 1) 0.06s', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } }, c.l));
+            })));
       })(),
       latest: (() => {
         const rows = [];
