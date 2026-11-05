@@ -26,7 +26,6 @@ Static site, no build step. Open `index.html` through a local server (it fetches
 
 ## Notes
 - History: built in Claude Design, then edited in a Claude artifact. The artifact is no longer the source of truth — this folder is.
-- Known open issue: the "Tavern Trek" link opens the 1899 gig.
 - Spotify "now playing" needs the separate worker (not in this folder).
 - Big images worth compressing before hosting: assets/profile.jpg (20 MB), recital-*.png (~19 MB total).
 - Hosting idea: GitHub Pages or Cloudflare Pages/Netlify straight from this folder (`.nojekyll` is already here).

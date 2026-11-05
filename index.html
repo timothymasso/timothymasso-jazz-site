@@ -2160,14 +2160,17 @@ class Component extends DCLogic {
   _hashToState(hash) {
     const parts = (hash || '#/').replace('#/', '').split('/').filter(Boolean);
     if (!parts.length) return { page: 'index' };
+    const sess = (n) => SESSIONS[Number(n)] ? { page: 'sessiondetail', session: Number(n), cue: 0 } : { page: 'sessions' };
+    // old gig slugs that shows.json replaced; unknown slugs would fall back to the first show
+    const OLD_GIG = { tavern: 'show-tavern-trek-2025-07-28', mob: 'show-halloween' };
     switch (parts[0]) {
       case 'performances':
         return parts[1] ? { page: 'detail', slug: parts[1] } : { page: 'perf' };
       case 'live':
-        if (parts[1] === 'session' && parts[2] != null) return { page: 'sessiondetail', session: Number(parts[2]), cue: 0 };
-        return parts[1] ? { page: 'gig', gig: parts[1] } : { page: 'live' };
+        if (parts[1] === 'session' && parts[2] != null) return sess(parts[2]);
+        return parts[1] ? { page: 'gig', gig: OLD_GIG[parts[1]] || parts[1] } : { page: 'live' };
       case 'sessions':
-        return parts[1] != null ? { page: 'sessiondetail', session: Number(parts[1]), cue: 0 } : { page: 'sessions' };
+        return parts[1] != null ? sess(parts[1]) : { page: 'sessions' };
       case 'compositions':
         return parts[1] ? { page: 'compdetail', comp: parts[1], part: 0 } : { page: 'comp' };
       case 'tech':
