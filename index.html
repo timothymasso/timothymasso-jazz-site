@@ -20,8 +20,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<link href="https://api.fontshare.com/v2/css?f[]=gambarino@400&amp;display=swap" rel="stylesheet">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link href="./fonts/gambarino.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;display=swap" rel="stylesheet">
 <style>
@@ -53,6 +53,10 @@
     --footer-cols: 1fr auto 1fr;
     --gigcols: minmax(0, 1fr) 150px 130px;
     --allcols: minmax(0, 1fr) 140px 190px;
+    --allgap: 24px;
+    --allyear: 74px;
+    --foot-start: flex-start;
+    --foot-end: flex-end;
     --ring-scale: 1;
     --ph-cols: 4;
     --hdr-cols: 1fr auto 1fr;
@@ -82,7 +86,12 @@
       --footer-cols: minmax(0, 1fr);
       --gigcols: minmax(0, 1fr);
       --allcols: minmax(0, 1fr);
+      --allgap: 2px 24px;
+      --allyear: 40px;
+      --foot-start: center;
+      --foot-end: center;
       --ring-scale: 0.6;
+      --ring-max: min(540px, 62svh);
       --ph-cols: 2;
       --hdr-cols: minmax(0, 1fr) auto;
       --hdr-areas: "name end" "nav nav";
@@ -100,11 +109,12 @@
   a:hover { color: var(--ink); }
   * { scrollbar-width: none; -ms-overflow-style: none; }
   ::-webkit-scrollbar { width: 0; height: 0; }
-  ::selection { background: transparent; color: var(--ink); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  ::selection { background: rgba(155, 178, 122, 0.32); color: var(--ink); }
   @keyframes vinyl { to { transform: rotate(360deg); } }
   @keyframes pageTurn { from { opacity: 0; transform: perspective(1400px) rotateY(-14deg); } to { opacity: 1; transform: none; } }
   @keyframes rise { from { opacity: 0; transform: translate3d(0, 14px, 0); } 40% { opacity: 1; } to { opacity: 1; transform: none; } }
   @keyframes slideUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes wipeIn { from { opacity: 0; clip-path: inset(-0.35em 100% -0.35em -0.15em); } to { opacity: 1; clip-path: none; } }
   @keyframes marquee { to { transform: translateX(-50%); } }
   @keyframes blink { 0%, 62% { opacity: 1; } 63%, 100% { opacity: 0.15; } }
@@ -117,14 +127,17 @@
   @keyframes sleeveIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 </style>
 </helmet>
-<div style="min-height: 100vh; display: flex; flex-direction: column; background: var(--paper); color: var(--ink); font-family: 'Newsreader', Georgia, serif; overflow-x: clip">
+<div style="position: relative; isolation: isolate; min-height: 100vh; display: flex; flex-direction: column; background: var(--paper); color: var(--ink); font-family: 'Newsreader', Georgia, serif; overflow-x: clip">
+  <sc-if value="{{ skyOn }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ skyRef }}" aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; height: 900px; z-index: -1; pointer-events: none; animation: fadeIn 0.7s cubic-bezier(0.3, 0, 0.3, 1) both"><div data-skydim="" style="position: absolute; left: 0; right: 0; top: 0; height: 0; background: rgba(0, 0, 0, 0.4); opacity: 0; transition: opacity 0.45s cubic-bezier(0.2, 0.7, 0.3, 1)"></div></div>
+  </sc-if>
   
-  <header ref="{{ hdrRef }}" style="position: sticky; top: 0; z-index: 50; background: var(--paper); font-family: 'Newsreader', Georgia, serif; color: var(--ink); transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)">
+  <header ref="{{ hdrRef }}" style="position: sticky; top: 0; z-index: 50; background: {{ hdrBg }}; font-family: 'Newsreader', Georgia, serif; color: var(--ink); transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)">
     <div style="display: grid; grid-template-columns: var(--hdr-cols); grid-template-areas: var(--hdr-areas); gap: 6px 16px; align-items: center; padding: 14px var(--gutter)">
       <a href="#" onClick="{{ goIndex }}" aria-hidden="{{ hdrNameHidden }}" tabIndex="{{ hdrNameTab }}" style="grid-area: name; color: var(--ink); font-family: 'Gambarino', Georgia, serif; font-size: 22px; letter-spacing: -0.02em; line-height: 1; justify-self: start; opacity: {{ hdrNameOp }}; pointer-events: {{ hdrNamePe }}; transition: opacity 0.4s ease" style-hover="color: var(--accent, #B8502A)">Timothy Masso</a>
       <nav aria-label="Main" style="grid-area: nav; display: flex; gap: var(--nav-gap); justify-content: center">
         <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
-          <a href="#" onClick="{{ n.go }}" aria-current="{{ n.current }}" style="position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; color: {{ n.color }}; font-family: 'Gambarino', Georgia, serif; font-size: var(--nav-size); letter-spacing: -0.02em; line-height: 1" style-hover="color: var(--accent, #B8502A)">{{ n.text }}<span aria-hidden="true" style="position: absolute; left: calc(100% - 4px + 0.03em); top: calc(50% + 0.19em); width: 0.2em; height: 0.2em; border-radius: 50%; background: var(--accent, #B8502A); opacity: {{ n.dot }}; transition: opacity 0.35s ease"></span></a>
+          <a href="#" onClick="{{ n.go }}" aria-current="{{ n.current }}" style="position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; color: {{ n.color }}; text-shadow: {{ navTs }}; transition: color 0.3s ease, text-shadow 0.6s ease; font-family: 'Gambarino', Georgia, serif; font-size: var(--nav-size); letter-spacing: -0.02em; line-height: 1" style-hover="color: var(--accent, #B8502A)">{{ n.text }}<span aria-hidden="true" style="position: absolute; left: calc(100% - 4px + 0.03em); top: calc(50% + 0.19em); width: 0.2em; height: 0.2em; border-radius: 50%; background: var(--accent, #B8502A); opacity: {{ n.dot }}; transition: opacity 0.35s ease"></span></a>
         </sc-for>
       </nav>
       <span style="grid-area: end; display: flex; gap: 18px; justify-content: flex-end; align-items: center; font-size: 14px; font-style: italic; color: var(--muted)">
@@ -145,23 +158,23 @@
 
 
   <sc-if value="{{ isIndex }}" hint-placeholder-val="{{ true }}">
-    <main style="animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; display: flex; flex-direction: column">
+    <main style="animation: fadeIn 0.7s cubic-bezier(0.3, 0, 0.3, 1) both; display: flex; flex-direction: column">
       
-      <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; gap: 12px">
-        <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, 12.4vw, 215px); line-height: 0.9; letter-spacing: -0.035em; color: var(--ink); white-space: nowrap; animation: wipeIn 0.8s cubic-bezier(0.2, 0.85, 0.2, 1) 0.05s both">Timothy Masso<span style="color: var(--accent, #B8502A)">.</span></h1>
+      <section style="padding: 28px var(--gutter) 20px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px">
+        <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, min(12.4vw, 22svh), 215px); line-height: 0.9; letter-spacing: -0.035em; color: var(--ink); text-shadow: {{ heroTs }}; transition: text-shadow 0.6s ease; white-space: nowrap; animation: fadeIn 0.7s cubic-bezier(0.3, 0, 0.3, 1) both">Timothy Masso<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="position: relative; z-index: 0; isolation: isolate; padding: 0; overflow: hidden">
-        <div style="position: relative; height: calc(640px * var(--ring-scale)); display: flex; align-items: center; justify-content: center; margin-top: calc(-60px * var(--ring-scale))">{{ ring }}</div>
-        <div role="group" aria-label="Season" style="position: absolute; right: var(--gutter); bottom: clamp(8px, 2vw, 16px); z-index: 10; max-width: calc(100% - 2 * var(--gutter)); display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px clamp(8px, 2.2vw, 14px); padding: clamp(6px, 1.4vw, 8px) clamp(12px, 3vw, 16px); border-radius: 18px; background: rgba(var(--paper-rgb), 0.88); box-shadow: 0 0 0 1px var(--rule), 0 10px 24px -12px rgba(0,0,0,0.6); font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: clamp(13px, 3.4vw, 14px); color: var(--faint)">
+        <div style="position: relative; height: clamp(calc(300px * var(--ring-scale)), calc(100svh - 64px - min(11.2vw, 20svh, 194px)), var(--ring-max, calc(640px * var(--ring-scale)))); display: flex; align-items: center; justify-content: center; margin-top: calc(-60px * var(--ring-scale))">{{ ring }}</div>
+        <div role="group" aria-label="Season" style="position: absolute; right: var(--gutter); bottom: clamp(8px, 2vw, 16px); z-index: 10; max-width: calc(100% - 2 * var(--gutter)); display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px clamp(8px, 2.2vw, 14px); padding: 0 clamp(10px, 3vw, 14px); border-radius: 18px; background: rgba(var(--paper-rgb), 0.88); box-shadow: 0 0 0 1px var(--rule), 0 10px 24px -12px rgba(0,0,0,0.6); font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: clamp(14px, 3.6vw, 15px); color: var(--faint)">
           <sc-for list="{{ seasonOpts }}" as="o" hint-placeholder-count="5">
-            <a href="#" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" style="color: {{ o.color }}" style-hover="color: var(--ink)">{{ o.label }}</a>
+            <a href="#" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" style="color: {{ o.color }}; display: inline-flex; align-items: center; min-height: 34px; padding: 0 3px; -webkit-tap-highlight-color: transparent" style-hover="color: var(--ink)">{{ o.label }}</a>
           </sc-for>
         </div>
         
         
       </section>
       <section style="position: relative; padding: 24px var(--gutter) 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: end; margin: 0 var(--gutter);  padding-left: 0; padding-right: 0">
-        <span aria-hidden="true" style="position: absolute; left: calc(50% - 50vw); width: 100vw; height: 6px; background: var(--accent, #9BB27A); -webkit-mask: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E&quot;) repeat-x left center / 24px 6px; mask: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='black' stroke-width='1.4'/%3E%3C/svg%3E&quot;) repeat-x left center / 24px 6px; top: -3px; animation: squiggle 2.4s linear infinite"></span>
+        <span aria-hidden="true" style="position: absolute; left: calc(50% - 50vw); width: 100vw; height: 12px; background: #CFE3A8; -webkit-mask: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 6 Q6 1.5 12 6 T24 6' fill='none' stroke='black' stroke-width='3'/%3E%3C/svg%3E&quot;) repeat-x left center / 24px 12px; mask: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath d='M0 6 Q6 1.5 12 6 T24 6' fill='none' stroke='black' stroke-width='3'/%3E%3C/svg%3E&quot;) repeat-x left center / 24px 12px; top: -6px; z-index: 42; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 5px rgba(190, 220, 140, 0.45)); animation: squiggle 2.4s linear infinite"></span>
         <p style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-size: clamp(22px, 2.4vw, 34px); line-height: 1.15; letter-spacing: -0.022em; color: var(--ink); text-wrap: pretty">I play the saxophone, write and arrange music, mix live shows, and take photos. This is an archive of all of it.</p>
         <sc-if value="{{ np.show }}" hint-placeholder-val="{{ false }}">
           <a href="{{ np.url }}" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 14px; width: fit-content; max-width: 100%; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
@@ -201,7 +214,7 @@
       </section>
       <section style="padding: 36px var(--gutter) 16px">
         <sc-for list="{{ snakeRows }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 96px">
+          <div style="position: relative; display: flex; gap: 24px; --stx: max(0px, min(40px, calc(var(--gutter) - 14px))); margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
             <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
               <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
@@ -383,7 +396,7 @@
       </section>
       <section style="padding: 36px var(--gutter) 8px">
         <sc-for list="{{ liveSnake }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 96px">
+          <div style="position: relative; display: flex; gap: 24px; --stx: max(0px, min(40px, calc(var(--gutter) - 14px))); margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
             <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
               <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
@@ -426,7 +439,7 @@
       <section id="sessions" style="padding: 8px var(--gutter) 28px; display: flex; flex-direction: column; gap: 20px">
         <div style="padding-top: 36px">
         <sc-for list="{{ sessionSnake }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 96px">
+          <div style="position: relative; display: flex; gap: 24px; --stx: max(0px, min(40px, calc(var(--gutter) - 14px))); margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
             <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
               <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
@@ -653,7 +666,7 @@
       </section>
       <section style="padding: 36px var(--gutter) 16px">
         <sc-for list="{{ compSnake }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; padding: 0 56px 96px">
+          <div style="position: relative; display: flex; gap: 24px; --stx: max(0px, min(40px, calc(var(--gutter) - 14px))); margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
             <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
               <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
@@ -697,7 +710,7 @@
       </section>
       <section style="padding: 8px var(--gutter) 0">
         <div style="position: relative; min-height: 62vh; background: #0B0B09; border-radius: 18px; overflow: hidden; display: grid; place-items: center; padding: 26px">
-          <img src="./assets/graphicscore.png" alt="Untitled graphic score: six labelled instrument lines — textures, alto, trumpet, bari, piano, bass (mostly bowed), drums" style="display: block; transform: rotate(-90deg); max-width: 62vh; max-height: 100%; width: auto; height: auto"></img>
+          <img src="./assets/graphicscore.png" alt="Untitled graphic score: six labelled instrument lines — textures, alto, trumpet, bari, piano, bass (mostly bowed), drums" style="display: block; transform: rotate(-90deg); max-width: 62vh; max-height: 100%; width: auto; height: auto">
         </div>
       </section>
     </main>
@@ -783,7 +796,7 @@
                 <a href="#" onClick="{{ t.cue }}" style="display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 9px 0 9px 8px; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round; color: var(--ink); box-shadow: inset 3px 0 0 {{ t.on }}; transition: background 0.18s ease" style-hover="background: var(--panel); color: var(--ink)">
                   <span style="font-weight: 500; font-size: 10px; letter-spacing: 0.22em; color: var(--accent, #B8502A)">{{ t.no }}</span>
                   <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 17px; letter-spacing: -0.03em">{{ t.title }}</span>
-                  <span style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; color: var(--muted); white-space: nowrap">{{ t.time }} ▶</span>
+                  <span style="font-family: 'Newsreader', Georgia, serif; font-size: 14px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums">{{ t.time }} ▶</span>
                 </a>
               </sc-for>
             </div>
@@ -920,7 +933,7 @@
       </section>
       <section style="padding: 8px var(--gutter) 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 24px">
         <a href="#" onClick="{{ goPerf }}" style="display: flex; flex-direction: column; gap: 12px; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
-          <span style="position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--panel); border-radius: 14px; overflow: hidden"><div role="img" aria-label="Playing alto" style="position: absolute; inset: 0; background-image: url('./assets/playing-tight2.png'); background-size: cover; background-position: center; filter: grayscale(1); transition: transform 0.6s cubic-bezier(0.2, 0.85, 0.2, 1), filter 0.3s ease" style-hover="transform: scale(1.04); filter: none"></div></span>
+          <span style="position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--panel); border-radius: 14px; overflow: hidden"><div role="img" aria-label="Playing alto" style="position: absolute; inset: 0; background-image: url('./assets/playing-tight2.jpg'); background-size: cover; background-position: center; filter: grayscale(1); transition: transform 0.6s cubic-bezier(0.2, 0.85, 0.2, 1), filter 0.3s ease" style-hover="transform: scale(1.04); filter: none"></div></span>
           <span style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><span style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(22px, 2.4vw, 32px); line-height: 0.94; letter-spacing: -0.026em">performances</span></span>
         </a>
         <a href="#" onClick="{{ goLive }}" style="display: flex; flex-direction: column; gap: 12px; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">
@@ -961,7 +974,7 @@
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px">
               <sc-for list="{{ g.items }}" as="p" hint-placeholder-count="8">
                 <a href="{{ p.src }}" onClick="{{ p.pop }}" aria-label="{{ p.label }}" style="display: block; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--panel)" style-hover="opacity: 0.85">
-                  <img src="{{ p.sm }}" alt="{{ p.label }}" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: cover"></img>
+                  <img src="{{ p.sm }}" alt="{{ p.label }}" loading="lazy" style="display: block; width: 100%; height: 100%; object-fit: cover">
                 </a>
               </sc-for>
             </div>
@@ -980,7 +993,7 @@
         </div>
         <div aria-label="Scrub through photos" onPointerDown="{{ scrDown }}" onPointerMove="{{ scrMove }}" onPointerUp="{{ scrUp }}" onPointerCancel="{{ scrUp }}" style="display: flex; gap: 10px; padding: 0 var(--gutter); touch-action: none; user-select: none; cursor: {{ scrCursor }}; position: relative">
           <div aria-hidden="true" data-scrtip="1" style="position: absolute; left: {{ scrTip.x }}; top: calc(100% + 8px); transform: translateX(-50%) translateY({{ scrTip.y }}) scale({{ scrTip.s }}); transform-origin: 50% 0; opacity: {{ scrTip.o }}; transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); pointer-events: none; z-index: 120; display: flex; flex-direction: column; align-items: center; gap: 6px">
-            <img data-scrimg="1" src="{{ scrTip.src }}" alt="" style="display: block; height: 96px; aspect-ratio: {{ scrTip.ratio }}; object-fit: cover; border-radius: 8px; box-shadow: 0 10px 24px -12px var(--accent, #5A7044)"></img>
+            <img data-scrimg="1" src="{{ scrTip.src }}" alt="" style="display: block; height: 96px; aspect-ratio: {{ scrTip.ratio }}; object-fit: cover; border-radius: 8px; box-shadow: 0 10px 24px -12px var(--accent, #5A7044)">
             <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 13px; color: var(--ink); white-space: nowrap" data-scrlab="1">{{ scrTip.label }}</span>
           </div>
           <sc-for list="{{ phScrub }}" as="m" hint-placeholder-count="8">
@@ -1001,7 +1014,7 @@
           <div aria-hidden="true" data-phglow="b" style="position: absolute; left: 50%; top: 52%; height: 22%; aspect-ratio: 5 / 4; transform: translate(-50%, -50%) scale(4.4); z-index: 99; background-image: url('{{ phGlow }}'); background-size: cover; background-position: center; filter: blur(14px) saturate(1.8) brightness(1); opacity: 0; border-radius: 50%; pointer-events: none; transition: opacity 0.7s ease; will-change: opacity"></div>
           <sc-for list="{{ phSlides }}" as="c" hint-placeholder-count="5">
             <a href="#" onClick="{{ c.go }}" draggable="false" data-ci="{{ c.i }}" aria-label="{{ c.label }}" style="position: absolute; left: 50%; top: 50%; height: 80%; max-width: 86vw; aspect-ratio: {{ c.ratio }}; border-radius: 16px; overflow: hidden; background: var(--panel); display: block; transform: {{ c.tf }}; opacity: {{ c.op }}; filter: {{ c.br }}; z-index: {{ c.z }}; pointer-events: {{ c.pe }}; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease, filter 0.5s ease; will-change: transform">
-              <img src="{{ c.src }}" data-sm="{{ c.sm }}" alt="{{ c.label }}" loading="{{ c.load }}" draggable="false" style="display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none"></img>
+              <img src="{{ c.src }}" data-sm="{{ c.sm }}" alt="{{ c.label }}" loading="{{ c.load }}" draggable="false" style="display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none">
             </a>
           </sc-for>
         </div>
@@ -1044,11 +1057,11 @@
       </section>
       <section style="padding: 20px var(--gutter) 26px">
         <sc-for list="{{ everything }}" as="y" hint-placeholder-count="6">
-          <div style="display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 0 20px; padding: 14px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
+          <div style="display: grid; grid-template-columns: var(--allyear) minmax(0, 1fr); gap: 0 20px; padding: 14px 0; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
             <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 11px; letter-spacing: 0.02em; color: var(--accent, #B8502A); padding-top: 6px">{{ y.year }}</span>
             <div style="display: flex; flex-direction: column">
               <sc-for list="{{ y.rows }}" as="r" hint-placeholder-count="8">
-                <a href="#" onClick="{{ r.open }}" style="display: grid; grid-template-columns: var(--allcols); gap: 24px; align-items: baseline; padding: 5px 10px 5px 6px; color: var(--ink); border-radius: 8px" style-hover="background: var(--panel); color: var(--ink)">
+                <a href="#" onClick="{{ r.open }}" style="display: grid; grid-template-columns: var(--allcols); gap: var(--allgap); align-items: baseline; padding: 5px 10px 5px 6px; color: var(--ink); border-radius: 8px" style-hover="background: var(--panel); color: var(--ink)">
                   <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 16px; letter-spacing: -0.02em">{{ r.title }}</span>
                   <span style="font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 14px; letter-spacing: 0; color: var(--muted); font-style: italic">{{ r.kind }}</span>
                   <span style="font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ r.meta }}</span>
@@ -1128,7 +1141,7 @@
             <a href="#" onClick="{{ toggleAboutFull }}" style="align-self: flex-start; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; color: var(--ink); min-height: 44px; display: inline-flex; align-items: center" style-hover="color: var(--accent, #B8502A)">( {{ aboutFullLabel }} )</a>
           </div>
           <figure style="margin: 28px 0 8px; display: flex; flex-direction: column; gap: 8px">
-            <div role="img" aria-label="Timothy Masso outside Severance Hall" style="aspect-ratio: 16 / 7; border-radius: 14px; overflow: hidden; background-image: url('./assets/about-banner.png'); background-size: cover; background-position: center"></div>
+            <div role="img" aria-label="Timothy Masso outside Severance Hall" style="aspect-ratio: 16 / 7; border-radius: 14px; overflow: hidden; background-image: url('./assets/about-banner.jpg'); background-size: cover; background-position: center"></div>
             <figcaption style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; color: var(--muted)">outside Severance Hall, Cleveland</figcaption>
           </figure>
           <sc-if value="{{ aboutFull }}" hint-placeholder-val="{{ false }}">
@@ -1183,7 +1196,7 @@
     <div aria-hidden="true" style="flex: 1 0 8px"></div>
     <footer style="flex: none; margin: 0 var(--gutter); padding: 24px 0 30px; font-family: 'Newsreader', Georgia, serif; font-size: 14px; font-weight: 400; letter-spacing: 0; color: var(--muted); font-style: italic">
       <div style="display: grid; grid-template-columns: var(--footer-cols); align-items: center; gap: 16px">
-      <span style="display: flex; gap: 18px; flex-wrap: wrap">
+      <span style="display: flex; gap: 18px; flex-wrap: wrap; justify-content: var(--foot-start)">
         <a href="https://www.instagram.com/himothymasso/" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">instagram</a>
         <a href="https://github.com/timothymasso" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">github</a>
         <a href="https://www.cosmos.so/timothymasso" target="_blank" rel="noopener noreferrer" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">cosmos</a>
@@ -1192,7 +1205,7 @@
         <a href="#" onClick="{{ goAll }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">everything</a>
         <a href="#" onClick="{{ goPeople }}" style="color: var(--ink)" style-hover="color: var(--accent, #B8502A)">who i played with</a>
       </span>
-      <span style="text-align: right; display: flex; justify-content: flex-end; align-items: baseline; gap: 10px">© {{ year }} Timothy Masso<span aria-hidden="true" style="font-family: 'Mrs Saint Delafield', cursive; font-style: normal; font-size: 30px; line-height: 0.6; color: var(--ink); opacity: 0.85; transform: rotate(-6deg) translateY(4px); display: inline-block">TM</span></span>
+      <span style="text-align: right; display: flex; justify-content: var(--foot-end); align-items: baseline; gap: 10px">© {{ year }} Timothy Masso<span aria-hidden="true" style="font-family: 'Mrs Saint Delafield', cursive; font-style: normal; font-size: 30px; line-height: 0.6; color: var(--ink); opacity: 0.85; transform: rotate(-6deg) translateY(4px); display: inline-block">TM</span></span>
       </div>
     </footer>
   <div ref="{{ railRef }}" aria-hidden="true" style="position: fixed; z-index: 95; top: 0; right: 0; width: 10px; height: 100vh; opacity: 0; transition: opacity 0.35s ease; pointer-events: none">
@@ -1212,7 +1225,7 @@ const PERFS = [
     when: 'April 19, 2024 — 6pm', venue: NS, address: NS_ADDR,
     leader: 'Timothy Masso', role: 'Alto sax & piano', field: '#1B7F8C', img: './assets/playing.webp',
     extras: true, repLabel: 'SET LIST',
-    images: [{ label: 'Poster', f: './assets/recital-poster.png', ratio: '17 / 22' }, { label: 'Program', f: './assets/recital-program.png', ratio: '17 / 22' }, { label: 'Stage plot', f: './assets/recital-stageplot.png', ratio: '16 / 9' }],
+    images: [{ label: 'Poster', f: './assets/recital-poster.jpg', ratio: '17 / 22' }, { label: 'Program', f: './assets/recital-program.jpg', ratio: '17 / 22' }, { label: 'Stage plot', f: './assets/recital-stageplot.jpg', ratio: '16 / 9' }],
     repertoire: [
       { t: 'Free Improvised Piano and Drum Duo', n: 'Tim on piano' },
       { t: 'Resolute', n: 'Composed by Timothy Masso' },
@@ -1254,9 +1267,9 @@ const PERFS = [
     ]
   },
   {
-    yt: 'HfmpWLo5oo4', start: 6220, thumb: './assets/improv-thumb.png', slug: 'improv', title: 'Improv Ensemble', date: '08 NOV 2023', year: '2023',
+    yt: 'HfmpWLo5oo4', start: 6220, thumb: './assets/improv-thumb.jpg', slug: 'improv', title: 'Improv Ensemble', date: '08 NOV 2023', year: '2023',
     when: 'November 8, 2023 — 1pm', venue: NS, address: NS_ADDR,
-    leader: 'Andrew Cyrille', role: 'Alto saxophone', field: '#1B7F8C', img: './assets/improv-thumb.png', repLabel: 'SET LIST',
+    leader: 'Andrew Cyrille', role: 'Alto saxophone', field: '#1B7F8C', img: './assets/improv-thumb.jpg', repLabel: 'SET LIST',
     repertoire: [
       { t: 'Broccoli', n: 'Composed by Jonathan Telsin' },
       { t: 'Imminent', n: '' },
@@ -1441,7 +1454,7 @@ const PERFS = [
   {
     yt: 'L_jJaFzohR4', start: 0, slug: 'unsilent', title: 'Unsilent Film Project', date: '21 JUL 2021', year: '2021',
     when: 'July 21, 2021 — 12:30pm to 7pm', venue: TISH, address: TISH_ADDR,
-    leader: 'Ben Allison', role: 'Alto sax, flute', field: '#1B7F8C', img: './assets/olddoe.png',
+    leader: 'Ben Allison', role: 'Alto sax, flute', field: '#1B7F8C', img: './assets/olddoe.jpg',
     repLabel: 'REPERTOIRE',
     repertoire: [
       { t: 'Opening Credits, Before Wonderland', n: 'Matthew Kuperberg' },
@@ -1781,10 +1794,10 @@ class Component extends DCLogic {
   // palettes drawn from the photo set: snowy river, daffodils/irises/blossom, daylilies/hydrangea/hosta, sunset amber
   _seasonParams(k) {
     return ({
-      winter: { h: 44, hv: 10, s: 9, l: 6, gs: 7, gl: 3, hm: 0.8, snow: 1, fd: 0, fl: [], bz: { kind: 'snow', c: ['#F4F1EA', '#E6EAF0', '#FFFFFF'] } },
-      spring: { h: 80, hv: 14, s: 24, l: 2, gs: 16, gl: 0, hm: 0.9, fd: 1.25, fl: [[48, 85, 62], [50, 30, 92], [265, 50, 58], [48, 80, 70]], bz: { kind: 'petal', c: ['#F2C531', '#F7E27A', '#FBF6E6', '#B98BE8'] } },
-      summer: { h: 96, hv: 14, s: 24, l: 1, gs: 18, gl: 0, hm: 1.1, fd: 1.4, fl: [[24, 80, 58], [220, 50, 64], [285, 32, 74], [330, 38, 80], [40, 25, 88]], bz: { kind: 'petal', c: ['#E8742A', '#F29A3E', '#C9A0DC', '#FBF6E6'] } },
-      fall: { h: 40, hv: 16, s: 30, l: 0, gs: 18, gl: 0, hm: 0.95, fd: 0.45, fl: [[270, 32, 68], [46, 72, 56]], bz: { kind: 'leaf', c: ['#E0732B', '#C8552A', '#E9A64A', '#B3743A'] } }
+      winter: { h: 44, hv: 10, s: 9, l: 6, gs: 7, gl: 3, hm: 0.58, snow: 1, haze: ['#3A4660', 0.55], skyAll: {'ground': '#525E6E', 'zen': ['#0B111F', '#121A2E', '#1C2540'], 'stops': [[0.1, '#1C2540'], [0.13, '#26304A'], [0.17, '#3A4660'], [0.22, '#56617A'], [0.3, '#4A5468']], 'sun': {'x': 0.8, 'y': 0.13, 'R': 0.4, 'stops': [[0, 'rgba(246,248,255,1)'], [0.06, 'rgba(246,248,255,1)'], [0.145, 'rgba(214,226,250,0.42)'], [0.41, 'rgba(170,190,230,0.12)'], [1, 'rgba(160,180,220,0)']]}}, fd: 0, fl: [], bz: { kind: 'snow', c: ['#F4F1EA', '#E6EAF0', '#FFFFFF'] } },
+      spring: { haze: ['#F1D9C8', 0.6], h: 88, hv: 20, s: 46, l: 15, gs: 30, gl: 12, hm: 1.32, skyAll: {'ground': '#2E3B1F', 'zen': ['#24223F', '#3E3863', '#6E6390'], 'stops': [[0.1, '#6E6390'], [0.125, '#9A88AE'], [0.15, '#D9B6BE'], [0.19, '#F0D0BF'], [0.22, '#F8E6CC'], [0.3, '#E8EDD2']], 'sun': {'x': 0.21, 'y': 0.2, 'R': 0.32, 'stops': [[0, 'rgba(255,248,232,0.95)'], [0.089, 'rgba(255,248,232,0.95)'], [0.25, 'rgba(255,224,204,0.55)'], [1, 'rgba(255,214,196,0)']]}}, base: 'linear-gradient(to bottom, rgba(170,190,140,0) 0%, hsl(88,30%,22%) 18%, hsl(88,30%,18%) 100%)', fd: 1.7, fl: [[48, 88, 62], [50, 25, 94], [268, 55, 64], [340, 55, 80], [48, 80, 72]], bz: { kind: 'blossom', c: ['#F6C6D4', '#FBE4EC', '#FFFFFF', '#F2A7BE'] } },
+      summer: { haze: ['#E4E6CC', 0.55], h: 104, hv: 14, s: 42, l: 11, gs: 32, gl: 9, hm: 1.42, fd: 0.75, fl: [[24, 85, 56], [220, 55, 66], [330, 50, 62], [52, 90, 60]], skyAll: {'ground': '#26381A', 'zen': ['#164C80', '#2A68A2', '#4F8FC4'], 'stops': [[0.1, '#4F8FC4'], [0.13, '#75AED6'], [0.165, '#9CCAE4'], [0.205, '#C9E1EA'], [0.23, '#ECE7C6'], [0.3, '#E6E3B6']], 'sun': {'x': 0.74, 'y': 0.14, 'R': 0.41, 'stops': [[0, 'rgba(255,253,240,1)'], [0.083, 'rgba(255,253,240,1)'], [0.19, 'rgba(255,238,186,0.6)'], [0.42, 'rgba(255,228,165,0.22)'], [1, 'rgba(255,220,150,0)']]}}, base: 'linear-gradient(to bottom, rgba(150,180,90,0) 0%, hsl(100,34%,20%) 18%, hsl(100,34%,16%) 100%)', bz: { kind: 'butterfly', c: ['#E8892A', '#F4F0E2', '#F2D04A', '#7FA8E0'] } },
+      fall: { h: 38, hv: 16, s: 40, l: 6, gs: 26, gl: 4, haze: ['#E9A574', 0.6], skyAll: {'ground': '#2A2014', 'zen': ['#1F1934', '#362A50', '#5B3F6A'], 'stops': [[0.1, '#5B3F6A'], [0.125, '#8A5476'], [0.15, '#C06A6E'], [0.185, '#E38C62'], [0.215, '#F3B270'], [0.24, '#F6CC8E'], [0.32, '#D99A5E']], 'sun': {'x': 0.66, 'y': 0.21, 'R': 0.45, 'stops': [[0, 'rgba(255,236,196,1)'], [0.079, 'rgba(255,236,196,1)'], [0.18, 'rgba(255,196,120,0.6)'], [0.43, 'rgba(246,150,90,0.22)'], [1, 'rgba(240,140,80,0)']]}}, base: 'linear-gradient(to bottom, rgba(150,110,60,0) 0%, hsl(36,34%,16%) 18%, hsl(34,30%,12%) 100%)', hm: 1.32, fd: 0.45, fl: [[270, 32, 68], [46, 72, 56]], bz: { kind: 'leaf', c: ['#E0732B', '#C8552A', '#E9A64A', '#B3743A'] } }
     })[k];
   }
   _seasonVals() {
@@ -1794,11 +1807,34 @@ class Component extends DCLogic {
       const wrap = this._ringWrap, host = wrap && wrap.parentNode;
       if (this._rm || !host || !host.animate) { this.setState({ season: v }); return; }
       if (this._seaBusy) return; this._seaBusy = 1;
-      const ov = document.createElement('div'); ov.style.cssText = 'position:absolute;inset:0;z-index:20;pointer-events:auto;background:var(--paper);opacity:0'; host.appendChild(ov);
-      ov.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 380, easing: 'cubic-bezier(0.4, 0, 0.6, 1)', fill: 'forwards' }).onfinish = () => { this.setState({ season: v }, () => { this._seaBusy = 0; setTimeout(() => ov.remove(), 60); }); };
+      this._dimOn = false; this._fHov = false; this._pend = null; clearTimeout(this._hovT); this._hovEl = null;
+      // season change: a black curtain wipes down over the sky and field, the season swaps behind it, then it wipes on down and fades away
+      const sky = this._skyEl, page = sky && sky.offsetParent, hgt = sky ? sky.offsetHeight : 0, main = wrap.closest('main'), name = main && main.querySelector('h1');
+      if (!sky || !page || !hgt || !main) { this._seaBusy = 0; this.setState({ season: v }); return; }
+      const E = 140, clip = document.createElement('div'), cur = document.createElement('div');
+      // the curtain lives in the page's main area, under the name, and reaches up to the top of the page
+      if (getComputedStyle(main).position === 'static') main.style.position = 'relative';
+      if (name) { name.style.position = 'relative'; name.style.zIndex = '41'; }
+      const mTop = main.getBoundingClientRect().top - page.getBoundingClientRect().top;
+      clip.style.cssText = 'position:absolute;left:0;right:0;top:' + (-mTop) + 'px;height:' + hgt + 'px;overflow:hidden;z-index:40;pointer-events:auto';
+      cur.style.cssText = 'position:absolute;left:0;right:0;top:0;height:' + (hgt + 2 * E) + 'px;background:linear-gradient(to bottom, rgba(0,0,0,0) 0px, #000 ' + E + 'px, #000 ' + (hgt + E) + 'px, rgba(0,0,0,0) 100%);will-change:transform,opacity';
+      clip.appendChild(cur); main.appendChild(clip);
+      const off = 'translate3d(0,' + (-(hgt + 2 * E)) + 'px,0)', on = 'translate3d(0,' + (-E) + 'px,0)', gone = 'translate3d(0,' + (hgt + E) + 'px,0)';
+      cur.animate([{ transform: off }, { transform: on }], { duration: 560, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', fill: 'forwards' }).onfinish = () => {
+        this.setState({ season: v }, () => {
+          const t0 = performance.now();
+          const reveal = () => {
+            const w = this._ringWrap;
+            if (!(w && w._in) && performance.now() - t0 < 1800) { setTimeout(reveal, 50); return; }
+            const a = cur.animate([{ transform: on, opacity: 1 }, { transform: gone, opacity: 0 }], { duration: 900, easing: 'cubic-bezier(0.45, 0, 0.25, 1)', fill: 'forwards' });
+            a.onfinish = () => { clip.remove(); this._seaBusy = 0; };
+          };
+          setTimeout(reveal, 120);
+        });
+      };
     };
     const act = cur === 'auto' ? now : cur;
-    return { seasonOpts: ['winter', 'spring', 'summer', 'fall'].map((v) => ({ label: v === now ? v + ' (now)' : v, pick: pick(v === now ? 'auto' : v), on: act === v ? 'true' : 'false', color: act === v ? 'var(--ink)' : 'var(--muted)' })) };
+    return { seasonOpts: ['winter', 'spring', 'summer', 'fall'].map((v) => ({ label: v === now ? v + ' (now)' : v, pick: pick(v === now ? 'auto' : v), on: act === v ? 'true' : 'false', color: act === v ? 'var(--ink)' : 'rgba(var(--ink-rgb), 0.66)' })) };
   }
   _breeze(cv, T, dt) {
     const W = cv.clientWidth, H = cv.clientHeight; if (!W || !H) return;
@@ -1811,7 +1847,7 @@ class Component extends DCLogic {
     if (!this._motes) {
       const pal = this._seasonParams(this._season()).bz;
       this._bzPal = pal;
-      this._motes = Array.from({ length: pal.kind === 'snow' ? 60 : 12 }, () => ({ x: rnd() * W, y: H * (0.1 + rnd() * 0.62), v: 14 + rnd() * 22, r: pal.kind === 'snow' ? 1 + rnd() * 1.4 : 3 + rnd() * 3, a: 0.55 + rnd() * 0.35, p: rnd() * 6.28, rot: rnd() * 6.28, spin: (rnd() - 0.5) * 3, col: pal.c[Math.floor(rnd() * pal.c.length)] }));
+      this._motes = Array.from({ length: pal.kind === 'snow' ? (W < 700 ? 55 : 110) : pal.kind === 'butterfly' ? 7 : pal.kind === 'blossom' ? 22 : 12 }, () => ({ x: rnd() * W, y: pal.kind === 'butterfly' ? H * (0.3 + rnd() * 0.45) : H * (0.1 + rnd() * 0.62), v: 14 + rnd() * 22, r: pal.kind === 'snow' ? (() => { const d = rnd(); return 0.6 + d * d * d * 5.5; })() : 3 + rnd() * 3, a: 0.55 + rnd() * 0.35, p: rnd() * 6.28, rot: rnd() * 6.28, spin: (rnd() - 0.5) * 3, col: pal.c[Math.floor(rnd() * pal.c.length)] }));
       this._glints = Array.from({ length: 5 }, () => ({ x: rnd() * W, y: H * (0.15 + rnd() * 0.55), t: rnd() * 4, d: 2.5 + rnd() * 3 }));
     }
     if (!this._wisps) this._wisps = Array.from({ length: 2 }, (_, i) => ({ x: -W * (0.3 + i * 0.7), y: H * (0.2 + rnd() * 0.4), len: 140 + rnd() * 120, v: 60 + rnd() * 30, p: rnd() * 6.28 }));
@@ -1834,7 +1870,37 @@ class Component extends DCLogic {
       c.fillStyle = '#FFF6DC'; c.beginPath(); c.arc(g.x, g.y, 0.9 + e * 0.6, 0, 6.283); c.fill();
     }
     const kind = this._bzPal.kind;
+    if (kind === 'snow') {
+      const wr = cv.getBoundingClientRect(), spot = (s) => { for (let k = 0; k < 6; k++) { s.x = rnd() * W; s.y = H * (0.42 + Math.pow(rnd(), 0.8) * 0.55); const el = document.elementFromPoint(wr.left + s.x, wr.top + s.y); if (!el || !el.closest || !el.closest('a[data-base]')) break; } s.t = 0; s.d = 1.2 + rnd() * 2.6; s.s = 1.6 + rnd() * 2.6 * (s.y / H); };
+      if (!this._sparkT0 || this._sparkSea !== this._bzSea) { this._sparkT0 = T; this._sparkSea = this._bzSea; this._sparks = null; }
+      if (T - this._sparkT0 < 1.6) {} else if (!this._sparks || this._sparks._W !== W) { this._sparks = Array.from({ length: 34 }, () => { const s = {}; spot(s); s.t = rnd() * s.d; return s; }); this._sparks._W = W; }
+      c.lineCap = 'round';
+      for (const s of (this._sparks || [])) { s.t += dt; if (s.t > s.d) spot(s); const e = Math.sin(Math.min(1, s.t / s.d) * Math.PI); if (e < 0.05) continue;
+        const L = s.s * (0.6 + e); c.globalAlpha = 0.85 * e; c.strokeStyle = '#F6FAFF'; c.lineWidth = 0.7; c.beginPath(); c.moveTo(s.x - L, s.y); c.lineTo(s.x + L, s.y); c.moveTo(s.x, s.y - L * 1.3); c.lineTo(s.x, s.y + L * 1.3); c.stroke();
+        c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(s.x, s.y, 0.6 + 0.6 * e, 0, 6.283); c.fill(); }
+      c.globalAlpha = 1;
+    }
     for (const m of this._motes) {
+      if (kind === 'snow') {
+        const near = Math.min(1, m.r / 6);
+        m.p += dt * (0.6 + near * 0.5); m.y += (10 + m.r * 7) * dt; m.x += (Math.sin(m.p + m.rot) * (6 + near * 10) + 4 * (0.35 + gust)) * dt;
+        if (m.y > H + 10) { m.y = -10 - rnd() * 40; m.x = rnd() * W; } if (m.x > W + 10) m.x = -10; if (m.x < -10) m.x = W + 10;
+        if (this._bzPal.flat) { c.globalAlpha = 0.95; c.fillStyle = m.col; c.beginPath(); c.arc(m.x, m.y, 1.6 + m.r * 0.75, 0, 6.283); c.fill(); continue; }
+        if (m.r > 2.6) { const g = c.createRadialGradient(m.x, m.y, 0, m.x, m.y, m.r); g.addColorStop(0, 'rgba(250,252,255,' + (0.55 * m.a).toFixed(3) + ')'); g.addColorStop(0.45, 'rgba(240,246,255,' + (0.3 * m.a).toFixed(3) + ')'); g.addColorStop(1, 'rgba(235,242,255,0)'); c.globalAlpha = 1; c.fillStyle = g; c.beginPath(); c.arc(m.x, m.y, m.r, 0, 6.283); c.fill(); }
+        else { c.globalAlpha = m.a * (0.55 + 0.45 * near); c.fillStyle = '#F4F7FC'; c.beginPath(); c.arc(m.x, m.y, m.r, 0, 6.283); c.fill(); }
+        continue;
+      }
+      if (kind === 'butterfly') {
+        // summer afternoon: a few butterflies wandering over the tall grass, wings beating
+        m.p += dt * (0.5 + m.r * 0.04); m.x += (Math.cos(m.p * 0.8 + m.rot) * 26 + 10) * dt; m.y += (Math.sin(m.p * 1.3 + m.rot) * 20 + Math.sin(m.p * 9) * 6) * dt;
+        if (m.x > W + 20) { m.x = -20; m.y = H * (0.3 + rnd() * 0.45); } m.y = Math.max(H * 0.22, Math.min(H * 0.85, m.y));
+        const flap = 0.15 + 0.85 * Math.abs(Math.sin(m.p * 11 + m.rot)), s0 = 4.5 + m.r * 0.6, dir = Math.cos(m.p * 0.8 + m.rot) >= -0.4 ? 1 : -1;
+        c.save(); c.translate(m.x, m.y); c.scale(dir, 1); c.rotate(-0.25 + Math.sin(m.p * 2) * 0.15); c.globalAlpha = 0.95;
+        c.fillStyle = m.col; c.beginPath(); c.ellipse(-s0 * 0.55 * flap, -s0 * 0.35, s0 * 0.75 * flap, s0 * 0.62, -0.5, 0, 6.283); c.ellipse(s0 * 0.55 * flap, -s0 * 0.35, s0 * 0.75 * flap, s0 * 0.62, 0.5, 0, 6.283); c.fill();
+        c.globalAlpha = 0.85; c.beginPath(); c.ellipse(-s0 * 0.4 * flap, s0 * 0.3, s0 * 0.48 * flap, s0 * 0.4, 0.4, 0, 6.283); c.ellipse(s0 * 0.4 * flap, s0 * 0.3, s0 * 0.48 * flap, s0 * 0.4, -0.4, 0, 6.283); c.fill();
+        c.globalAlpha = 1; c.fillStyle = '#2A211A'; c.fillRect(-0.6, -s0 * 0.7, 1.2, s0 * 1.3);
+        c.restore(); continue;
+      }
       m.p += dt * (0.9 + m.r * 0.08); m.rot += m.spin * dt * (0.6 + gust);
       m.x += m.v * (0.35 + gust) * dt; m.y += (Math.sin(m.p) * 10 + (kind === 'snow' ? 6 : 1)) * dt;
       if (m.x > W + 14 || m.y > H * 0.85) { m.x = -14; m.y = H * (0.08 + rnd() * 0.55); }
@@ -1883,17 +1949,25 @@ class Component extends DCLogic {
     let moving = cam !== tx, stale = false;
     for (const it of this._fItems) {
       const el = it.el; if (!el.isConnected) { stale = true; continue; }
+      if (it.drift) { const sc = it.sc || (it.sc = P / (P - it.z)), tf = 'translate3d(' + (W / 2 + (it.X + cam) * sc).toFixed(1) + 'px,' + (oy + (G + it.sink - oy) * sc - it.h * sc).toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')'; if (el._tf !== tf) { el._tf = tf; el.style.transform = tf; } continue; }
       if (it.grp) {
-        if (el._W && el._W !== W && el._repaint && !el._rp) { el._rp = 1; setTimeout(() => { el._rp = 0; el._repaint(); }, 200); }
+        if (el._W && (el._W !== W || Math.abs((el._H || 0) - H) > 2) && el._repaint && !el._rp) { el._rp = 1; const wait = () => { if (performance.now() - (this._rsAt || 0) < 140) { setTimeout(wait, 60); return; } el._rp = 0; if (el.isConnected) el._repaint(); }; setTimeout(wait, 90); }
         continue;
       }
-      const lt = el._liftT || 0, pt = el._pullT || 0;
-      if (spring(el, '_lift', '_liftV', lt, 9, 0.75)) moving = true;
-      if (spring(el, '_pull', '_pullV', pt, 7.5, 1)) moving = true;
-      if (spring(el, '_cs', '_csV', pt, 13, 0.42)) moving = true;
+      // two-step motion: on hover the card first rises straight up out of the grass (still behind the blades in front),
+      // then comes forward; on the way back it settles into place first, then sinks down into the grass
+      const want = el._pullT ? 1 : 0, snowy = !!this._noMask, up = -(it.sink + (snowy ? 58 : 75));
+      const pt = want ? ((this._rm || el._lift <= up * (snowy ? 0.88 : 0.35) || nowT - (el._hovAt || 0) > (snowy ? 600 : 140)) ? 1 : 0) : 0;
+      const lt = want ? up : up * Math.min(1, Math.max(0, el._pull || 0) * 1.8);
+      if (pt === 1 && el._zHi && el.style.zIndex !== el._zHi) el.style.zIndex = el._zHi;
+      if (want && !pt) moving = true;
+      if (spring(el, '_lift', '_liftV', lt, want ? 9 : 7, 1)) moving = true;
+      if (spring(el, '_pull', '_pullV', pt, 6, 1)) moving = true;
+      if (spring(el, '_cs', '_csV', pt, 8, 0.8)) moving = true;
       const lift = el._lift, pull = Math.max(0, Math.min(1, el._pull)); if (pt === 1 && pull > 0.95 && !el._zone) { const hz = el.querySelector('[data-hit]'); if (hz) { el._zone = 1; hz.style.cssText = 'position:absolute;left:3%;right:3%;top:2%;bottom:2%;pointer-events:auto;'; el.style.pointerEvents = 'none'; } }
       if (pt === 0 && el._pull < 0.35 && el.dataset.z != null && el.style.zIndex !== el.dataset.z) el.style.zIndex = el.dataset.z;
-      if (el._ret && pt === 0 && el._pull === 0 && lift === lt) { el._ret = 0; el.style.pointerEvents = ''; }
+      // hoverable again once it's most of the way home, instead of waiting for the spring to fully settle
+      if (el._ret && pt === 0 && el._pull < 0.45) { el._ret = 0; el.style.pointerEvents = ''; if (this._mx != null && !this._hovEl && !this._pend && el.isConnected && this._hoverNow) { const u = document.elementFromPoint(this._mx, this._my), on = u && u.closest ? u.closest('a[data-base]') : null; if (on === el && !this._fHov) this._hoverNow(el); } }
       let sc = it.sc || (it.sc = P / (P - it.z)), sx = W / 2 + (it.X + cam) * sc, sy = oy + (G + it.sink + lift - oy) * sc - it.h * sc;
       const scF = Math.max(sc, Math.min(1.1, (H - 120) / it.h)); el._kF = (1 / scF).toFixed(3);
       if (pull > 0) {
@@ -1901,6 +1975,7 @@ class Component extends DCLogic {
         const fx = Math.max(12, Math.min(W - w - 12, cx - w / 2)), fy = Math.max(70, Math.min(H - hh - 24, bot - hh)), e = pull * pull * (3 - 2 * pull);
         sx += (fx - sx) * e; sy += (fy - sy) * e; sc += (scF - sc) * e;
       }
+      if (!this._noMask) { const mk = (pt === 1 || pull >= 0.35) ? '0 0%' : '0 100%'; const im = el.firstChild; if (im && el._mk !== mk) { el._mk = mk; im.style.webkitMaskPosition = mk; im.style.maskPosition = mk; } }
       const tf = 'translate3d(' + sx.toFixed(1) + 'px,' + sy.toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')';
       if (el._tf !== tf) { el._tf = tf; el.style.transform = tf; }
       if (pull > 0 || el._capOn) { const cap = el._cap || (el._cap = el.querySelector('[data-cap]')); if (cap) { const spr = el._cs || 0, ct = 'translateX(-50%) scale(' + ((0.82 + 0.18 * spr) / sc).toFixed(3) + ') translateY(' + (-10 * (1 - spr)).toFixed(1) + 'px)'; if (cap._tf !== ct) { cap._tf = ct; cap.style.transform = ct; } } el._capOn = pull > 0; }
@@ -1936,7 +2011,7 @@ class Component extends DCLogic {
       [ALL_GIGS, GIGS].forEach((arr) => { for (let i = arr.length - 1; i >= 0; i--) if (arr[i].slug === 'mob' || arr[i].slug === 'tavern' || String(arr[i].slug).startsWith('show-')) arr.splice(i, 1); arr.unshift(...rows); });
       this.forceUpdate();
     }).catch(() => {});
-    this._onRs = () => { const w = window.innerWidth < 720; if (w !== this._narrow) { this._narrow = w; this.forceUpdate(); } clearTimeout(this._rsT); this._rsT = setTimeout(() => { const W = (this._ringWrap && this._ringWrap.clientWidth) || 0; if (W && Math.abs(W - (this._lastFW || 0)) > 24) { this._lastFW = W; this.forceUpdate(); } }, 220); };
+    this._onRs = () => { const w = window.innerWidth < 720; if (w !== this._narrow) { this._narrow = w; this.forceUpdate(); } this._rsAt = performance.now(); clearTimeout(this._rsT); const chk = () => { const w = this._ringWrap, W = (w && w.clientWidth) || 0, H = (w && w.clientHeight) || 0; if (W && (Math.abs(W - (this._lastFW || 0)) > 24 || Math.abs(H - (this._lastFH || 0)) > 24)) { this._lastFW = W; this._lastFH = H; this.forceUpdate(); if (!this._rm && w.animate) requestAnimationFrame(() => w.querySelectorAll('a[data-base]').forEach((c) => c.animate([{ opacity: 0.25 }, { opacity: 1 }], { duration: 320, easing: 'cubic-bezier(0.3, 0, 0.3, 1)' }))); } }; this._rsT = setTimeout(chk, 150); };
     this._touch = window.matchMedia && window.matchMedia('(hover: none)').matches;
     this._narrow = window.innerWidth < 720; window.addEventListener('resize', this._onRs);
     try { const sv = localStorage.getItem('tm-season'); if (sv && sv !== 'auto') this.setState({ season: sv }); } catch (_) {}
@@ -2046,7 +2121,7 @@ class Component extends DCLogic {
   _setTitle() {
     if (document.title !== 'Timothy Masso') document.title = 'Timothy Masso';
   }
-  componentDidUpdate(pp, ps) { this._setTitle(); if (!this._phSpyOn) { this._phSpyOn = 1; window.addEventListener('scroll', this._phSpyFn, { passive: true }); } this._phSpyFn(); this._phReveal(); this._applyAccent(); this._renderPdfs(); setTimeout(this._syncRail, 80); }
+  componentDidUpdate(pp, ps) { this._setTitle(); if (this._skyFit) { try { this._skyFit(); } catch (e) {} } if (!this._phSpyOn) { this._phSpyOn = 1; window.addEventListener('scroll', this._phSpyFn, { passive: true }); } this._phSpyFn(); this._phReveal(); this._applyAccent(); this._renderPdfs(); setTimeout(this._syncRail, 80); }
 
   /* ── hash routing ── */
 
@@ -2217,8 +2292,8 @@ class Component extends DCLogic {
     const p = this.state.page;
     const _noMaxRes = new Set(['MhJe7zcYz50']);
     const _ytThumb = (id) => _noMaxRes.has(id)
-      ? 'url("https://i.ytimg.com/vi/' + id + '/hqdefault.jpg")'
-      : 'url("https://i.ytimg.com/vi/' + id + '/maxresdefault.jpg")';
+      ? 'url("./assets/yt/' + id + '/hqdefault.jpg")'
+      : 'url("./assets/yt/' + id + '/maxresdefault.jpg")';
     const FIELDS = ['var(--paper)', 'var(--accent, #B8502A)', 'var(--panel)', 'var(--panel)'];
     const INKS = { 'var(--paper)': 'var(--ink)', 'var(--accent, #B8502A)': 'var(--paper)', 'var(--panel)': 'var(--ink)', 'var(--panel)': 'var(--paper)' };
     const list = PERFS.map((x, n) => {
@@ -2243,7 +2318,7 @@ class Component extends DCLogic {
       ...c,
       bg: c.thumb ? "url('" + c.thumb + "')" : (c.img && c.img.indexOf('5thfloor') === -1)
         ? "url('" + c.img + "')"
-        : 'url("https://i.ytimg.com/vi/' + c.yt + '/hq2.jpg")',
+        : 'url("./assets/yt/' + c.yt + '/hq2.jpg")',
       embed: `https://www.youtube.com/embed/${c.yt}?enablejsapi=1&rel=0${c.start ? '&start=' + c.start : ''}`,
       watchUrl: `https://youtu.be/${c.yt}?t=${this.state.pcue || c.start || 0}`,
       kicker: `${c.year} · THE NEW SCHOOL`,
@@ -2292,6 +2367,28 @@ class Component extends DCLogic {
       })
     };
     return {
+      skyOn: p === 'index' && !!(this._seasonParams(this._season()) || {}).skyAll,
+      ...(() => { const sa = p === 'index' && (this._seasonParams(this._season()) || {}).skyAll; if (!sa) return { heroTs: 'none', navTs: 'none' };
+        const hx = (sa.zen && sa.zen[0]) || '#000000', n = parseInt(hx.slice(1), 16), c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(v * 0.55)).join(',');
+        return { heroTs: '0 1px 2px rgba(' + c + ',0.35), 0 4px 18px rgba(' + c + ',0.4), 0 10px 70px rgba(' + c + ',0.55)', navTs: '0 1px 2px rgba(' + c + ',0.5), 0 2px 14px rgba(' + c + ',0.6)' }; })(),
+      hdrBg: (this._hdrTopBg = (p === 'index' && (this._seasonParams(this._season()) || {}).skyAll) ? 'transparent' : 'var(--paper)'),
+      skyRef: this._skyRefFn || (this._skyRefFn = (el) => { this._skyEl = el; if (!el) return; this._dimOn = !!this._fHov;
+          // arriving on the home page: start on black and fade out once the field is drawn, so nothing is seen loading
+          if (!this._rm && !this._introOv) { const ov = document.createElement('div'); ov.setAttribute('aria-hidden', 'true'); ov.style.cssText = 'position:fixed;inset:0;background:#000;z-index:99999;pointer-events:none;opacity:1'; document.body.appendChild(ov); this._introOv = ov;
+            const t0 = performance.now(); const go = () => { const w = this._ringWrap; if (!(w && w._in) && performance.now() - t0 < 2200) { setTimeout(go, 60); return; }
+              setTimeout(() => { const a = ov.animate ? ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 900, easing: 'cubic-bezier(0.3, 0, 0.3, 1)', fill: 'forwards' }) : null; const done = () => { ov.remove(); if (this._introOv === ov) this._introOv = null; }; if (a) a.onfinish = done; else done(); }, 150); };
+            setTimeout(go, 60); } const fit = () => { const s = this._skyEl, w = this._ringWrap; if (!s || !s.isConnected || !w || !w.isConnected) return;
+          const K = (this._seasonParams(this._season()) || {}).skyAll; if (!K) return;
+          const o = s.offsetParent.getBoundingClientRect(), wr = w.getBoundingClientRect(), sec = w.closest('section') || w, T = wr.top - o.top, H = wr.height, Wd = wr.width, S = sec.getBoundingClientRect().top - o.top;
+          if (!(H > 0)) return;
+          // one continuous sky in page pixels: zenith at the top of the page, horizon lined up with the field, sun or moon glow on top
+          const px = (v) => Math.round(v) + 'px', yh = T + K.stops[0][0] * H;
+          const lin = 'linear-gradient(to bottom, ' + K.zen[0] + ' 0px, ' + K.zen[1] + ' ' + px(yh * 0.55) + ', ' + K.zen[2] + ' ' + px(yh) + ', ' + K.stops.slice(1).map(([p, c]) => c + ' ' + px(T + p * H)).join(', ') + (K.ground ? ', ' + K.ground + ' ' + px(T + 0.45 * H) : '') + ')';
+          const R = K.sun.R * H, glow = 'radial-gradient(circle ' + px(R) + ' at ' + px(wr.left - o.left + K.sun.x * Wd) + ' ' + px(T + K.sun.y * H) + ', ' + K.sun.stops.map(([f, c]) => c + ' ' + (f * 100).toFixed(1) + '%').join(', ') + ')';
+          s.style.height = px(T + H); s.style.background = glow + ', ' + lin;
+          const dim = s.querySelector('[data-skydim]'); if (dim) { const fd = this._dimEl; if (!fd || !fd.isConnected || fd.style.opacity !== '1') this._dimOn = false; dim.style.height = px(Math.max(0, S)); dim.style.opacity = this._dimOn ? '1' : '0'; }
+        }; [0, 60, 250, 800].forEach((d) => setTimeout(() => requestAnimationFrame(fit), d)); if (!this._skyFit) { this._skyFit = fit; const refit = () => this._skyFit && this._skyFit(); window.addEventListener('resize', refit, { passive: true }); try { document.fonts && document.fonts.ready.then(refit); document.fonts && document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', refit); } catch (e) {} } else this._skyFit = fit;
+          if (window.ResizeObserver) { if (this._skyRO) this._skyRO.disconnect(); const q = () => this._skyFit && this._skyFit(); this._skyRO = new ResizeObserver(() => requestAnimationFrame(q)); const pg = el.offsetParent || el.parentElement; if (pg) { this._skyRO.observe(pg); const m = pg.querySelector('main'); if (m) this._skyRO.observe(m); const h1 = pg.querySelector('main h1'); if (h1) this._skyRO.observe(h1); } } }),
       isIndex: p === 'index', notIndex: p !== 'index', hdrNameOp: p === 'index' ? 0 : 1, hdrNamePe: p === 'index' ? 'none' : 'auto', hdrNameHidden: p === 'index' ? 'true' : 'false', hdrNameTab: p === 'index' ? -1 : 0, isGig: p === 'gig', isProject: p === 'project', isPeople: p === 'people', isAll: p === 'all', isColophon: p === 'colophon', isGraphic: p === 'graphic', goGraphic: this.go('graphic'),
       goGraphicRecital: (e) => { e.preventDefault(); this._nav({ page: 'detail', slug: 'recital' }); this.setState({ pcue: 0 }); }, isPerf: p === 'perf', isDetail: p === 'detail', isSessions: p === 'sessions', isLive: p === 'live', isComp: p === 'comp', isCompDetail: p === 'compdetail', isSessionDetail: p === 'sessiondetail', isData: p === 'data', isAbout: p === 'about',
       aboutFull: this.state.aboutFull ? 1 : 0, aboutFullLabel: this.state.aboutFull ? 'show less ↑' : 'read the full story ↓',
@@ -2470,7 +2567,7 @@ class Component extends DCLogic {
       })(),
       ...this._seasonVals(),
       ring: (() => {
-        const SEA = this._season(), SP = this._seasonParams(SEA), FW = Math.round((this._ringWrap && this._ringWrap.clientWidth) || document.documentElement.clientWidth || window.innerWidth || 1200), mkey = SEA + '|' + Math.round(FW / 24) + '|' + (this._homeSeed || 0);
+        const SEA = this._season(), SP = this._seasonParams(SEA), _nm = (this._noMask = !!SP.snow), snowLit = (near, a) => 'hsla(208, 16%, ' + Math.round(64 + near * 26) + '%, ' + (a == null ? 1 : a) + ')', snowMid = (near, a) => 'hsla(214, 14%, ' + Math.round(48 + near * 24) + '%, ' + (a == null ? 1 : a) + ')', snowShade = (near, a) => 'hsla(219, 16%, ' + Math.round(27 + near * 21) + '%, ' + (a == null ? 1 : a) + ')', snowCol = (near, dl, a) => 'hsla(' + (214 + (dl || 0) * 0.3) + ', 11%, ' + Math.round(46 + near * 28 + (dl || 0)) + '%, ' + (a == null ? 1 : a) + ')', FW = Math.round((this._ringWrap && this._ringWrap.clientWidth) || document.documentElement.clientWidth || window.innerWidth || 1200), mkey = SEA + '|' + Math.round(FW / 24) + '|' + (this._homeSeed || 0);
         if (this._ringMemo && this._ringMemo.k === mkey) return this._ringMemo.el;
         const ph = this._photos();
         if (!this._homeSeed) this._homeSeed = 1 + Math.floor(Math.random() * 2147483000);
@@ -2478,7 +2575,7 @@ class Component extends DCLogic {
         const shuf = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(hr() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
         const phs = shuf(ph).slice(0, 38);
         const photoCards = phs.map((p) => { const [rw, rh] = String(p.ratio).split('/').map(Number); return { k: p.id, wide: rw > rh, ratio: p.ratio, bg: "url('" + (p.sm || p.src) + "')", l: 'photo · ' + p.m, go: () => this._openPhoto(p, phs) }; });
-        const yt = (id) => "url('https://i.ytimg.com/vi/" + id + "/maxresdefault.jpg')";
+        const yt = (id) => "url('./assets/yt/" + id + "/maxresdefault.jpg')";
         const nav = (st) => () => this._nav(st);
         const perfs = shuf(PERFS.filter((x) => x.yt)).slice(0, 3).map((x) => ({ k: 'p-' + x.slug, wide: true, ratio: x.thumb ? '4 / 3' : '16 / 9', bg: x.thumb ? "url('" + x.thumb + "')" : yt(x.yt), l: 'performance · ' + x.title.toLowerCase(), go: nav({ page: 'detail', slug: x.slug }) }));
         const lives = shuf(GIGS.filter((g) => g.show && g.show.photos && g.show.photos.length)).slice(0, 2).map((g) => { const sp = g.show.photos[Math.floor(hr() * g.show.photos.length)], [rw, rh] = String(sp.r || '3/4').split('/').map(Number); return { k: 'g-' + g.slug, wide: rw > rh, ratio: rw + ' / ' + rh, bg: "url('" + sp.f + "')", l: 'live sound · ' + String(g.title).toLowerCase(), go: nav({ page: 'gig', gig: g.slug }) }; });
@@ -2492,20 +2589,27 @@ class Component extends DCLogic {
           if (this._touch && !forced) return;
           const el = e.currentTarget, img = el.firstChild, cap = el.querySelector('[data-cap]') || el.lastChild;
           
-          if (on && el._ret) return; if (!on) { el._ret = 1; el.style.pointerEvents = 'none'; if (this._pend === el) this._pend = null; }
+          if (on && el._ret) return;
+          // a hovered card flies forward and can slide out from under a still cursor; keep it while the cursor stays on its resting spot
+          if (on && !forced && this._pend && this._pend !== el && this._pend.isConnected && e && e.clientX != null) { const q = this._pend._homeR; if (q && e.clientX >= q.left - 6 && e.clientX <= q.right + 6 && e.clientY >= q.top - 6 && e.clientY <= q.bottom + 6) return; }
+          if (!on) { el._ret = 1; el.style.pointerEvents = 'none'; if (this._pend === el) this._pend = null; }
           if (on) { if (this._pend && this._pend !== el) { const pv = this._pend; this._pend = null; hover(false, forced)({ currentTarget: pv }); } if (!el._pullT) el._homeR = el.getBoundingClientRect(); }
-          el._liftT = on ? -30 : 0; el._pullT = on ? 1 : 0; this._fHov = on; this._kick();
-          if (el.dataset.z == null) el.dataset.z = el.style.zIndex; if (on) el.style.zIndex = String(9000 + ((this._zc = (this._zc || 0) + 1) % 900));
+          if (on && !el._pullT) el._hovAt = performance.now();
+          if (el.dataset.z == null) el.dataset.z = el.style.zIndex; if (on) el._zHi = String(9000 + ((this._zc = (this._zc || 0) + 1) % 900));
+          el._pullT = on ? 1 : 0; this._fHov = on; this._kick();
           let hit = el.querySelector('[data-hit]'); if (!hit) { hit = document.createElement('span'); hit.setAttribute('data-hit', ''); el.appendChild(hit); } if (!on) { el._zone = 0; hit.style.cssText = 'display:none'; }
           const k = on ? (el._kF || 1) : (el.dataset.k || 1);
-          cap.style.opacity = on ? '1' : '0';
+          cap.style.transition = on ? 'opacity 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) 0.24s' : 'opacity 0.2s ease'; cap.style.opacity = on ? '1' : '0';
           if (this._dimEl) this._dimEl.style.opacity = on ? '1' : '0';
-          el.style.willChange = on ? 'auto' : 'transform';
-          img.style.boxShadow = on ? '0 0 0 2px var(--paper), 0 0 0 3.5px var(--accent, #9BB27A), 0 30px 50px -22px rgba(0,0,0,0.7)' : '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)';
+          // dim the sky behind the name by the same amount, so the field and the sky above it darken together
+          this._dimOn = !!on; if (this._skyEl) { const sd = this._skyEl.querySelector('[data-skydim]'); if (sd) sd.style.opacity = on ? '1' : '0'; }
+          
+          img.style.boxShadow = on ? '0 30px 50px -22px rgba(0,0,0,0.7)' : '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)';
           if (this._ringWrap) this._ringWrap.style.cursor = on ? 'pointer' : 'default';
         };
-        this._chkLeave = (x, y) => { const el = this._pend; if (!el) return; if (!el.isConnected) { this._pend = null; return; } const inR = (q, p) => q && x >= q.left - p && x <= q.right + p && y >= q.top - p && y <= q.bottom + p; if (inR(el.getBoundingClientRect(), 2) || inR(el._homeR, 6)) return; this._pend = null; hover(false)({ currentTarget: el }); };
-        const SW = Math.min(2400, FW), sm = SW < 720, P = 900; this._fP = P; const CW = sm ? 165 : 260, CH = sm ? 220 : 340;
+        this._hoverNow = (el) => hover(true)({ currentTarget: el, clientX: this._mx, clientY: this._my });
+        this._chkLeave = (x, y) => { const el = this._pend; if (!el) return; if (!el.isConnected) { this._pend = null; return; } const inR = (q, p) => q && x >= q.left - p && x <= q.right + p && y >= q.top - p && y <= q.bottom + p; if (inR(el.getBoundingClientRect(), 2) || inR(el._homeR, 6)) return; this._pend = null; hover(false)({ currentTarget: el }); const u = document.elementFromPoint(x, y), nx = u && u.closest ? u.closest('a[data-base]') : null; if (nx && nx !== el && !nx._ret) hover(true)({ currentTarget: nx, clientX: x, clientY: y }); };
+        const SW = Math.min(2400, FW), sm = SW <= 820, P = 900; this._fP = P; const _hh0 = (this._ringWrap && this._ringWrap.clientHeight) || 0, _ck = _hh0 ? Math.max(0.55, Math.min(1, _hh0 / (sm ? 340 : 560))) : 1, CW = Math.round((sm ? 165 : 260) * _ck), CH = Math.round((sm ? 220 : 340) * _ck);
         const sAt = (z) => P / (P - z);
         let seed = ((this._homeSeed * 7919) % 2147483646) + 1; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
         const minW = SW < 1000 ? 74 : 64, zMin = P - P * CW / minW; // farthest depth whose cards stay clickable
@@ -2545,30 +2649,63 @@ class Component extends DCLogic {
         const greens = ['#4E6338', '#5A7044', '#6E8752', '#7F9A5E', '#9BB27A'], petals = ['#E9A6B8', '#F2E7D7', '#C9A6E0', '#F0C66B', '#E58C6E'];
         const drawRow = (z, ri) => (cv) => {
           if (!cv || cv.dataset.drawn) return; cv.dataset.drawn = '1'; if (!cv._go) { cv._go = 1; const run = () => { cv.dataset.drawn = ''; drawRow(z, ri)(cv); }; cv.dataset.drawn = 'wait'; (window.requestIdleCallback || ((fn) => setTimeout(fn, 1)))(run, { timeout: 200 + ri * 40 }); return; }
-          const s = sAt(z), dpr = Math.min(SW < 720 ? 1.5 : 2, window.devicePixelRatio || 1), rw = 2.8 * (SW / 2) / s, rh = 270;
-          const cw = Math.min(5000, Math.round(rw * s * dpr)), full = Math.round(rh * s * dpr), gy = full * 150 / 270; cv.width = cw; cv.height = full;
+          const s = sAt(z), dpr = Math.min(SW < 720 ? 1.5 : 2, window.devicePixelRatio || 1), rw = 2.8 * (SW / 2) / s, rh = 350;
+          const cw = Math.min(5000, Math.round(rw * s * dpr)), full = Math.round(rh * s * dpr), gy = full * 230 / 350, G0 = full * 150 / 350; cv.width = cw; cv.height = full;
           const c = cv.getContext('2d'); let sd = 97 + ri * 131; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
           const near = Math.max(0, Math.min(1, s / 0.75)), px = s * dpr;
           const ink = (l, a) => 'hsla(' + (SP.h + r() * SP.hv) + ',' + (SP.s + near * 10) + '%,' + (l + SP.l) + '%,' + a + ')';
           const gnd = 'hsl(' + SP.h + ', ' + SP.gs + '%, ' + (6 + near * 4 + SP.gl) + '%)';
+          if (SP.snow || SP.ridge) {
+            // winter: each row is a rolling ridge of snow; moonlit crest, soft blue shade falling away into the next ridge
+            const hum = []; for (let k = 0, nh = Math.max(2, Math.round(cw / (150 * px))); k < nh; k++) hum.push([r() * cw, (38 + r() * 80) * px, (5 + r() * 15) * px]);
+            const crest = (x) => { let y = gy - px * (11 + 6 * Math.sin(x / (150 * px) + ri * 1.7) + 4 * Math.sin(x / (61 * px) + ri * 0.6) + 1.6 * Math.sin(x / (21 * px) + ri * 2.3)); for (const [cx0, w0, h0] of hum) { const d0 = (x - cx0) / w0; y -= h0 * Math.exp(-d0 * d0); } return y; };
+            const step = 5 * px, top = gy - 46 * px, pts = []; for (let x = -step; x <= cw + step; x += step) pts.push([x, crest(x)]);
+            if (SP.flat) {
+              // cartoon winter: flat snow hills, one tone each, a wobbly ink line on top and a flat band of shade under the crest
+              const FC = SP.flatCols || ['#F6F4F2', '#ECEBF2', '#E2E3EE', '#C9CCE2', '#8C92B6'], tone = FC[ri % 3], shade = FC[3], ink = FC[4];
+              c.fillStyle = tone; c.beginPath(); c.moveTo(-step, full); pts.forEach(([x, y]) => c.lineTo(x, y)); c.lineTo(cw + step, full); c.closePath(); c.fill();
+              c.save(); c.clip(); c.fillStyle = shade; c.globalAlpha = 0.55; c.beginPath(); c.moveTo(-step, full); pts.forEach(([x, y], k2) => c.lineTo(x, y + (16 + 6 * Math.sin(x / (47 * px) + ri)) * px)); c.lineTo(cw + step, full); c.closePath(); c.fill(); c.restore();
+              c.strokeStyle = ink; c.lineWidth = Math.max(1, 1.6 * px); c.lineJoin = 'round'; c.beginPath(); pts.forEach(([x, y], k2) => { const wob = Math.sin(x / (9 * px) + ri * 3) * 0.6 * px; k2 ? c.lineTo(x, y + wob) : c.moveTo(x, y + wob); }); c.stroke();
+              if (SP.ridge) { c.strokeStyle = ink; c.lineWidth = Math.max(0.9, 1.3 * px); c.lineCap = 'round'; c.beginPath(); const gap = (11 + 6 * near) * px; for (let x = r() * gap; x < cw; x += gap * (0.6 + r() * 0.9)) { const y = crest(x) + 1.5 * px, hgt = (5 + r() * 7) * px * (0.6 + near * 0.6); for (let b = -1; b <= 1; b++) { c.moveTo(x + b * 2.2 * px, y); c.quadraticCurveTo(x + b * 2.6 * px, y - hgt * 0.6, x + b * 4.2 * px, y - hgt * (b ? 0.8 : 1)); } } c.stroke(); }
+            } else {
+            const sg = c.createLinearGradient(0, top, 0, gy + 80 * px); sg.addColorStop(0, snowLit(near)); sg.addColorStop(0.32, snowMid(near)); sg.addColorStop(1, snowShade(near));
+            c.fillStyle = sg; c.beginPath(); c.moveTo(-step, full); pts.forEach(([x, y]) => c.lineTo(x, y)); c.lineTo(cw + step, full); c.closePath(); c.fill();
+            // soft occlusion where the ridge meets the slope behind it, then a bright moonlit rim on the crest
+            c.save(); c.filter = 'blur(' + (3 * px).toFixed(1) + 'px)'; c.strokeStyle = snowShade(near, 0.35); c.lineWidth = 4 * px; c.beginPath(); pts.forEach(([x, y], k) => k ? c.lineTo(x, y + 2.5 * px) : c.moveTo(x, y + 2.5 * px)); c.stroke(); c.restore();
+            c.save(); c.filter = 'blur(' + (0.7 * px).toFixed(1) + 'px)'; c.strokeStyle = snowLit(near, 0.55 + 0.35 * near); c.lineWidth = 1.5 * px; c.beginPath(); pts.forEach(([x, y], k) => k ? c.lineTo(x, y + 0.6 * px) : c.moveTo(x, y + 0.6 * px)); c.stroke(); c.restore();
+            // glints on the nearer ridges
+            // moonlight: ridges facing the moon catch a cool sheen, the far side falls into blue shade
+            { const mx = (cw - SW * dpr) / 2 + 0.8 * SW * dpr; c.save(); c.globalCompositeOperation = 'source-atop';
+              const lg = c.createRadialGradient(mx, top, 0, mx, top, cw * 0.55); lg.addColorStop(0, 'rgba(236,242,255,' + (0.22 + 0.12 * near).toFixed(3) + ')'); lg.addColorStop(1, 'rgba(236,242,255,0)'); c.fillStyle = lg; c.fillRect(0, 0, cw, full);
+              const sh = c.createLinearGradient(0, 0, cw, 0); sh.addColorStop(0, 'rgba(24,34,64,0.22)'); sh.addColorStop(0.55, 'rgba(24,34,64,0)'); c.fillStyle = sh; c.fillRect(0, 0, cw, full); c.restore(); }
+            // wind ripples: faint crescent lines following the slope just under the crest
+            { c.save(); c.lineCap = 'round'; const nr = Math.round(cw / (55 * px)); for (let k = 0; k < nr; k++) { const x0 = r() * cw, len = (24 + r() * 70) * px, dy = (6 + r() * 26) * px, lit = r() < 0.6;
+                c.strokeStyle = lit ? snowLit(near, 0.18 + 0.2 * near) : snowShade(near, 0.22); c.lineWidth = Math.max(0.5, (0.7 + r() * 0.7) * px); c.beginPath();
+                for (let u = 0; u <= 1.0001; u += 0.1) { const x = x0 + u * len, y = crest(x) + dy + Math.sin(u * Math.PI) * -3 * px; u ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); } c.restore(); }
+            if (near > 0.3) { const ng = Math.round(cw / (16 * px) * near); for (let k = 0; k < ng; k++) { const x = r() * cw, y = crest(x) + Math.pow(r(), 2.2) * 34 * px, s0 = (0.5 + r() * 0.9) * px; c.fillStyle = 'rgba(248,251,255,' + (0.35 + r() * 0.55) * near + ')'; c.fillRect(x, y, s0, s0); } }
+            }
+          } else {
           c.fillStyle = gnd; c.fillRect(0, gy, cw, full - gy);
           const g2 = c.createLinearGradient(0, gy * 0.6, 0, gy); g2.addColorStop(0, 'hsla(' + SP.h + ',' + SP.gs + '%,' + (6 + near * 4 + SP.gl) + '%,0)'); g2.addColorStop(1, gnd); c.fillStyle = g2; c.fillRect(0, gy * 0.6, cw, gy * 0.4);
+          }
           const nb = Math.round(cw / Math.max(0.9, 1.1 * dpr));
           for (let layer = 0; layer < 3; layer++) {
-            const L = [7, 11, 16][layer] + near * [3, 6, 10][layer], A = [0.9, 0.85, 0.8][layer], hMul = [0.55, 0.8, 1][layer] * SP.hm;
+            const L = [7, 11, 16][layer] + near * [3, 6, 10][layer], A = [0.9, 0.85, 0.8][layer], hMul = [0.55, 0.8, 1][layer] * SP.hm * (SW <= 820 ? 0.84 : 1) * _ck;
+            if (SP.snow || SP.ridge) continue;
             c.lineCap = 'round'; const buckets = [];
-            for (let i = 0; i < nb * [0.9, 0.7, 0.35][layer]; i++) {
-              const x = r() * cw, root = gy + Math.pow(r(), 1.5) * (full - gy) * 0.9, hh = gy * hMul * (0.35 + 0.65 * r()), lean = (r() - 0.5) * hh * 0.5 + Math.sin(x * 0.004 + ri) * hh * 0.12;
+            for (let i = 0; i < nb * [1.15, 0.95, 0.5][layer]; i++) {
+              const x = r() * cw, root = gy + Math.pow(r(), 1.5) * (full - gy) * 0.9, hh = Math.min(G0 * hMul * (0.35 + 0.65 * r()), root - 4 * px), lean = (r() - 0.5) * hh * 0.5 + Math.sin(x * 0.004 + ri) * hh * 0.12;
               const bk = Math.floor(r() * 6); (buckets[bk] = buckets[bk] || []).push(x, root, lean, hh);
             }
-            for (let bk = 0; bk < 6; bk++) { const B = buckets[bk]; if (!B) continue; c.strokeStyle = ink(L + bk * 0.7, A); c.lineWidth = Math.max(0.55, (0.8 + (bk % 3) * 0.45) * px); c.beginPath(); for (let j = 0; j < B.length; j += 4) { const x = B[j], root = B[j + 1], lean = B[j + 2], hh = B[j + 3]; c.moveTo(x, root); c.quadraticCurveTo(x + lean * 0.15, root - hh * 0.6, x + lean, root - hh); } c.stroke();
-              if (SP.snow && layer > 0) { c.strokeStyle = 'rgba(228,234,242,' + (0.3 + 0.38 * near) + ')'; c.lineWidth = Math.max(0.5, 0.9 * px); c.beginPath(); for (let j = 0; j < B.length; j += layer === 2 ? 4 : 12) { const x = B[j], root = B[j + 1], lean = B[j + 2], hh = B[j + 3], ax = x + lean * 0.55, ay = root - hh * 0.8; c.moveTo(ax, ay); c.quadraticCurveTo(x + lean * 0.8, root - hh * 0.92, x + lean, root - hh); } c.stroke(); }
+            for (let bk = 0; bk < 6; bk++) { const B = buckets[bk]; if (!B) continue; c.fillStyle = ink(L + bk * 0.7, A); const bw = Math.max(0.9, (1.9 + (bk % 3) * 0.8) * px); c.beginPath(); for (let j = 0; j < B.length; j += 4) { const x = B[j], root = B[j + 1], lean = B[j + 2], hh = B[j + 3], w = bw * (0.7 + ((x * 13) % 7) / 10), mx = x + lean * 0.18, my = root - hh * 0.58, tx = x + lean, ty = root - hh, curl = lean * 0.08; c.moveTo(x - w, root); c.quadraticCurveTo(mx - w * 0.55, my, tx + curl, ty); c.quadraticCurveTo(mx + w * 0.75, my + hh * 0.04, x + w, root); c.closePath(); } c.fill();
+              if (SP.snow) { c.fillStyle = snowCol(near, layer * 3 - 2, 0.92); c.beginPath(); for (let j = 0; j < B.length; j += 12) { const x = B[j], root = B[j + 1], w = (8 + ((x * 7) % 12)) * px, hgt = w * 0.4; c.moveTo(x + w, root); c.ellipse(x, root, w, hgt, 0, 0, 6.283); } c.fill(); }
+              if (SP.snow && layer > 0) { c.strokeStyle = 'rgba(232,238,246,' + (0.42 + 0.4 * near) + ')'; c.lineWidth = Math.max(0.6, 1.2 * px); c.beginPath(); for (let j = 0; j < B.length; j += layer === 2 ? 4 : 12) { const x = B[j], root = B[j + 1], lean = B[j + 2], hh = B[j + 3], ax = x + lean * 0.55, ay = root - hh * 0.8; c.moveTo(ax, ay); c.quadraticCurveTo(x + lean * 0.8, root - hh * 0.92, x + lean, root - hh); } c.stroke(); }
             }
           }
           const fl = SP.fl;
           const nfl = fl.length ? Math.round(cw / dpr / (near > 0.6 ? 220 : 160) * SP.fd) : 0;
           for (let i = 0; i < nfl; i++) {
-            const x = r() * cw, root = gy + Math.pow(r(), 1.6) * (full - gy) * 0.8, hh = gy * (0.55 + 0.5 * r()), lean = (r() - 0.5) * hh * 0.35;
+            const x = r() * cw, root = gy + Math.pow(r(), 1.6) * (full - gy) * 0.8, hh = G0 * (0.55 + 0.5 * r()), lean = (r() - 0.5) * hh * 0.35;
             const hx = x + lean, hy = root - hh, f = fl[Math.floor(r() * fl.length)], fade = 0.35 + 0.65 * near, rr = (7 + r() * 6) * px, kind = r() * 0.8;
             const col = (dl) => 'hsla(' + f[0] + ',' + Math.round(f[1] * fade) + '%,' + Math.round((f[2] + dl) * (0.45 + 0.55 * near)) + '%,1)';
             c.strokeStyle = 'hsla(' + (SP.h + 4) + ', 22%, ' + (14 + near * 10 + SP.l) + '%, 0.95)'; c.lineWidth = Math.max(0.5, 0.9 * px); c.beginPath(); c.moveTo(x, root); c.quadraticCurveTo(x + lean * 0.1, root - hh * 0.6, hx, hy); c.stroke();
@@ -2585,44 +2722,48 @@ class Component extends DCLogic {
               for (let k = 0; k < 6; k++) { const yy = hy + k * rr * 0.55, xx = hx + (k % 2 ? 1 : -1) * rr * 0.25; c.fillStyle = col(k * 2 - 4); c.beginPath(); c.arc(xx, yy, rr * (0.42 - k * 0.03), 0, 6.283); c.fill(); }
             }
           }
-          if (near > 0.5) { c.strokeStyle = SP.snow ? 'rgba(240,243,248,' + (0.3 * near) + ')' : 'hsla(' + (SP.h - 8) + ', 30%, 62%, ' + (0.18 * near) + ')'; c.lineWidth = Math.max(0.5, 0.6 * px); c.beginPath(); for (let i = 0; i < nb * 0.04; i++) { const x = r() * cw, hh = gy * (0.6 + 0.4 * r()), lean = (r() - 0.5) * hh * 0.4, root = gy + r() * (full - gy) * 0.3; c.moveTo(x + lean * 0.5, root - hh * 0.6); c.quadraticCurveTo(x + lean * 0.8, root - hh * 0.85, x + lean, root - hh); } c.stroke(); }
+          if (near > 0.5 && !SP.snow && !SP.ridge) { c.strokeStyle = SP.snow ? 'rgba(240,243,248,' + (0.3 * near) + ')' : 'hsla(' + (SP.h - 8) + ', 30%, 62%, ' + (0.18 * near) + ')'; c.lineWidth = Math.max(0.5, 0.6 * px); c.beginPath(); for (let i = 0; i < nb * 0.04; i++) { const x = r() * cw, hh = G0 * (0.6 + 0.4 * r()), lean = (r() - 0.5) * hh * 0.4, root = gy + r() * (full - gy) * 0.3; c.moveTo(x + lean * 0.5, root - hh * 0.6); c.quadraticCurveTo(x + lean * 0.8, root - hh * 0.85, x + lean, root - hh); } c.stroke(); }
+          if (SP.haze) { const k = Math.pow(1 - near, 1.4) * SP.haze[1]; if (k > 0.01) { c.globalCompositeOperation = 'source-atop'; c.fillStyle = SP.haze[0]; c.globalAlpha = k; c.fillRect(0, 0, cw, full); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; } }
         };
         const GM = 48, cz = place.map((p) => p.z).sort((x, y) => y - x);
         const groups = []; rows.slice().sort((x, y) => x - y).forEach((z) => { const k = cz.filter((q) => q > z).length; if (sAt(z) >= 0.45) { groups.push({ k, rows: [z], solo: 1 }); return; } let g = groups.find((q) => q.k === k && !q.solo); if (!g) { g = { k, rows: [] }; groups.push(g); } g.rows.push(z); });
         groups.forEach((g) => { g.zi = 1000 + Math.round(Math.max(...g.rows) / 10) * 2; g.gs = g.rows.reduce((t, z) => t + sAt(z), 0) / g.rows.length; });
         this._gPend = groups.length; this._gReady = null;
         const drawGroup = (g, gi) => (cv) => {
-          if (!cv) return; if (!(this._fItems || []).some((q) => q.el === cv)) (this._fItems = this._fItems || []).push({ el: cv, grp: 1, gs: g.gs }); if (cv._done) return; cv._done = 1;
+          if (!cv) return; if (!(this._fItems || []).some((q) => q.el === cv)) (this._fItems = this._fItems || []).push({ el: cv, grp: 1, gs: g.gs });
           const paint = () => {
             const wrap = this._ringWrap; if (!wrap || !cv.isConnected) return; const W = wrap.clientWidth, H = wrap.clientHeight; if (!W || !H) { setTimeout(paint, 60); return; }
             const dpr = Math.min(SW < 720 ? 1.5 : 2, window.devicePixelRatio || 1), CWd = W + 2 * GM, oy = H * 0.2, G = H - 30;
-            let top = 0, s0 = 1, gyL = 0; if (g.solo) { s0 = sAt(g.rows[0]); const y0 = oy + (G + 8 - oy) * s0 - 150 * s0; top = Math.max(0, Math.floor(y0)); gyL = y0 - top + 150 * s0; cv.style.top = top + 'px'; cv.style.height = (H - top) + 'px'; }
+            let top = 0, s0 = 1, gyL = 0; if (g.solo) { s0 = sAt(g.rows[0]); const y0 = oy + (G + 8 - oy) * s0 - 230 * s0; top = Math.max(0, Math.floor(y0)); gyL = y0 - top + 230 * s0; cv.style.top = top + 'px'; cv.style.height = (H - top) + 'px'; }
             const tgt = g.solo ? document.createElement('canvas') : cv; tgt.width = Math.round(CWd * dpr); tgt.height = Math.round((H - top) * dpr); cv._W = W; cv._H = H;
             const c = tgt.getContext('2d');
             g.rows.forEach((z) => {
               const ri = rows.indexOf(z), sc = sAt(z), rw = 2.8 * (SW / 2) / sc, tmp = document.createElement('canvas'); tmp._go = 1; drawRow(z, ri)(tmp);
-              const sx = W / 2 - (rw / 2) * sc + GM, sy = oy + (G + 8 - oy) * sc - 150 * sc, dw = rw * sc, dh = 270 * sc;
+              const sx = W / 2 - (rw / 2) * sc + GM, sy = oy + (G + 8 - oy) * sc - 230 * sc, dw = rw * sc, dh = 350 * sc;
               c.drawImage(tmp, sx * dpr, (sy - top) * dpr, dw * dpr, dh * dpr);
-              c.fillStyle = 'hsl(' + SP.h + ', ' + SP.gs + '%, ' + (6 + Math.max(0, Math.min(1, sc / 0.75)) * 4 + SP.gl) + '%)'; c.fillRect(sx * dpr, (sy - top + dh - 2) * dpr, dw * dpr, (H - sy - dh + 2) * dpr);
+              c.fillStyle = SP.flat ? (SP.flatBase || '#E2E3EE') : SP.snow ? snowShade(Math.max(0, Math.min(1, sc / 0.75))) : 'hsl(' + SP.h + ', ' + SP.gs + '%, ' + (6 + Math.max(0, Math.min(1, sc / 0.75)) * 4 + SP.gl) + '%)'; c.fillRect(sx * dpr, (sy - top + dh - 2) * dpr, dw * dpr, (H - sy - dh + 2) * dpr);
             });
             if (g.solo) {
               const HH = H - top, yB = Math.min(HH, gyL + 70 * s0);
               cv.width = tgt.width; cv.height = tgt.height; const cx = cv.getContext('2d'); if (cx) cx.drawImage(tgt, 0, 0);
               const R = this._windGL();
-              if (R && cx) { if (cv._wtex) R.gl.deleteTexture(cv._wtex); cv._wtex = R.tex(tgt); cv._wind = { cx, w: tgt.width, h: tgt.height, yB: yB / HH, A: 12 * s0 / CWd, ph: gi * 0.52, dur: 8.2 + (gi % 3) * 0.9 }; if (!this._rm) { (this._windRows = (this._windRows || []).filter((q) => q !== cv && q.isConnected)).push(cv); this._windKick(); } }
+              if (R && cx && !SP.snow && !SP.ridge) { if (cv._wtex) R.gl.deleteTexture(cv._wtex); cv._wtex = R.tex(tgt); cv._wind = { cx, w: tgt.width, h: tgt.height, yB: yB / HH, A: 12 * s0 / CWd, ph: gi * 0.52, dur: 8.2 + (gi % 3) * 0.9 }; if (!this._rm) { (this._windRows = (this._windRows || []).filter((q) => q !== cv && q.isConnected)).push(cv); this._windKick(); } }
             }
-            cv._repaint = () => { cv._done = 1; paint(); };
             if (!cv._counted) { cv._counted = 1; if (--this._gPend <= 0 && this._gReady) { const f = this._gReady; this._gReady = null; f(); } }
           };
+          // always repaint with the newest layout (card scale, width) — painting into the existing canvas, so the grass never blanks
+          cv._repaint = () => { cv._done = 1; cv._ckey = CW + ':' + SW; paint(); };
+          if (cv._done) { if (cv._ckey !== CW + ':' + SW) cv._repaint(); return; }
+          cv._done = 1; cv._ckey = CW + ':' + SW;
           (window.requestIdleCallback || ((fn) => setTimeout(fn, 1)))(paint, { timeout: 40 + gi * 20 });
         };
         this._fItems = [];
         const ringEl = h('div', {
-            key: 'ringsurface-' + SEA, ref: (el) => { this._ringWrap = el; },
-            style: { position: 'absolute', inset: 0, overflow: 'hidden', contain: 'strict', cursor: 'default', touchAction: 'pan-y', userSelect: 'none', WebkitUserSelect: 'none' },
+            key: 'ringsurface-' + SEA, ref: (el) => { this._ringWrap = el; if (el && this._skyFit) [30, 200].forEach((d) => setTimeout(() => requestAnimationFrame(() => this._skyFit && this._skyFit()), d)); },
+            style: { position: 'absolute', inset: 0, opacity: (this._rm || !document.body.animate) ? 1 : 0, overflow: 'hidden', contain: 'strict', cursor: 'default', touchAction: 'pan-y', userSelect: 'none', WebkitUserSelect: 'none' },
             onDragStart: (e) => e.preventDefault(),
             onPointerDown: (e) => { this._drag = { x: e.clientX, moved: 0, id: e.pointerId }; this._dragMoved = 0; const t = this._tapEl; if (t && t.isConnected && !t.contains(e.target)) { this._tapEl = null; t._ret = 0; hover(false, 1)({ currentTarget: t }); } },
-            onPointerMove: (e) => { if (this._pend) this._chkLeave(e.clientX, e.clientY);
+            onPointerMove: (e) => { this._mx = e.clientX; this._my = e.clientY; if (this._pend) this._chkLeave(e.clientX, e.clientY);
               
               if (!this._drag) return;
               const dx = e.clientX - this._drag.x; this._drag.x = e.clientX; this._drag.moved += Math.abs(dx);
@@ -2631,26 +2772,29 @@ class Component extends DCLogic {
             },
             onPointerUp: (e) => { this._dragMoved = this._drag ? this._drag.moved : 0; this._drag = null; },
             onPointerCancel: () => { this._drag = null; },
-            onPointerLeave: () => { if (this._pend) { const pv = this._pend; this._pend = null; hover(false)({ currentTarget: pv }); } this._fHov = false; this._fTarget = 0; this._kick(); }
+            onPointerLeave: () => { this._mx = null; this._my = null; clearTimeout(this._hovT); this._hovT = 0; this._hovEl = null; if (this._pend) { const pv = this._pend; this._pend = null; hover(false)({ currentTarget: pv }); } this._fHov = false; this._fTarget = 0; this._kick(); }
           },
-          h('div', { 'aria-hidden': true, style: { position: 'absolute', left: 0, right: 0, top: '35%', bottom: 0, pointerEvents: 'none', background: 'linear-gradient(to bottom, rgba(20,22,15,0) 0%, hsl(90,14%,7%) 18%, hsl(90,14%,9%) 100%)' } }),
-          h('div', { key: 'fdim', 'aria-hidden': 'true', ref: (el) => { this._dimEl = el; }, style: { position: 'absolute', inset: 0, zIndex: 8990, pointerEvents: 'none', background: 'rgba(var(--paper-rgb), 0.5)', opacity: 0, transition: 'opacity 0.45s cubic-bezier(0.2, 0.7, 0.3, 1)' } }),
+          h('div', { 'aria-hidden': true, style: { position: 'absolute', left: 0, right: 0, top: '35%', bottom: 0, pointerEvents: 'none', background: SP.base ? SP.base : SP.snow ? 'linear-gradient(to bottom, rgba(40,46,56,0) 0%, ' + snowCol(0.2, -10) + ' 18%, ' + snowCol(0.5, -6) + ' 100%)' : 'linear-gradient(to bottom, rgba(20,22,15,0) 0%, hsl(90,14%,7%) 18%, hsl(90,14%,9%) 100%)' } }),
+          h('div', { key: 'fdim', 'aria-hidden': 'true', ref: (el) => { this._dimEl = el; }, style: { position: 'absolute', inset: 0, zIndex: 8990, pointerEvents: 'none', background: 'rgba(0, 0, 0, 0.4)', opacity: 0, transition: 'opacity 0.45s cubic-bezier(0.2, 0.7, 0.3, 1)' } }),
           h('canvas', { key: 'breeze', 'aria-hidden': 'true', ref: (el) => { this._bzCv = el; if (el) this._windKick(); }, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 1400, pointerEvents: 'none' } }),
-            h('div', { key: 'fcover', 'aria-hidden': 'true', ref: (el) => { if (!el || el._go) return; el._go = 1; if (this._rm || !el.animate) { el.style.display = 'none'; return; } const go = () => { if (el._run) return; el._run = 1; const an = el.animate([{ transform: 'translate3d(0,-66.667%,0)' }, { transform: 'translate3d(0,33.4%,0)' }], { duration: 2600, easing: 'cubic-bezier(0.33, 0, 0.15, 1)', fill: 'forwards' }); an.onfinish = () => { el.style.display = 'none'; }; setTimeout(() => { el.style.pointerEvents = 'none'; }, 700); }; this._gReady = () => requestAnimationFrame(go); if (this._gPend <= 0) requestAnimationFrame(go); setTimeout(go, 2200); }, onPointerDown: (e) => { e.stopPropagation(); e.preventDefault(); }, onClick: (e) => { e.stopPropagation(); e.preventDefault(); }, style: { position: 'absolute', left: 0, right: 0, top: 0, height: '300%', zIndex: 6000, pointerEvents: 'auto', cursor: 'default', transform: 'translate3d(0,-66.667%,0)', background: 'linear-gradient(to bottom, rgba(var(--paper-rgb),0) 0%, rgba(var(--paper-rgb),0) 22%, rgba(var(--paper-rgb),0.55) 36%, var(--paper) 52%, var(--paper) 100%)', willChange: 'transform' } }),
-            h('div', { style: { position: 'absolute', inset: 0 } },
+            h('div', { key: 'fcover', 'aria-hidden': 'true', ref: (el) => { if (!el || el._go) return; el._go = 1; if (this._rm || !el.animate) { el.style.display = 'none'; return; } const go = () => { if (el._run) return; el._run = 1; const rw = this._ringWrap; if (rw && rw.animate && !rw._in) { rw._in = 1; rw.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 950, easing: 'cubic-bezier(0.25, 0.6, 0.3, 1)', fill: 'forwards' }); } else if (rw) rw.style.opacity = '1'; const an = el.animate([{ transform: 'translate3d(0,-66.667%,0)' }, { transform: 'translate3d(0,33.4%,0)' }], { duration: 2600, easing: 'cubic-bezier(0.33, 0, 0.15, 1)', fill: 'forwards' }); an.onfinish = () => { el.style.display = 'none'; }; setTimeout(() => { el.style.pointerEvents = 'none'; }, 700); }; this._gReady = () => requestAnimationFrame(go); if (this._gPend <= 0) requestAnimationFrame(go); setTimeout(go, 2200); }, onPointerDown: (e) => { e.stopPropagation(); e.preventDefault(); }, onClick: (e) => { e.stopPropagation(); e.preventDefault(); }, style: { position: 'absolute', left: 0, right: 0, top: 0, height: '300%', zIndex: 6000, pointerEvents: 'auto', cursor: 'default', transform: 'translate3d(0,-66.667%,0)', background: 'none', willChange: 'transform' } }),
+            h('div', { key: 'rows', ref: (el) => { this._rowsEl = el; }, style: { position: 'absolute', inset: 0 } },
             groups.map((g, gi) => h('canvas', { key: 'g' + gi + '-' + g.rows.length, 'aria-hidden': true, ref: drawGroup(g, gi), style: { position: 'absolute', left: 0, top: 0, width: 'calc(100% + ' + (2 * GM) + 'px)', height: '100%', zIndex: g.zi, pointerEvents: 'none', willChange: 'transform', transform: 'translate3d(-48px,0,0)' } })),
             cards.map((c, i) => {
               const p = place[i]; if (!p) return null;
-              return h('a', {
+              return [h('a', {
                   key: c.k, href: '#', draggable: false, 'aria-label': c.l, 'data-base': '1', 'data-k': (1 / sAt(p.z)).toFixed(3),
                   ref: (el) => { if (el && !(this._fItems || []).some((q) => q.el === el)) { (this._fItems = this._fItems || []).push({ el, X: p.x, z: p.z, sink: p.sink, h: CH }); this._kick(); } },
                   onClick: (e) => { e.preventDefault(); if (this._dragMoved > 6) { this._dragMoved = 0; return; }
                     if (this._touch && this._tapEl !== e.currentTarget) { const prev = this._tapEl; if (prev && prev.isConnected) hover(false, 1)({ currentTarget: prev }); const el = e.currentTarget; el._ret = 0; hover(true, 1)(e); this._tapEl = el; return; }
                     this._tapEl = null; c.go(e); },
-                  onMouseEnter: hover(true), onMouseLeave: (e) => { if (this._touch) return; this._pend = e.currentTarget; this._chkLeave(e.clientX, e.clientY); },
+                  // hover intent: a card only lifts once the cursor settles on it, so cards crossed on the way to another don't jump forward and cover the one you're aiming at
+                  onMouseEnter: (e) => { if (this._touch) return; const el = e.currentTarget; this._mx = e.clientX; this._my = e.clientY; clearTimeout(this._hovT); this._hovEl = el;
+                    this._hovT = setTimeout(() => { this._hovT = 0; if (this._hovEl !== el || !el.isConnected) return; this._hovEl = null; const u = document.elementFromPoint(this._mx, this._my), on = u && u.closest ? u.closest('a[data-base]') : null; if (on === el || (el._pullT && el.contains(u))) hover(true)({ currentTarget: el, clientX: this._mx, clientY: this._my }); }, 90); },
+                  onMouseLeave: (e) => { if (this._touch) return; if (this._hovEl === e.currentTarget) { clearTimeout(this._hovT); this._hovT = 0; this._hovEl = null; } this._pend = e.currentTarget; this._chkLeave(e.clientX, e.clientY); },
                   style: { position: 'absolute', left: 0, top: 0, width: CW + 'px', height: CH + 'px', display: 'block', transformOrigin: '0 0', zIndex: 1001 + Math.round(p.z / 10) * 2, willChange: 'transform', transition: 'none', contain: 'layout style' }
                 },
-                h('div', { style: { position: 'absolute', inset: 0, backgroundImage: c.wide ? 'none' : c.bg, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: 'var(--panel)', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: c.text ? '22px 20px' : 0, boxSizing: 'border-box', overflow: 'hidden', boxShadow: '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)', } },
+                h('div', { style: { position: 'absolute', inset: 0, backgroundImage: c.wide ? 'none' : c.bg, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: 'var(--panel)', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: c.text ? '22px 20px' : 0, boxSizing: 'border-box', overflow: 'hidden', boxShadow: '0 0 0 1px rgba(0,0,0,0.3), 0 22px 44px -24px rgba(0,0,0,0.65)', ...(SP.snow ? {} : { WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, #000 90%, transparent 98.5%)', maskImage: 'linear-gradient(to bottom, #000 0%, #000 90%, transparent 98.5%)', WebkitMaskSize: '100% 200%', maskSize: '100% 200%', WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskPosition: '0 100%', maskPosition: '0 100%', transition: '-webkit-mask-position 0.55s cubic-bezier(0.3, 0.6, 0.3, 1), mask-position 0.55s cubic-bezier(0.3, 0.6, 0.3, 1)' }) } },
                   c.wide ? [
                     h('div', { key: 'wb', 'aria-hidden': true, style: { position: 'absolute', inset: '-24px', backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', filter: 'blur(18px) saturate(1.2) brightness(0.55)' } }),
                     h('div', { key: 'wi', style: { position: 'absolute', left: 0, right: 0, top: '14%', aspectRatio: c.ratio, backgroundImage: c.bg, backgroundSize: 'cover', backgroundPosition: 'center', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.6)' } })
@@ -2659,8 +2803,28 @@ class Component extends DCLogic {
                     h('span', { key: 'tt', style: { fontFamily: "'Gambarino', Georgia, serif", fontSize: '34px', lineHeight: 0.95, letterSpacing: '-0.025em', color: 'var(--ink)' } }, c.text, h('span', { style: { color: 'var(--accent, #B8502A)' } }, '.')),
                     h('span', { key: 'sb', style: { fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '14px', color: 'var(--muted)' } }, c.sub)
                   ] : null),
+                  SP.snow ? (() => { const hh = (k) => { const s = Math.sin(i * 51.7 + k * 9.13) * 43758.5453; return s - Math.floor(s); }, wC = CW + 10, n = 8, hC = 22;
+                    let d = 'M0,' + (hC - 2); for (let k = 0; k <= n; k++) { const x = (k / n) * wC, y = (k === 0 || k === n) ? hC - 4 : 4 + hh(k) * 7 + Math.abs(k - n / 2) * 0.6; d += ' ' + (k ? 'S' + (x - wC / n / 2).toFixed(1) + ',' + (y - 2).toFixed(1) + ' ' : 'L') + x.toFixed(1) + ',' + y.toFixed(1); } d += ' L' + wC + ',' + (hC - 2) + ' Q' + (wC / 2) + ',' + (hC + 4) + ' 0,' + (hC - 2) + ' Z';
+                    return h('svg', { key: 'cap', 'aria-hidden': true, width: wC, height: hC + 6, viewBox: '0 0 ' + wC + ' ' + (hC + 6), style: { position: 'absolute', left: '-5px', top: (-hC + 8) + 'px', overflow: 'visible', pointerEvents: 'none', filter: 'drop-shadow(0 2px 2px rgba(10,14,28,0.35))' } },
+                      h('defs', null, h('linearGradient', { id: 'cap' + i, x1: 0, y1: 0, x2: 0, y2: 1 }, h('stop', { offset: '0', stopColor: '#FBFCFF' }), h('stop', { offset: '0.7', stopColor: '#E3E8F2' }), h('stop', { offset: '1', stopColor: '#BFC7D8' }))),
+                      h('path', { d, fill: 'url(#cap' + i + ')' }), h('path', { d: d.slice(0, d.indexOf(' L' + wC)).replace(/^M0,[0-9.]+ L/, 'M'), fill: 'none', stroke: 'rgba(255,255,255,0.9)', strokeWidth: 1.2 })); })() : null,
                   h('span', { 'data-pad': '', 'aria-hidden': true, style: { position: 'absolute', inset: '-' + Math.round(9 / sAt(p.z)) + 'px', borderRadius: '18px' } }),
-                  h('span', { 'data-cap': '', style: { position: 'absolute', left: '50%', top: '12px', transformOrigin: '50% 0', maxWidth: '210px', overflow: 'hidden', textOverflow: 'ellipsis', boxSizing: 'border-box', padding: '8px 16px', borderRadius: '999px', background: 'rgba(22,21,15,0.92)', boxShadow: '0 0 0 1px rgba(242,239,228,0.14), 0 10px 24px -10px rgba(0,0,0,0.7)', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '17px', fontWeight: 400, color: '#F2EFE4', pointerEvents: 'none', opacity: 0, transform: 'translateX(-50%) scale(' + (1 / sAt(p.z)).toFixed(3) + ') translateY(-8px)', transition: 'opacity 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) 0.04s', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } }, c.l));
+                  h('span', { 'data-cap': '', style: { position: 'absolute', left: '50%', top: '12px', transformOrigin: '50% 0', maxWidth: '210px', overflow: 'hidden', textOverflow: 'ellipsis', boxSizing: 'border-box', padding: '8px 16px', borderRadius: '999px', background: 'rgba(22,21,15,0.92)', boxShadow: '0 0 0 1px rgba(242,239,228,0.14), 0 10px 24px -10px rgba(0,0,0,0.7)', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '17px', fontWeight: 400, color: '#F2EFE4', pointerEvents: 'none', opacity: 0, transform: 'translateX(-50%) scale(' + (1 / sAt(p.z)).toFixed(3) + ') translateY(-8px)', transition: 'opacity 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) 0.04s', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } }, c.l)), SP.snow ? (() => {
+                // winter: a drift of snow banked against the foot of each card; it stays put when the card lifts out
+                const sc0 = sAt(p.z), nr = Math.max(0, Math.min(1, sc0 / 0.75)), wD = CW + 90, ext = 34, hD = p.sink + 40 + ext, gL = 40, n = 9, cut = ((hD - ext) / hD).toFixed(3);
+                const hh = (k) => { const s = Math.sin(i * 97.13 + k * 13.71) * 43758.5453; return s - Math.floor(s); };
+                const pts = []; for (let k = 0; k <= n; k++) { const fx = k / n, bump = (18 + hh(k) * 24) * Math.pow(Math.sin(Math.PI * fx), 0.6); pts.push([fx * wD, gL + 5 - bump]); }
+                let d = 'M0,' + hD + ' L' + pts[0][0] + ',' + pts[0][1].toFixed(1); for (let k = 1; k < n; k++) { const m = [(pts[k][0] + pts[k + 1][0]) / 2, (pts[k][1] + pts[k + 1][1]) / 2]; d += ' Q' + pts[k][0].toFixed(1) + ',' + pts[k][1].toFixed(1) + ' ' + m[0].toFixed(1) + ',' + m[1].toFixed(1); } const rim = d.slice(d.indexOf(' L') + 2).replace(/^/, 'M'); d += ' L' + wD + ',' + pts[n][1].toFixed(1) + ' C' + (wD * 0.97).toFixed(1) + ',' + (hD * 0.85).toFixed(1) + ' ' + (wD * 0.72).toFixed(1) + ',' + hD + ' ' + (wD / 2).toFixed(1) + ',' + hD + ' C' + (wD * 0.28).toFixed(1) + ',' + hD + ' ' + (wD * 0.03).toFixed(1) + ',' + (hD * 0.85).toFixed(1) + ' 0,' + pts[0][1].toFixed(1) + ' Z';
+                const gid = 'drift' + i;
+                return h('span', { key: 'drift-' + c.k, 'aria-hidden': true,
+                    ref: (el) => { if (el && !(this._fItems || []).some((q) => q.el === el)) { (this._fItems = this._fItems || []).push({ el, drift: 1, X: p.x, z: p.z, sink: p.sink, h: CH }); this._kick(); } },
+                    style: { position: 'absolute', left: 0, top: 0, width: CW + 'px', height: CH + 'px', transformOrigin: '0 0', pointerEvents: 'none', zIndex: 1002 + Math.round(p.z / 10) * 2, willChange: 'transform' } },
+                  h('svg', { width: wD, height: hD, viewBox: '0 0 ' + wD + ' ' + hD, style: { position: 'absolute', left: -45 + 'px', top: (CH - hD + ext) + 'px', overflow: 'visible' } },
+                    h('defs', null, h('linearGradient', { id: gid, x1: 0, y1: 0, x2: 0, y2: 1 }, h('stop', { offset: '0', stopColor: snowLit(nr) }), h('stop', { offset: '0.3', stopColor: snowMid(nr) }), h('stop', { offset: cut, stopColor: snowShade(nr) }), h('stop', { offset: '1', stopColor: snowShade(nr), stopOpacity: 0 })), h('filter', { id: gid + 'b', x: '-10%', y: '-50%', width: '120%', height: '200%' }, h('feGaussianBlur', { stdDeviation: 3 }))),
+                    SP.flat ? null : h('ellipse', { cx: wD / 2, cy: gL - 14, rx: CW * 0.5, ry: 9, fill: 'rgba(10,12,18,0.45)', filter: 'url(#' + gid + 'b)' }),
+                    h('path', { d, fill: SP.flat ? '#F6F4F2' : 'url(#' + gid + ')' }),
+                    h('path', { d: rim, fill: 'none', stroke: SP.flat ? '#8C92B6' : snowLit(nr, 0.85), strokeWidth: SP.flat ? 2 : 1.6, strokeLinecap: 'round' })));
+              })() : null];
             })));
         this._ringMemo = { k: mkey, el: ringEl }; return ringEl;
       })(),
@@ -2682,7 +2846,7 @@ class Component extends DCLogic {
         { label: 'About', page: 'about', on: ['about'] }
       ].filter((n) => SHOW_TECH || n.page !== 'data').map((n) => { const on = n.on.indexOf(p) > -1; return {
         label: n.label, text: n.label.toLowerCase(), current: on ? 'page' : undefined, dot: on ? 1 : 0,
-        color: on ? 'var(--ink)' : 'var(--muted)', go: this.go(n.page)
+        color: on ? 'var(--ink)' : (p === 'index' && (this._seasonParams(this._season()) || {}).skyAll ? 'rgba(var(--ink-rgb), 0.86)' : 'var(--muted)'), go: this.go(n.page)
       }; }),
       inMusic: ['perf', 'detail', 'live', 'gig', 'sessions', 'sessiondetail', 'comp', 'compdetail', 'graphic'].indexOf(p) > -1,
       inMusicAny: ['music', 'perf', 'detail', 'live', 'gig', 'sessions', 'sessiondetail', 'comp', 'compdetail', 'graphic'].indexOf(p) > -1 ? 1 : 0,
@@ -2695,7 +2859,7 @@ class Component extends DCLogic {
           this._hdrScroll = () => {
             const h = this._hdr; if (!h) return;
             const on = window.scrollY > 40; if (on === this._hdrMin) return; this._hdrMin = on;
-            h.style.background = on ? 'transparent' : 'var(--paper)'; h.style.pointerEvents = on ? 'none' : '';
+            h.style.background = on ? 'transparent' : (this._hdrTopBg || 'var(--paper)'); h.style.pointerEvents = on ? 'none' : '';
             const name = h.querySelector('[style*="grid-area: name"]'), end = h.querySelector('[style*="grid-area: end"]'), nav = h.querySelector('nav[aria-label="Main"]'), sub = h.children[1];
             [name, end, sub].forEach((el) => { if (!el || (el === name && el.getAttribute('aria-hidden') === 'true')) return; el.style.transition = 'opacity 0.3s ease'; el.style.opacity = on ? '0' : ''; el.style.visibility = on ? 'hidden' : ''; });
             if (nav) { nav.style.transition = 'background 0.3s ease, box-shadow 0.3s ease'; nav.style.pointerEvents = 'auto'; nav.style.justifySelf = 'center'; nav.style.padding = '0 18px'; nav.style.borderRadius = '999px'; nav.style.background = on ? 'color-mix(in srgb, var(--paper) 82%, transparent)' : ''; nav.style.backdropFilter = nav.style.webkitBackdropFilter = on ? 'blur(10px)' : ''; nav.style.boxShadow = on ? '0 0 0 1px var(--rule)' : ''; }
@@ -2956,14 +3120,14 @@ class Component extends DCLogic {
         items: SESSIONS.map((x, n) => ({ ...x, _i: n })).filter((x) => x.crewRole === g.key).map((x, k) => ({
           ...x,
           delay: (0.05 * k).toFixed(2) + 's',
-          thumb: `url('https://i.ytimg.com/vi/${x.yt}/hqdefault.jpg')`,
+          thumb: `url('./assets/yt/${x.yt}/hqdefault.jpg')`,
           open: this.openSession(x._i)
         }))
       })).filter((g) => g.count > 0),
       sessions: SESSIONS.map((x, n) => ({
         ...x,
         delay: (0.05 * n).toFixed(2) + 's',
-        thumb: 'url("https://i.ytimg.com/vi/' + x.yt + '/hqdefault.jpg")',
+        thumb: 'url("./assets/yt/' + x.yt + '/hqdefault.jpg")',
         field: n === this.state.session ? 'var(--accent, #B8502A)' : 'transparent',
         ink: n === this.state.session ? 'var(--panel)' : 'var(--ink)',
         pick: (e) => { e.preventDefault(); this.setState({ session: n }); },
@@ -2989,7 +3153,7 @@ class Component extends DCLogic {
         });
         return years;
       })(),
-      get sessionSnake() { return __self._snake(SESSIONS.map((x, n) => ({ year: x.ep, yearMark: false, title: x.artist, l1: x.ep, l2: x.date, hasThumb: 1, bg: 'url("https://i.ytimg.com/vi/' + x.yt + '/hqdefault.jpg")', bgSize: 'auto 134%', open: __self.openSession(n) }))); },
+      get sessionSnake() { return __self._snake(SESSIONS.map((x, n) => ({ year: x.ep, yearMark: false, title: x.artist, l1: x.ep, l2: x.date, hasThumb: 1, bg: 'url("./assets/yt/' + x.yt + '/hqdefault.jpg")', bgSize: 'auto 134%', open: __self.openSession(n) }))); },
       get liveSnake() {
         const out = []; let last = null;
         const add = (o) => { out.push({ ...o, yearMark: o.year !== last }); last = o.year; };
