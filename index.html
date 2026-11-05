@@ -2185,7 +2185,9 @@ class Component extends DCLogic {
     const s = this._hashToState(window.location.hash);
     const from = this.state.page;
     this._skipPush = true;
-    this.setState(s);
+    const first = !this._hashRead; this._hashRead = 1;
+    // only the home page fades in on load; other pages jump straight to their final state
+    this.setState(s, () => { if (first && s.page !== 'index') document.querySelectorAll('main').forEach((m) => m.getAnimations && m.getAnimations({ subtree: true }).forEach((a) => { if (a.effect && a.effect.getComputedTiming().endTime !== Infinity) a.finish(); })); });
     this._scrollFor(from, s.page);
   }
 
