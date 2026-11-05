@@ -1645,7 +1645,7 @@ const SPOTIFY_PROFILE = ''; // https://open.spotify.com/user/…
 const GIGS = ALL_GIGS.filter((g) => HIDDEN_GIGS.indexOf(g.slug) < 0);
 
 class Component extends DCLogic {
-  state = { page: 'index', slug: 'recital', gig: 'mob', project: 'calculus', session: 0, cue: 0, comp: 'resolute', part: 0, cgroup: 'All', theme: 'dark', phIdx: 0 };
+  state = { page: 'index', slug: 'recital', gig: 'mob', project: 'calculus', session: 0, cue: 0, comp: 'resolute', part: 0, cgroup: 'All', theme: 'dark', phIdx: 0, ...this._hashToState(window.location.hash) }; // start on the page in the URL so a reload never draws home (and its black fade-in cover) first
 
   _lbKeys() {
     if (this._lbBound) return;
@@ -2183,11 +2183,16 @@ class Component extends DCLogic {
 
   _readHash() {
     const s = this._hashToState(window.location.hash);
-    const from = this.state.page;
-    this._skipPush = true;
     const first = !this._hashRead; this._hashRead = 1;
+    const from = first ? 'index' : this.state.page;
+    this._skipPush = true;
     // only the home page fades in on load; other pages jump straight to their final state
-    this.setState(s, () => { if (first && s.page !== 'index') document.querySelectorAll('main').forEach((m) => m.getAnimations && m.getAnimations({ subtree: true }).forEach((a) => { if (a.effect && a.effect.getComputedTiming().endTime !== Infinity) a.finish(); })); });
+    this.setState(s, () => {
+      if (!first || s.page === 'index' || !document.getAnimations) return;
+      const end = performance.now() + 1000; // also catches fades that start a few frames late (scroll rail)
+      const still = () => { document.getAnimations().forEach((a) => { if (a.effect && a.effect.getComputedTiming().endTime !== Infinity) a.finish(); }); if (performance.now() < end) requestAnimationFrame(still); };
+      still();
+    });
     this._scrollFor(from, s.page);
   }
 
