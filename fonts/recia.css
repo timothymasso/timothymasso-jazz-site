@@ -1,0 +1,19 @@
+/* Recia */
+@font-face {
+  font-family: 'Recia';
+  src: url("./recia/7XCHJ2FE6VSSCGPUIM7FUFFMDGQZLWVU.woff2") format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Erode */
+@font-face {
+  font-family: 'Erode';
+  src: url("./recia/AL47FDSJFHTXHQ4H2QPW6HPE5NZMJPEX.woff2") format('woff2');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+
+

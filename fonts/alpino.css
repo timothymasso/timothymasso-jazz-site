@@ -1,0 +1,37 @@
+/* Alpino */
+@font-face {
+  font-family: 'Alpino';
+  src: url("./alpino/Z4Q4AHQTIFKTR36JAH4YU4DHHZTJRJMK.woff2") format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Clash Grotesk */
+@font-face {
+  font-family: 'Clash Grotesk';
+  src: url("./alpino/MJQFMMOTEGNXDVM7HBBDTQHTVB2M7Y6G.woff2") format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Cabinet Grotesk */
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url("./alpino/WN5274VQ3AUBDFP74GB4EC4XYJ3EKVNE.woff2") format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Erode */
+@font-face {
+  font-family: 'Erode';
+  src: url("./alpino/SMFAKKZYPUS6JMKLX3YWBR33XTVQTN5D.woff2") format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+

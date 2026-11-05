@@ -1,0 +1,40 @@
+/* Tanker */
+@font-face {
+  font-family: 'Tanker';
+  src: url("./tanker/GKSURDSYOFIC3Y6F5SMWSENDSAB2YMKC.woff2") format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* General Sans */
+@font-face {
+  font-family: 'General Sans';
+  src: url("./tanker/7YY3ZAAE3TRV2LANYOLXNHTPHLXVWTKH.woff2") format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url("./tanker/SB2OEB6IKZPRR6JT4GFJ2TFT6HBB6AZN.woff2") format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url("./tanker/3ZLMEXZEQPLTEPMHTQDAUXP5ZZXCZAEN.woff2") format('woff2');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'General Sans';
+  src: url("./tanker/NIQ54PVBBIWVK3PFSOIOUJSXIJ5WTNDP.woff2") format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+

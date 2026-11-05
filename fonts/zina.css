@@ -1,0 +1,110 @@
+/* Zina */
+@font-face {
+  font-family: 'Zina';
+  src: url("./zina/EL76ZS7AY22ALJEBHCNRLQSR7UA6S5NG.woff2") format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* Supreme */
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/3TQJM3LST7JIZJBUX4IH5OAMDJS4D5BC.woff2") format('woff2');
+  font-weight: 100;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/EXWNVVV6F54WHX3JRKLQLMCPFQ2OOET5.woff2") format('woff2');
+  font-weight: 100;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/6IG5NRG4D4MEEF77CBE44JBJS4T2YCGU.woff2") format('woff2');
+  font-weight: 200;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/GHIGKXOUZTMKP3KKZI3Q6DMEDD2MD4TD.woff2") format('woff2');
+  font-weight: 200;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/SPD5TGNFK2XOFPWN7JB26FTXSLXBKEAV.woff2") format('woff2');
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/HGC6U3MDLX3QXSN2A7PAEQ4Q4HTQA6OX.woff2") format('woff2');
+  font-weight: 300;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/5ZZU4JM62PS7KOJ7BOKLPL3AEO2G76TS.woff2") format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/F6KK3SHJZ5IAQWFJ26LASNWIU5ZCMCOF.woff2") format('woff2');
+  font-weight: 400;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/GHZ524YD2KXKRX4PZ2S7DE3HKNPE2EKH.woff2") format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/QDQ4GE7GXJOFSMNLOAAL7EH2TTUIOKM5.woff2") format('woff2');
+  font-weight: 500;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/TN7F4YNDQ3FJ6JRJV2XDS3CGMFKQRLXV.woff2") format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/WSOULU7BZA6ZWBLKBF4DDD6R2AYE2F5X.woff2") format('woff2');
+  font-weight: 700;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/UPZ7O6SKOW5AF4XEN7NCNHHDMAAMYNSS.woff2") format('woff2');
+  font-weight: 800;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Supreme';
+  src: url("./zina/LK4QNLGOAJXCEBGY4UOJ4KNHDSMPJRN4.woff2") format('woff2');
+  font-weight: 800;
+  font-display: swap;
+  font-style: italic;
+}
+
+
