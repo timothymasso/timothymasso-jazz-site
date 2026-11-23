@@ -170,7 +170,7 @@
         <h1 style="margin: 0; font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, min(12.4vw, 22svh), 215px); line-height: 0.9; letter-spacing: -0.035em; color: var(--ink); text-shadow: {{ heroTs }}; transition: text-shadow 0.6s ease; white-space: nowrap; animation: fadeIn 0.7s cubic-bezier(0.3, 0, 0.3, 1) both">Timothy Masso<span style="color: var(--accent, #B8502A)">.</span></h1>
       </section>
       <section style="position: relative; z-index: 0; isolation: isolate; padding: 0; overflow: hidden">
-        <div style="position: relative; height: clamp(calc(300px * var(--ring-scale)), calc(100svh - 64px - min(11.2vw, 20svh, 194px)), var(--ring-max, calc(640px * var(--ring-scale)))); display: flex; align-items: center; justify-content: center; margin-top: calc(-60px * var(--ring-scale))">{{ ring }}</div>
+        <div style="position: relative; width: 100%; height: clamp(calc(300px * var(--ring-scale)), min(calc(100vw / 3), calc(100svh - 64px - min(11.2vw, 20svh, 194px))), var(--ring-max, calc(520px * var(--ring-scale)))); display: flex; align-items: center; justify-content: center; margin-top: calc(-60px * var(--ring-scale))">{{ ring }}</div>
         <div role="group" aria-label="Season" style="position: absolute; right: max(var(--gutter), env(safe-area-inset-right, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px)); z-index: 10; max-width: calc(100% - 2 * var(--gutter)); display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px clamp(8px, 2.2vw, 14px); padding: 2px clamp(10px, 3vw, 14px); border-radius: 18px; background: rgba(var(--paper-rgb), 0.88); box-shadow: 0 0 0 1px var(--rule), 0 10px 24px -12px rgba(0,0,0,0.6); font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: clamp(14px, 3.6vw, 15px); color: var(--faint)">
           <sc-for list="{{ seasonOpts }}" as="o" hint-placeholder-count="5">
             <a href="#" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" style="color: {{ o.color }}; display: inline-flex; align-items: center; min-height: 44px; padding: 0 5px; -webkit-tap-highlight-color: transparent" style-hover="color: var(--ink)">{{ o.label }}</a>
@@ -1877,7 +1877,7 @@ class Component extends DCLogic {
     this._ringWrap = el; this._f3Host = el;
     if (this._skyFit) [30, 200].forEach((d) => setTimeout(() => requestAnimationFrame(() => this._skyFit && this._skyFit()), d));
     const fail = () => { if (this._f3Host !== el) return; this._no3d = 1; this._ringMemo = null; this.setState({ f3fail: 1 }); };
-    import('./field3d.js?v=105').then((m) => { // bump v whenever field3d.js changes, or browsers keep running their cached copy
+    import('./field3d.js?v=121').then((m) => { // bump v whenever field3d.js changes, or browsers keep running their cached copy
       if (this._f3Host !== el || !el.isConnected) return;
       try {
         this._f3Sea = this._season();
