@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field 3D · Timothy Masso</title>
+<!-- prototype: the home field in real 3D (Three.js). The live site is index.html; this page is only for comparing. -->
+<link href="./fonts/gambarino.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #1E1712; --ink: #F2E7D7; --faint: #917F6C; }
+  html, body { margin: 0; height: 100%; background: #000; color: var(--ink); overflow: hidden; }
+  canvas { display: block; position: fixed; inset: 0; width: 100%; height: 100%; touch-action: pan-y; }
+  h1 { position: fixed; left: 0; right: 0; top: clamp(40px, 9vh, 90px); margin: 0; text-align: center; pointer-events: none;
+       font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(36px, min(12.4vw, 22svh), 215px); line-height: 0.9; letter-spacing: -0.035em;
+       text-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 18px rgba(0,0,0,0.35); }
+  h1 span { color: #9BB27A; }
+  .ui { position: fixed; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; }
+  .back { left: 20px; top: 16px; color: var(--ink); text-decoration: none; opacity: 0.8; }
+  .back:hover, .back:focus-visible { opacity: 1; }
+  .seasons { right: clamp(12px, 3vw, 40px); bottom: clamp(12px, 3vw, 28px); display: flex; gap: 12px; padding: 4px 14px; border-radius: 18px;
+             background: rgba(30, 23, 18, 0.88); box-shadow: 0 0 0 1px #3A2E25, 0 10px 24px -12px rgba(0,0,0,0.6); }
+  .seasons button { all: unset; cursor: pointer; min-height: 34px; display: inline-flex; align-items: center; padding: 0 3px; color: rgba(242,231,215,0.66); }
+  .seasons button[aria-pressed="true"] { color: var(--ink); }
+  .seasons button:focus-visible { outline: 2px solid #9BB27A; outline-offset: 2px; border-radius: 4px; }
+  #veil { position: fixed; inset: 0; background: #000; pointer-events: none; opacity: 1; transition: opacity 0.6s ease; }
+  #msg { position: fixed; inset: 0; display: none; place-items: center; font-family: 'Newsreader', Georgia, serif; font-size: 18px; }
+</style>
+<script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }</script>
+</head>
+<body>
+<h1>Timothy Masso<span>.</span></h1>
+<a class="ui back" href="./#/">← back to the site</a>
+<div class="ui seasons" role="group" aria-label="Season"></div>
+<div id="veil"></div>
+<div id="msg">This needs WebGL. <a href="./#/" style="color:inherit">Back to the site</a></div>
+<script type="module">
+import * as THREE from 'three';
+
+// colours straight from the site's _seasonParams, so both versions share one palette
+const SEASONS = {
+  winter: { snow: 1, ground: '#525E6E', zen: ['#0B111F', '#121A2E', '#1C2540'], stops: [[0.1, '#1C2540'], [0.13, '#26304A'], [0.17, '#3A4660'], [0.22, '#56617A'], [0.3, '#4A5468']], sun: { x: 0.8, y: 0.13, R: 0.4, stops: [[0, 'rgba(246,248,255,1)'], [0.06, 'rgba(246,248,255,1)'], [0.145, 'rgba(214,226,250,0.42)'], [0.41, 'rgba(170,190,230,0.12)'], [1, 'rgba(160,180,220,0)']] } },
+  spring: { h: 88, hv: 20, s: 46, l: 15, hm: 1.32, ground: '#2E3B1F', zen: ['#24223F', '#3E3863', '#6E6390'], stops: [[0.1, '#6E6390'], [0.125, '#9A88AE'], [0.15, '#D9B6BE'], [0.19, '#F0D0BF'], [0.22, '#F8E6CC'], [0.3, '#E8EDD2']], sun: { x: 0.21, y: 0.2, R: 0.32, stops: [[0, 'rgba(255,248,232,0.95)'], [0.089, 'rgba(255,248,232,0.95)'], [0.25, 'rgba(255,224,204,0.55)'], [1, 'rgba(255,214,196,0)']] } },
+  summer: { h: 104, hv: 14, s: 42, l: 11, hm: 1.42, ground: '#26381A', zen: ['#164C80', '#2A68A2', '#4F8FC4'], stops: [[0.1, '#4F8FC4'], [0.13, '#75AED6'], [0.165, '#9CCAE4'], [0.205, '#C9E1EA'], [0.23, '#ECE7C6'], [0.3, '#E6E3B6']], sun: { x: 0.74, y: 0.14, R: 0.41, stops: [[0, 'rgba(255,253,240,1)'], [0.083, 'rgba(255,253,240,1)'], [0.19, 'rgba(255,238,186,0.6)'], [0.42, 'rgba(255,228,165,0.22)'], [1, 'rgba(255,220,150,0)']] } },
+  fall: { h: 38, hv: 16, s: 40, l: 6, hm: 1.32, ground: '#2A2014', zen: ['#1F1934', '#362A50', '#5B3F6A'], stops: [[0.1, '#5B3F6A'], [0.125, '#8A5476'], [0.15, '#C06A6E'], [0.185, '#E38C62'], [0.215, '#F3B270'], [0.24, '#F6CC8E'], [0.32, '#D99A5E']], sun: { x: 0.66, y: 0.21, R: 0.45, stops: [[0, 'rgba(255,236,196,1)'], [0.079, 'rgba(255,236,196,1)'], [0.18, 'rgba(255,196,120,0.6)'], [0.43, 'rgba(246,150,90,0.22)'], [1, 'rgba(240,140,80,0)']] } },
+};
+const nowSeason = (() => { const m = new Date().getMonth(); return m === 11 || m < 2 ? 'winter' : m < 5 ? 'spring' : m < 8 ? 'summer' : 'fall'; })();
+let season = (() => { try { const v = localStorage.getItem('tm-season'); return SEASONS[v] ? v : nowSeason; } catch (_) { return nowSeason; } })();
+
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches, SMALL = innerWidth < 720;
+const rand = (() => { let a = 20251108; return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; })();
+const hsl = (h, s, l) => new THREE.Color().setHSL(((h % 360) + 360) % 360 / 360, Math.min(1, s / 100), Math.min(1, l / 100));
+
+// everything in plain sRGB, like the 2D canvas version: no colour-space conversions anywhere
+THREE.ColorManagement.enabled = false;
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' }); } catch (e) { document.getElementById('msg').style.display = 'grid'; throw e; }
+renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, SMALL ? 1.5 : 1.75));
+renderer.setSize(innerWidth, innerHeight);
+renderer.domElement.setAttribute('aria-hidden', 'true');
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 900);
+const CAM = new THREE.Vector3(0, 2.0, 8), LOOK = new THREE.Vector3(0, 1.15, -8);
+camera.position.copy(CAM); camera.lookAt(LOOK);
+const fog = new THREE.FogExp2('#000', 0.03); scene.fog = fog;
+
+// ── sky: painted exactly like the 2D site (skyRef fit): one page gradient from the zenith down through the horizon, with the sun or moon glow on top.
+// The site's "field" is the box the stops are measured in; here it's placed so its horizon (0.2 down) sits on the 3D horizon.
+// It's painted into a texture that is both the background and the fog: anything far away fades into the exact sky colour behind it
+// (the haze below the horizon, the sun or moon glow), so the far field melts into the sky the way the 2D rows do.
+const sunDir = new THREE.Vector3(), h1 = document.querySelector('h1'), skyCv = document.createElement('canvas'), skyTex = new THREE.CanvasTexture(skyCv);
+scene.background = skyTex;
+const SKY = { value: skyTex }, RES = { value: new THREE.Vector2() }; renderer.getDrawingBufferSize(RES.value);
+const skyFog = (m) => { m.onBeforeCompile = (sh) => { sh.uniforms.uSky = SKY; sh.uniforms.uRes = RES;
+  sh.fragmentShader = `uniform sampler2D uSky; uniform vec2 uRes;
+` + sh.fragmentShader.replace('#include <fog_fragment>', `#ifdef USE_FOG
+float fogF = 1.0 - exp(-fogDensity * fogDensity * vFogDepth * vFogDepth); gl_FragColor.rgb = mix(gl_FragColor.rgb, texture2D(uSky, gl_FragCoord.xy / uRes).rgb, fogF);
+#endif`); }; return m; };
+const paintSky = () => {
+  const K = SEASONS[season], W = innerWidth, VH = innerHeight;
+  camera.updateMatrixWorld(); // project/unproject need the camera's current matrices (this can run before the first render)
+  const hz = new THREE.Vector3(CAM.x, CAM.y, CAM.z - 2000).project(camera), hy = (1 - hz.y) / 2 * VH, H = VH * 0.78, T = hy - 0.2 * H;
+  const px = (v) => Math.round(v) + 'px', yh = T + K.stops[0][0] * H;
+  const line = [[0, K.zen[0]], [yh * 0.55, K.zen[1]], [yh, K.zen[2]], ...K.stops.slice(1).map(([p, c]) => [T + p * H, c]), [T + 0.45 * H, K.ground]];
+  const sx = K.sun.x * W, sy = T + K.sun.y * H, k = 512 / W, yEnd = Math.max(VH, line[line.length - 1][0]);
+  const ch = Math.max(2, Math.round(VH * k)); if (skyCv.width !== 512 || skyCv.height !== ch) { skyCv.width = 512; skyCv.height = ch; skyTex.dispose(); } // three.js can't resize a texture in place
+  const x = skyCv.getContext('2d');
+  const lg = x.createLinearGradient(0, 0, 0, yEnd * k); line.forEach(([y, c]) => lg.addColorStop(Math.max(0, Math.min(1, y / yEnd)), c)); x.fillStyle = lg; x.fillRect(0, 0, skyCv.width, skyCv.height);
+  const rg = x.createRadialGradient(sx * k, sy * k, 0, sx * k, sy * k, K.sun.R * H * k); K.sun.stops.forEach(([f, c]) => rg.addColorStop(f, c)); x.fillStyle = rg; x.fillRect(0, 0, skyCv.width, skyCv.height);
+  skyTex.needsUpdate = true;
+  // light comes from where the sun is drawn
+  sunDir.set(sx / W * 2 - 1, 1 - sy / VH * 2, 0.5).unproject(camera).sub(camera.position).normalize();
+  // the name's shadow, tinted from the zenith like the site's
+  const n = parseInt(K.zen[0].slice(1), 16), c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => Math.round(v * 0.55)).join(',');
+  h1.style.textShadow = '0 1px 2px rgba(' + c + ',0.35), 0 4px 18px rgba(' + c + ',0.4), 0 10px 70px rgba(' + c + ',0.55)';
+};
+
+// ── ground under the grass
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), skyFog(new THREE.MeshBasicMaterial({ color: '#000' })));
+ground.rotation.x = -Math.PI / 2; scene.add(ground);
+
+// ── grass: one tapered, curved blade, instanced tens of thousands of times. Wind, the parting around a lifting card,
+// root-to-tip shading, lusher/drier patches and the sun's rim light all happen in the shader.
+const SEG = 4, bp = [], bi = [];
+for (let i = 0; i < SEG; i++) { const y = i / SEG; bp.push(-0.5, y, 0, 0.5, y, 0); }
+bp.push(0, 1, 0);
+for (let i = 0; i < SEG - 1; i++) { const a = i * 2; bi.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+bi.push((SEG - 1) * 2, (SEG - 1) * 2 + 1, SEG * 2);
+const N = SMALL ? 38000 : 95000, gg = new THREE.InstancedBufferGeometry();
+gg.setIndex(bi); gg.setAttribute('position', new THREE.Float32BufferAttribute(bp, 3)); gg.instanceCount = N;
+const aOff = new Float32Array(N * 3), aShape = new Float32Array(N * 4);
+for (let i = 0; i < N; i++) {
+  // denser near the camera; the strip widens with distance to fill the view
+  const z = 7.5 - 52 * Math.pow(rand(), 1.45), d = CAM.z - z + 1, x = (rand() - 0.5) * (4 + d * 1.45);
+  aOff.set([x, z, rand()], i * 3);
+  aShape.set([0.45 + rand() * 0.55, 0.035 + rand() * 0.035, rand() * Math.PI * 2, (rand() - 0.3) * 0.35], i * 4);
+}
+gg.setAttribute('aOff', new THREE.InstancedBufferAttribute(aOff, 3)); gg.setAttribute('aShape', new THREE.InstancedBufferAttribute(aShape, 4));
+gg.boundingSphere = new THREE.Sphere(new THREE.Vector3(0, 0, -18), 70);
+const PARTS = 4, grassU = {
+  uTime: { value: 0 }, uHm: { value: 1 }, uRoot: { value: new THREE.Color() }, uTip: { value: new THREE.Color() }, uDry: { value: new THREE.Color() }, uRim: { value: new THREE.Color() },
+  uSun: { value: sunDir }, uCam: { value: camera.position }, uSky: SKY, uRes: RES, uFogD: { value: fog.density },
+  uPart: { value: Array.from({ length: PARTS }, () => new THREE.Vector4()) },
+};
+const grass = new THREE.Mesh(gg, new THREE.ShaderMaterial({
+  uniforms: grassU, side: THREE.DoubleSide,
+  vertexShader: `attribute vec3 aOff; attribute vec4 aShape; uniform float uTime, uHm; uniform vec3 uSun, uCam; uniform vec4 uPart[${PARTS}];
+    varying float vH, vPatch, vRim, vDepth, vRnd;
+    void main(){
+      float h = position.y, H = aShape.x * uHm * 0.44;
+      vec3 p = vec3(position.x * aShape.y * (1.0 - h * 0.8), h * H, aShape.w * h * h * H);
+      float c = cos(aShape.z), s = sin(aShape.z); p.xz = mat2(c, -s, s, c) * p.xz;
+      vec3 w = vec3(aOff.x, 0.0, aOff.y) + p;
+      // wind: a slow swell, a quicker flutter, and gusts that roll across the field
+      vec2 q = aOff.xy; float t = uTime;
+      float wind = 0.55 * sin(t * 1.1 + q.x * 0.22 + q.y * 0.17) + 0.25 * sin(t * 2.3 + q.x * 0.8 - q.y * 0.5 + aOff.z * 6.0) + 0.7 * pow(max(0.0, sin(t * 0.45 - q.x * 0.09 + q.y * 0.05)), 4.0);
+      w.x += wind * 0.16 * h * h * H; w.z -= wind * 0.05 * h * h * H; w.y -= abs(wind) * 0.03 * h * h * H;
+      // a lifting card pushes the blades around its foot aside (wide across the card, shallow front to back) and bends them down
+      for (int i = 0; i < ${PARTS}; i++) { vec4 P = uPart[i]; if (P.w < 0.001) continue;
+        vec2 d = w.xz - P.xy; float L = length(d / vec2(P.z, P.z * 0.5)); float f = P.w * (1.0 - smoothstep(0.5, 1.4, L));
+        vec2 dir = normalize(vec2(d.x, d.y * 0.35) + vec2(0.0001)); w.xz += dir * f * h * H * 0.75; w.y -= f * h * h * H * 0.35; }
+      vH = h; vRnd = aOff.z;
+      vPatch = 0.5 + 0.3 * sin(q.x * 0.21 + 1.3) * sin(q.y * 0.17 + 0.4) + 0.2 * sin(q.x * 0.57 - q.y * 0.43);
+      // rim light: tips glow when the sun is behind them (backlit) and on the side that faces it
+      vec3 v = normalize(w - uCam); float back = pow(max(dot(v, uSun), 0.0), 8.0); float face = abs(dot(vec2(s, c), normalize(uSun.xz)));
+      vRim = h * h * (0.75 * back + 0.25 * face);
+      vec4 mv = modelViewMatrix * vec4(w, 1.0); vDepth = -mv.z; gl_Position = projectionMatrix * mv; }`,
+  fragmentShader: `uniform vec3 uRoot, uTip, uDry, uRim; uniform float uFogD; uniform sampler2D uSky; uniform vec2 uRes; varying float vH, vPatch, vRim, vDepth, vRnd;
+    void main(){
+      vec3 tip = mix(uTip, uDry, smoothstep(0.35, 0.95, vPatch + (vRnd - 0.5) * 0.3));
+      vec3 c = mix(uRoot, tip, smoothstep(0.0, 1.0, vH)) * (0.88 + 0.24 * vRnd);
+      c += uRim * vRim * 0.3;
+      float f = 1.0 - exp(-uFogD * uFogD * vDepth * vDepth); gl_FragColor = vec4(mix(c, texture2D(uSky, gl_FragCoord.xy / uRes).rgb, f), 1.0); }`,
+}));
+grass.frustumCulled = false; scene.add(grass);
+
+// ── winter: moonlit snow dunes with wind-carved ridges, and falling snow
+const snowGeo = new THREE.PlaneGeometry(160, 160, SMALL ? 140 : 240, SMALL ? 140 : 240); snowGeo.rotateX(-Math.PI / 2);
+const duneH = (x, z) => { const u = z * 0.42 + x * 0.07 + 0.5 * Math.sin(x * 0.27), f = u - Math.floor(u), ridge = f < 0.78 ? f / 0.78 : (1 - f) / 0.22; // long windward slope, short lee face
+  return 0.32 * ridge * ridge * (0.6 + 0.4 * Math.sin(x * 0.19 + z * 0.05)) + 0.22 * Math.sin(x * 0.31 + z * 0.13) + 0.12 * Math.sin(x * 0.83 - z * 0.37 + 1.3); };
+snowGeo.translate(0, 0, -40); // world coordinates, so duneH(x, z) is the snow height anywhere
+{ const P = snowGeo.attributes.position; for (let i = 0; i < P.count; i++) P.setY(i, duneH(P.getX(i), P.getZ(i))); snowGeo.computeVertexNormals(); }
+const snow = new THREE.Mesh(snowGeo, skyFog(new THREE.MeshLambertMaterial({ color: '#E8EDF5' }))); scene.add(snow);
+// three.js lights are physical (a lambert surface gets intensity / pi), so these look high: they give the 2D site's pale moonlit snow
+const moon = new THREE.DirectionalLight('#DCE6FF', 2.6), hemi = new THREE.HemisphereLight('#C7D1EA', '#4A5675', 2.8); scene.add(moon, hemi);
+// flakes start at least ~4 units from the camera so none fill the screen
+const FL = SMALL ? 1500 : 3500, flG = new THREE.BufferGeometry(), flP = new Float32Array(FL * 3), flS = new Float32Array(FL);
+for (let i = 0; i < FL; i++) { flP.set([(rand() - 0.5) * 30, rand() * 9, 4 - rand() * 31], i * 3); flS[i] = rand(); }
+flG.setAttribute('position', new THREE.BufferAttribute(flP, 3)); flG.setAttribute('aS', new THREE.BufferAttribute(flS, 1));
+const flU = { uTime: { value: 0 }, uPx: { value: renderer.getPixelRatio() } };
+const flakes = new THREE.Points(flG, new THREE.ShaderMaterial({ uniforms: flU, transparent: true, depthWrite: false,
+  vertexShader: `attribute float aS; uniform float uTime, uPx; varying float vA;
+    void main(){ vec3 p = position; float sp = 0.35 + aS * 0.55; p.y = mod(p.y - uTime * sp, 9.0) - 0.3; p.x += sin(uTime * (0.4 + aS) + aS * 40.0) * 0.35 + mod(uTime * 0.25, 30.0); p.x = mod(p.x + 15.0, 30.0) - 15.0;
+      vec4 mv = modelViewMatrix * vec4(p, 1.0); gl_PointSize = min(uPx * 9.0, uPx * (0.8 + aS * aS * 2.2) * 14.0 / -mv.z); vA = 0.55 + 0.45 * aS; gl_Position = projectionMatrix * mv; }`,
+  fragmentShader: 'varying float vA; void main(){ float d = length(gl_PointCoord - 0.5); gl_FragColor = vec4(0.96, 0.97, 0.99, vA * smoothstep(0.5, 0.15, d)); }' }));
+flakes.frustumCulled = false; scene.add(flakes);
+
+// powder kicked up when a card rises out of the snow
+const PF = 400, pfG = new THREE.BufferGeometry(), pfP = new Float32Array(PF * 3), pfA = new Float32Array(PF), pfV = new Float32Array(PF * 3), pfT = new Float32Array(PF).fill(9), pfL = new Float32Array(PF).fill(1);
+pfG.setAttribute('position', new THREE.BufferAttribute(pfP, 3)); pfG.setAttribute('aA', new THREE.BufferAttribute(pfA, 1));
+const puffs = new THREE.Points(pfG, new THREE.ShaderMaterial({ uniforms: flU, transparent: true, depthWrite: false,
+  vertexShader: 'attribute float aA; uniform float uPx; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_PointSize = uPx * 34.0 / -mv.z; vA = aA; gl_Position = projectionMatrix * mv; }',
+  fragmentShader: 'varying float vA; void main(){ float d = length(gl_PointCoord - 0.5); gl_FragColor = vec4(0.96, 0.97, 1.0, vA * smoothstep(0.5, 0.1, d)); }' }));
+puffs.frustumCulled = false; scene.add(puffs);
+let pfNext = 0;
+const puff = (x, y, z, w, k) => { for (let i = 0; i < 90 * k; i++) { const j = pfNext++ % PF, u = rand() * 2 - 1; pfP.set([x + u * w * 0.5, y, z + (rand() - 0.3) * 0.3], j * 3); pfV.set([u * (0.4 + rand() * 0.9), (0.9 + rand() * 2.2) * k, 0.3 + rand() * 0.6], j * 3); pfT[j] = 0; pfL[j] = 0.8 + rand() * 0.9; } };
+
+// ── cards: photos standing in the field at several depths; their feet really sit down in the grass or snow
+const PHOTOS = Array.from({ length: 65 }, (_, i) => 'p' + String(i + 1).padStart(2, '0')).concat(Array.from({ length: 15 }, (_, i) => 'q' + String(i + 1).padStart(2, '0')));
+for (let i = PHOTOS.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [PHOTOS[i], PHOTOS[j]] = [PHOTOS[j], PHOTOS[i]]; }
+// rounded corners drawn for each card's own shape, so wide photos keep round corners too
+const masks = {}, roundMask = (a) => masks[a.toFixed(2)] || (masks[a.toFixed(2)] = (() => { const c = document.createElement('canvas'); c.width = 96; c.height = Math.round(96 / a); const x = c.getContext('2d'); x.fillStyle = '#000'; x.fillRect(0, 0, c.width, c.height); x.fillStyle = '#fff'; x.beginPath(); x.roundRect(1, 1, c.width - 2, c.height - 2, 7); x.fill(); return new THREE.CanvasTexture(c); })());
+const loader = new THREE.TextureLoader(), cards = [], plane = new THREE.PlaneGeometry(1, 1);
+let hov = null;
+const cardBase = (c) => (SEASONS[season].snow ? duneH(c.home.x, c.home.z) : 0); // ground height under a card
+const sizeCard = (c) => { c.m.scale.set(c.H * c.a, c.H, 1); c.proxy.scale.copy(c.m.scale); c.proxy.position.set(c.home.x, cardBase(c) + c.H / 2 - c.sink - (SEASONS[season].snow ? 0.15 : 0), c.home.z); };
+const makeCard = (i) => {
+  const mat = skyFog(new THREE.MeshBasicMaterial({ color: '#fff', alphaMap: roundMask(0.75), alphaTest: 0.5, alphaToCoverage: true }));
+  // the invisible proxy stays at the card's home spot and keeps the hover while the card itself flies toward the camera
+  const m = new THREE.Mesh(plane, mat), proxy = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({ visible: false }));
+  const c = { m, proxy, a: 0.75, H: 1.6, home: new THREE.Vector3(), yaw: (rand() - 0.5) * 0.25, sink: 0.14 + rand() * 0.14, lift: 0, liftV: 0, fwd: 0, fwdV: 0, want: 0, up: 0, on: 0, bad: 0 };
+  m.rotation.y = proxy.rotation.y = c.yaw; scene.add(m, proxy);
+  loader.load('./assets/photos/sm/' + PHOTOS[i % PHOTOS.length] + '.jpg',
+    (t) => { c.a = Math.min(1.25, Math.max(0.62, t.image.width / t.image.height)); mat.map = t; mat.alphaMap = roundMask(c.a); mat.needsUpdate = true; sizeCard(c); },
+    undefined, () => { c.bad = 1; m.visible = false; }); // a photo that won't load is left out, not shown as a blank card
+  return c;
+};
+// like the 2D layout: cards at several depths, never overlapping on screen (each spot is tried a few times, skipped if nothing fits).
+// Redone when the window changes shape, so cards never end up off-screen or on top of each other.
+const layoutCards = () => {
+  const BANDS = innerWidth < 720 ? [[1.4, 1], [-1.8, 2], [-5, 2], [-8.2, 3]] : [[1.4, 2], [-1.8, 3], [-5, 4], [-8.2, 4]]; // farthest band kept close so every card stays readable
+  camera.updateMatrixWorld(); const taken = [], scr = (x, y, z) => new THREE.Vector3(x, y, z).project(camera);
+  const sz = Math.min(1, 0.5 + camera.aspect * 0.38); // narrow (portrait) screens get smaller cards so more of them fit
+  let i = 0;
+  for (const [z0, n] of BANDS) {
+    const d = CAM.z - z0, half = d * Math.tan(THREE.MathUtils.degToRad(19)) * camera.aspect * 0.9;
+    for (let k = 0; k < n; k++) {
+      let x, z, H, ok = false;
+      // bands go near to far, so a new card is always behind the ones placed: its bottom may tuck behind them, but the top half must stay clear
+      for (let t = 0; t < 60 && !ok; t++) {
+        z = z0 + (rand() - 0.5) * 1.4; x = (rand() * 2 - 1) * half; H = (1.5 + rand() * 0.3) * sz;
+        const top = H * 0.85, a = scr(x - H * 0.55, top, z), m = scr(x + H * 0.55, top - 0.5 * (top - 0.35), z), b = scr(x + H * 0.55, 0.35, z), pad = 0.025;
+        const r = [a.x, a.y, m.x, m.y];
+        ok = r[0] > -0.95 && r[2] < 0.95 && taken.every((q) => r[2] + pad < q[0] || r[0] - pad > q[2] || r[1] + pad < q[3] || r[3] - pad > q[1]);
+        if (ok) taken.push([a.x, a.y, b.x, b.y]);
+      }
+      if (!ok) continue;
+      const c = cards[i] || (cards[i] = makeCard(i)); i++;
+      c.H = H; c.home.set(x, 0, z); c.on = 1; c.lift = c.fwd = c.liftV = c.fwdV = 0; c.up = 0; sizeCard(c);
+    }
+  }
+  cards.forEach((c, j) => { if (j >= i) c.on = 0; c.m.visible = !!c.on && !c.bad; });
+  hov = null;
+};
+
+// ── season switch: repaint the sky, retint the grass, swap grass for snow
+const setSeason = (k) => {
+  season = k; const S = SEASONS[k];
+  try { localStorage.setItem('tm-season', k === nowSeason ? 'auto' : k); } catch (_) {}
+  paintSky();
+  pfT.fill(9); pfA.fill(0); pfG.attributes.aA.needsUpdate = true; // a new season starts with no powder in the air
+  const snowy = !!S.snow; grass.visible = !snowy; ground.visible = !snowy; snow.visible = snowy; flakes.visible = snowy; moon.visible = hemi.visible = snowy;
+  if (snowy) { fog.density = 0.02; moon.position.copy(sunDir).multiplyScalar(50); }
+  else {
+    fog.density = 0.022;
+    grassU.uRoot.value.copy(hsl(S.h, S.s * 0.9, S.l + 4)); grassU.uTip.value.copy(hsl(S.h + S.hv * 0.4, S.s + 4, S.l + 27)); grassU.uDry.value.copy(hsl(S.h - 10, S.s - 6, S.l + 34));
+    ground.material.color.copy(grassU.uRoot.value).lerp(grassU.uTip.value, 0.45); // far off, the ground reads as the field's average colour, so there's no seam where the blades end
+    grassU.uRim.value.set(S.sun.stops[2][1].replace(/rgba\((\d+),(\d+),(\d+).*/, 'rgb($1,$2,$3)')); grassU.uHm.value = S.hm;
+  }
+  grassU.uFogD.value = fog.density;
+  for (const c of cards) { sizeCard(c); c.lift = c.fwd = c.liftV = c.fwdV = 0; c.up = 0; }
+  document.querySelectorAll('.seasons button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === k)));
+};
+const bar = document.querySelector('.seasons');
+['winter', 'spring', 'summer', 'fall'].forEach((k) => { const b = document.createElement('button'); b.dataset.k = k; b.textContent = k + (k === nowSeason ? ' (now)' : '');
+  b.onclick = () => { if (k === season) return; const v = document.getElementById('veil'); v.style.transition = 'opacity 0.35s ease'; v.style.opacity = '1'; setTimeout(() => { setSeason(k); requestAnimationFrame(() => { v.style.transition = 'opacity 0.9s ease'; v.style.opacity = '0'; }); }, 360); };
+  bar.appendChild(b); });
+layoutCards(); setSeason(season);
+
+// ── hover: the card rises out of the grass (which bends away from its foot), then flies toward you; leaving reverses it
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2(9, 9);
+// only the field itself hovers cards, not the season buttons or links on top of it
+const point = (e) => { if (e.target !== renderer.domElement) { mouse.set(9, 9); return; } mouse.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); };
+addEventListener('pointermove', point); addEventListener('pointerdown', point); // pointerdown: on a phone a tap picks the card (there's no hover)
+addEventListener('pointerleave', () => mouse.set(9, 9));
+document.addEventListener('pointerout', (e) => { if (!e.relatedTarget) mouse.set(9, 9); });
+const spring = (c, k, kv, tgt, w, dt) => { if (RM) { c[k] = tgt; c[kv] = 0; return; } const a = w * w * (tgt - c[k]) - 2 * w * c[kv]; c[kv] += a * dt; c[k] += c[kv] * dt; };
+const tmp = new THREE.Vector3(), tgt = new THREE.Vector3(), fwdPos = new THREE.Vector3(), qCam = new THREE.Quaternion();
+
+let rsT = 0;
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); renderer.getDrawingBufferSize(RES.value); flU.uPx.value = renderer.getPixelRatio(); paintSky(); clearTimeout(rsT); rsT = setTimeout(layoutCards, 200); });
+
+let last = performance.now(), T = 0;
+const frame = (now) => {
+  requestAnimationFrame(frame);
+  if (document.hidden) { last = now; return; }
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; T += RM ? 0 : dt;
+  // which card is under the pointer: the hovered one stays hovered while the pointer is over it or over its home spot
+  ray.setFromCamera(mouse, camera); const hits = ray.intersectObjects(cards.filter((c) => c.on && !c.bad).flatMap((c) => [c.m, c.proxy]));
+  const owner = (o) => cards.find((c) => c.m === o || c.proxy === o);
+  if (!(hov && hits.some((h) => h.object === hov.m || h.object === hov.proxy))) hov = hits.length ? owner(hits[0].object) : null;
+  document.body.style.cursor = hov ? 'pointer' : '';
+  const snowy = !!SEASONS[season].snow;
+  camera.getWorldDirection(tmp); fwdPos.copy(camera.position).addScaledVector(tmp, 4.4); qCam.copy(camera.quaternion);
+  const active = [];
+  for (const c of cards) {
+    if (!c.on) continue;
+    c.want = c === hov ? 1 : 0;
+    spring(c, 'lift', 'liftV', c.want || c.fwd > 0.3 ? 1 : 0, 9, dt);
+    spring(c, 'fwd', 'fwdV', c.want && c.lift > 0.65 ? 1 : 0, 6.5, dt);
+    const base = cardBase(c) + c.H / 2 - (snowy ? c.sink + 0.15 : c.sink), lifted = base + (c.sink + 0.55) * c.lift;
+    const e = Math.max(0, Math.min(1, c.fwd * c.fwd * (3 - 2 * c.fwd)));
+    c.m.position.set(c.home.x, lifted, c.home.z).lerp(tgt.set(fwdPos.x + c.home.x * 0.18, fwdPos.y, fwdPos.z), e);
+    c.m.quaternion.copy(c.proxy.quaternion).slerp(qCam, e);
+    c.m.renderOrder = c.fwd > 0.05 ? 2 : 0; c.m.material.depthTest = c.fwd < 0.6;
+    if (snowy && !RM) { if (c.want && !c.up) { c.up = 1; puff(c.home.x, cardBase(c) + 0.05, c.home.z + 0.15, c.m.scale.x, 1); } else if (!c.want && c.up && c.lift < 0.15) { c.up = 0; puff(c.home.x, cardBase(c) + 0.05, c.home.z + 0.15, c.m.scale.x, 0.45); } }
+    const a = Math.max(0, Math.min(1, c.lift)) * (1 - 0.85 * Math.max(0, Math.min(1, c.fwd)));
+    if (a > 0.01) active.push([a, c]);
+  }
+  // grass parts around the (up to 4) most-lifted cards
+  active.sort((p, q) => q[0] - p[0]);
+  for (let i = 0; i < PARTS; i++) { const v = grassU.uPart.value[i]; if (active[i]) { const [a, c] = active[i]; v.set(c.home.x, c.home.z + 0.1, c.m.scale.x * 0.75, a); } else v.set(0, 0, 1, 0); }
+  // powder: always updated (not only in winter), so a puff still in the air when the season changes can't freeze on the cards
+  { for (let j = 0; j < PF; j++) { if (pfT[j] >= pfL[j]) { pfA[j] = 0; continue; } pfT[j] += dt; const u = pfT[j] / pfL[j]; pfV[j * 3] *= Math.exp(-1.6 * dt); pfV[j * 3 + 1] -= 4.2 * dt; pfV[j * 3 + 2] *= Math.exp(-1.6 * dt);
+    pfP[j * 3] += pfV[j * 3] * dt; pfP[j * 3 + 1] += pfV[j * 3 + 1] * dt; pfP[j * 3 + 2] += pfV[j * 3 + 2] * dt; pfA[j] = Math.min(1, pfT[j] / 0.06) * (1 - u) * (1 - u) * 0.9; }
+    pfG.attributes.position.needsUpdate = true; pfG.attributes.aA.needsUpdate = true; }
+  grassU.uTime.value = T; flU.uTime.value = T;
+  renderer.render(scene, camera);
+};
+requestAnimationFrame((t) => { last = t; frame(t); requestAnimationFrame(() => { document.getElementById('veil').style.opacity = '0'; }); });
+</script>
+</body>
+</html>

@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- home page loads already black; the season curtain takes over when the page draws (skyRef), 3s fallback -->
+<style>html.tm-boot, html.tm-boot body { background: #000 !important; }</style>
+<script>if (!location.hash || location.hash === '#/') { document.documentElement.classList.add('tm-boot'); setTimeout(function () { document.documentElement.classList.remove('tm-boot'); }, 3000); }</script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -16,11 +19,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Timothy Masso">
 <meta property="og:description" content="Saxophone, composition, live sound. Performances, sheet music, and live sound work.">
-<meta property="og:image" content="./assets/share.jpg">
+<meta property="og:image" content="https://timothymasso.com/assets/share.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <link href="./fonts/gambarino.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&amp;display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;display=swap" rel="stylesheet">
@@ -28,7 +31,7 @@
 
   :root {
     --paper: #1E1712; --ink: #F2E7D7; --panel: #2A211A; --body: #D9CAB6;
-    --muted: #A8957F; --faint: #857462; --rule: #3A2E25;
+    --muted: #A8957F; --faint: #917F6C; --rule: #3A2E25;
     --ink-rgb: 242, 231, 215; --paper-rgb: 30, 23, 18; --panel-rgb: 42, 33, 26;
     --blend: screen; --img-op: 0.34; --pdf-invert: invert(1); --accent: #9BB27A;
   }
@@ -47,6 +50,7 @@
     --spec: 130px minmax(0, 1fr);
     --years: var(--gutter) minmax(0, 1fr);
     --years-pull: calc(-1 * var(--gutter));
+    --stx: max(0px, calc(var(--gutter) - 14px), min(240px, calc((100vw - 1280px) / 2 - 14px))); /* snake rows: staff lines reach out past the gutter on wide screens */
     --banner-h: 26px;
     --home-h: calc(100vh - var(--banner-h));
     --home-of: hidden;
@@ -90,8 +94,8 @@
       --allyear: 40px;
       --foot-start: center;
       --foot-end: center;
-      --ring-scale: 0.6;
-      --ring-max: min(540px, 62svh);
+      --ring-scale: 0.72;
+      --ring-max: min(560px, 68svh);
       --ph-cols: 2;
       --hdr-cols: minmax(0, 1fr) auto;
       --hdr-areas: "name end" "nav nav";
@@ -103,6 +107,8 @@
   html { scroll-behavior: smooth; }
   a, button { transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
   img { transition: opacity 0.6s ease; }
+  /* casual save deterrent only — browsers still fetch the files; screenshots/DevTools can copy them */
+  img, canvas, [role="img"], [data-pdf], [data-scrimg] { -webkit-user-drag: none; user-select: none; -webkit-touch-callout: none; }
   html, body { margin: 0; padding: 0; background: var(--paper); transition: background-color 0.5s ease, color 0.5s ease; font-family: 'Newsreader', Georgia, serif; }
   * { box-sizing: border-box; }
   a { color: var(--accent, #B8502A); text-decoration: none; }
@@ -165,9 +171,9 @@
       </section>
       <section style="position: relative; z-index: 0; isolation: isolate; padding: 0; overflow: hidden">
         <div style="position: relative; height: clamp(calc(300px * var(--ring-scale)), calc(100svh - 64px - min(11.2vw, 20svh, 194px)), var(--ring-max, calc(640px * var(--ring-scale)))); display: flex; align-items: center; justify-content: center; margin-top: calc(-60px * var(--ring-scale))">{{ ring }}</div>
-        <div role="group" aria-label="Season" style="position: absolute; right: var(--gutter); bottom: clamp(8px, 2vw, 16px); z-index: 10; max-width: calc(100% - 2 * var(--gutter)); display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px clamp(8px, 2.2vw, 14px); padding: 0 clamp(10px, 3vw, 14px); border-radius: 18px; background: rgba(var(--paper-rgb), 0.88); box-shadow: 0 0 0 1px var(--rule), 0 10px 24px -12px rgba(0,0,0,0.6); font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: clamp(14px, 3.6vw, 15px); color: var(--faint)">
+        <div role="group" aria-label="Season" style="position: absolute; right: max(var(--gutter), env(safe-area-inset-right, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px)); z-index: 10; max-width: calc(100% - 2 * var(--gutter)); display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 2px clamp(8px, 2.2vw, 14px); padding: 2px clamp(10px, 3vw, 14px); border-radius: 18px; background: rgba(var(--paper-rgb), 0.88); box-shadow: 0 0 0 1px var(--rule), 0 10px 24px -12px rgba(0,0,0,0.6); font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: clamp(14px, 3.6vw, 15px); color: var(--faint)">
           <sc-for list="{{ seasonOpts }}" as="o" hint-placeholder-count="5">
-            <a href="#" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" style="color: {{ o.color }}; display: inline-flex; align-items: center; min-height: 34px; padding: 0 3px; -webkit-tap-highlight-color: transparent" style-hover="color: var(--ink)">{{ o.label }}</a>
+            <a href="#" onClick="{{ o.pick }}" aria-pressed="{{ o.on }}" style="color: {{ o.color }}; display: inline-flex; align-items: center; min-height: 44px; padding: 0 5px; -webkit-tap-highlight-color: transparent" style-hover="color: var(--ink)">{{ o.label }}</a>
           </sc-for>
         </div>
         
@@ -214,7 +220,7 @@
       </section>
       <section style="padding: 36px var(--gutter) 16px">
         <sc-for list="{{ snakeRows }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; --stx: max(0px, min(40px, calc(var(--gutter) - 14px))); margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
+          <div style="position: relative; display: flex; gap: 24px; margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
             <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
               <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
@@ -396,7 +402,7 @@
       </section>
       <section style="padding: 36px var(--gutter) 8px">
         <sc-for list="{{ liveSnake }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; --stx: max(0px, min(40px, calc(var(--gutter) - 14px))); margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
+          <div style="position: relative; display: flex; gap: 24px; margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
             <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
               <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
@@ -439,7 +445,7 @@
       <section id="sessions" style="padding: 8px var(--gutter) 28px; display: flex; flex-direction: column; gap: 20px">
         <div style="padding-top: 36px">
         <sc-for list="{{ sessionSnake }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; --stx: max(0px, min(40px, calc(var(--gutter) - 14px))); margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
+          <div style="position: relative; display: flex; gap: 24px; margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
             <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
               <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
@@ -612,7 +618,7 @@
         <sc-if value="{{ gig.tabPlot }}">
           <section style="padding: 20px var(--gutter) 32px; display: grid; grid-template-columns: var(--split-wide); gap: 24px; align-items: start">
             <sc-if value="{{ gig.hasPlotImg }}">
-              <a href="./assets/gigs/stageplot-mg.png" target="_blank" rel="noopener" style="display: block; background: #FFFFFF"><img src="./assets/gigs/stageplot-mg.png" alt="Moonshine Groove stage plot, Jul 28 2025" style="display: block; width: 100%; height: auto; border-radius: 14px; overflow: hidden"></a>
+              <div style="display: block; background: #FFFFFF; border-radius: 14px; overflow: hidden"><img src="./assets/gigs/stageplot-mg.png" alt="Moonshine Groove stage plot, Jul 28 2025" draggable="false" style="display: block; width: 100%; height: auto; pointer-events: none"></div>
             </sc-if>
             <dl style="display: grid; grid-template-columns: var(--spec); gap: 12px 22px; margin: 0">
               <sc-for list="{{ gig.plot }}" as="pl" hint-placeholder-count="2">
@@ -666,7 +672,7 @@
       </section>
       <section style="padding: 36px var(--gutter) 16px">
         <sc-for list="{{ compSnake }}" as="r" hint-placeholder-count="3">
-          <div style="position: relative; display: flex; gap: 24px; --stx: max(0px, min(40px, calc(var(--gutter) - 14px))); margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
+          <div style="position: relative; display: flex; gap: 24px; margin: 0 calc(-1 * var(--stx)); padding: 0 56px 96px">
             <span aria-hidden="true" style="position: absolute; top: 0; left: 56px; right: 56px; height: 17px; background: repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 4px)"></span><sc-if value="{{ r.first }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position: absolute; top: 0; left: 46px; width: 11px; height: 17px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span><span aria-hidden="true" style="position: absolute; top: 4px; left: 50px; width: 7px; height: 9px; box-sizing: border-box; border: 1px solid var(--rule); border-right: none; border-radius: 999px 0 0 999px"></span></sc-if>
             <sc-if value="{{ r.turnRight }}">
               <span aria-hidden="true" style="position: absolute; top: 0px; right: 0px; width: 57px; height: calc(100% + 17px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 4px; right: 4px; width: 53px; height: calc(100% + 9px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 8px; right: 8px; width: 49px; height: calc(100% + 1px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; width: 45px; height: calc(100% + -7px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span><span aria-hidden="true" style="position: absolute; top: 16px; right: 16px; width: 41px; height: calc(100% + -15px); box-sizing: border-box; border: 1px solid var(--rule); border-left: none; border-radius: 0 999px 999px 0"></span>
@@ -736,10 +742,6 @@
               <a href="#" onClick="{{ pt.pick }}" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: {{ pt.labelColor }}" style-hover="color: var(--accent, #B8502A)">{{ pt.label }}</a>
             </sc-for>
           </nav>
-          <div style="display: flex; flex-direction: column">
-            <a href="{{ comp.file }}" target="_blank" rel="noopener noreferrer" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">open full size ↗</a>
-            <a href="{{ comp.file }}" download="" style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 15px; min-height: 32px; display: inline-flex; align-items: center; color: var(--ink)" style-hover="color: var(--accent, #B8502A)">download ↓</a>
-          </div>
         </aside>
         <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 10px">
           <div style="display: flex; justify-content: flex-end; align-items: center; gap: 20px">
@@ -1077,7 +1079,7 @@
   <sc-if value="{{ isColophon }}">
     <main style="animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both">
       <section style="padding: 24px var(--gutter) 20px; border-bottom: 6px solid transparent; border-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='6' viewBox='0 0 24 6'%3E%3Cpath d='M0 3 Q6 0.5 12 3 T24 3' fill='none' stroke='%239BB27A' stroke-opacity='0.45' stroke-width='1.4'/%3E%3C/svg%3E&quot;) 0 0 6 0 / 0 0 6px 0 / 0 round">
-        <h2 style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(28px, 4.4vw, 60px); line-height: 0.89; letter-spacing: -0.032em; margin: 8px 0 0; text-transform: lowercase">About this site</h2>
+        <h1 style="font-family: 'Gambarino', Georgia, serif; font-weight: 400; font-size: clamp(28px, 4.4vw, 60px); line-height: 0.89; letter-spacing: -0.032em; margin: 8px 0 0; text-transform: lowercase">About this site</h1>
       </section>
       <section style="padding: 26px var(--gutter) 28px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: start">
         <div>
@@ -1344,7 +1346,7 @@ const PERFS = [
     ]
   },
   {
-    yt: 'bG930zKvAbk', start: 0, slug: 'hemphill', title: 'Julius Hemphil Ensemble', date: '06 DEC 2022', year: '2022',
+    yt: 'bG930zKvAbk', start: 0, slug: 'hemphill', title: 'Julius Hemphill Ensemble', date: '06 DEC 2022', year: '2022',
     when: 'December 6, 2022 — 8pm', venue: NS, address: NS_ADDR,
     leader: 'Marty Ehrlich', role: 'Alto saxophone', field: 'var(--ink)', img: './assets/5thfloor.webp',
     repLabel: 'REPERTOIRE',
@@ -1643,9 +1645,10 @@ const SHOW_TECH = false; // flip to true when Tech is finished
 const NOW_PLAYING_URL = ''; // Cloudflare Worker URL — see spotify/SETUP.md
 const SPOTIFY_PROFILE = ''; // https://open.spotify.com/user/…
 const GIGS = ALL_GIGS.filter((g) => HIDDEN_GIGS.indexOf(g.slug) < 0);
+const GM = 48; // home field: grass canvases overhang the field by this much on each side
 
 class Component extends DCLogic {
-  state = { page: 'index', slug: 'recital', gig: 'mob', project: 'calculus', session: 0, cue: 0, comp: 'resolute', part: 0, cgroup: 'All', theme: 'dark', phIdx: 0 };
+  state = { page: 'index', slug: 'recital', gig: 'mob', project: 'calculus', session: 0, cue: 0, comp: 'resolute', part: 0, cgroup: 'All', theme: 'dark', phIdx: 0, ...this._hashToState(location.hash) }; // first render = the linked page, so the home intro fade doesn't start elsewhere
 
   _lbKeys() {
     if (this._lbBound) return;
@@ -1713,11 +1716,11 @@ class Component extends DCLogic {
     window.addEventListener('mouseup', up);
   };
 
-  _MONTHS = [['march 2019', 3, 'q'], ['april 2019', 10, 'q'], ['july 2019', 2, 'q'], ['april 2020', 2, 'q'], ['july 2021', 1, 'q'], ['june 2022', 1, 'q'], ['july 2022', 1, 'q'], ['january 2025', 4, 'p'], ['february 2025', 9, 'p'], ['march 2025', 9, 'p'], ['april 2025', 6, 'p'], ['may 2025', 24, 'p'], ['june 2025', 5, 'p'], ['july 2025', 6, 'p'], ['august 2025', 2, 'p']];
+  _MONTHS = [['march 2019', 3, 'q'], ['april 2019', 10, 'q'], ['july 2019', 2, 'q'], ['april 2020', 2, 'q'], ['march 2021', 2, 'q'], ['july 2021', 1, 'q'], ['september 2021', 1, 'q'], ['december 2021', 1, 'q'], ['june 2022', 1, 'q'], ['july 2022', 3, 'q'], ['august 2022', 2, 'q'], ['january 2025', 8, 'p'], ['february 2025', 13, 'p'], ['march 2025', 10, 'p'], ['april 2025', 12, 'p'], ['may 2025', 27, 'p'], ['june 2025', 5, 'p'], ['july 2025', 6, 'p'], ['august 2025', 2, 'p']];
   _CAPS = {};
-  _QDAYS = '29,30,30,1,1,2,2,2,3,3,3,3,3,21,23,24,24,21,14,22'.split(',');
-  _QDIMS = '1200/900,900/1200,900/1200,900/1200,1200/900,1200/900,1200/900,1200/900,1200/900,900/1200,900/1200,900/1200,1200/900,1200/900,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200'.split(',');
-  _DIMS = "900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,576/768,576/768,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200,900/1200,1086/1200,1186/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200,1200/900,900/1200,900/1200,1200/900,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,1200/900,1200/900,900/1200,900/1200,1200/900,1200/900,900/1200,900/1200,1200/900,1200/900".split(',');
+  _QDAYS = '29,30,30,1,1,2,2,2,3,3,3,3,3,21,23,24,24,21,21,21,23,8,14,5,10,22,,'.split(',');
+  _QDIMS = '1200/900,900/1200,900/1200,900/1200,1200/900,1200/900,1200/900,1200/900,1200/900,900/1200,900/1200,900/1200,1200/900,1200/900,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,1200/900,1200/1200,900/1200,1200/900,900/1200,900/1200,1200/900,900/1200'.split(',');
+  _DIMS = "900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,576/768,576/768,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,1200/900,1200/900,1200/900,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,1200/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200,900/1200,1200/900,900/1200,900/1200,1200/900,900/1200,900/1200,900/1200,900/1200,1200/900,900/1200,1200/900,1200/900,900/1200,900/1200,1200/900,1200/900,900/1200,900/1200,1200/900,1200/900".split(',');
   _photos() {
     if (this._ph) return this._ph;
     const out = []; const n = { p: 0, q: 0 };
@@ -1757,13 +1760,14 @@ class Component extends DCLogic {
     const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return o; };
     const pr = gl.createProgram();
     gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p;varying vec2 v;void main(){v=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}'));
-    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\nvarying vec2 v;uniform sampler2D t;uniform float T,yB,A,ph,dur;void main(){float f=pow(clamp(1.-v.y/yB,0.,1.),1.8);float p=T/dur*6.2832+ph;float g=.45+.4*sin(p)+.2*sin(p*2.3+1.1)+.06*sin(p*5.1+.4);float x=v.x-g*A*f;gl_FragColor=(x<0.||x>1.)?vec4(0.):texture2D(t,vec2(x,v.y));}'));
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\nvarying vec2 v;uniform sampler2D t;uniform float T,yB,A,ph,dur,pc,pw,pk,pb,pt;void main(){float f=pow(clamp(1.-v.y/yB,0.,1.),1.8);float p=T/dur*6.2832+ph;float g=.45+.4*sin(p)+.2*sin(p*2.3+1.1)+.06*sin(p*5.1+.4);float x=v.x-g*A*f;float xs=x;bool gp=false;if(pk>0.){float d=x-pc;float hp=clamp((pb-v.y)/max(pb-pt,.001),0.,1.);float P=pk*pw*pow(hp,.6)*(1.-smoothstep(0.,pw*3.,abs(d)));xs=x-sign(d)*P;gp=abs(d)<P;}gl_FragColor=(xs<0.||xs>1.||gp)?vec4(0.):texture2D(t,vec2(xs,v.y));}'));
+    // pc/pw/pk: a hovered card rising at x=pc pushes the blades around it outward (tips most, roots stay), opening a gap of half-width pw*pk at the tips
     gl.linkProgram(pr); if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return (this._wR = null);
     gl.useProgram(pr);
     const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true); gl.clearColor(0, 0, 0, 0);
-    const U = {}; ['T', 'yB', 'A', 'ph', 'dur'].forEach((k) => { U[k] = gl.getUniformLocation(pr, k); });
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true); gl.clearColor(0, 0, 0, 0); gl.enable(gl.SCISSOR_TEST);
+    const U = {}; ['T', 'yB', 'A', 'ph', 'dur', 'pc', 'pw', 'pk', 'pb', 'pt'].forEach((k) => { U[k] = gl.getUniformLocation(pr, k); });
     const max = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
     cv.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this._wR = null; });
     return (this._wR = {
@@ -1776,16 +1780,26 @@ class Component extends DCLogic {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
         return t;
       },
-      draw: (rows, T) => {
-        let mw = 1, mh = 1; for (const r of rows) { mw = Math.max(mw, r._wind.w); mh = Math.max(mh, r._wind.h); }
+      // rows: canvases with _wind/_wtex, and _pt = the card parting it (or null). col: only redraw the gap's columns (this frame's and last drawn), not the whole row
+      draw: (rows, T, col) => {
+        // only ever grow the shared canvas: resizing it reallocates the GL buffer
+        let mw = cv.width, mh = cv.height; for (const r of rows) { mw = Math.max(mw, r._wind.w); mh = Math.max(mh, r._wind.h); }
         if (cv.width !== mw || cv.height !== mh) { cv.width = mw; cv.height = mh; }
         gl.uniform1f(U.T, T);
         for (const r of rows) {
-          const w = r._wind; gl.bindTexture(gl.TEXTURE_2D, r._wtex);
-          gl.viewport(0, mh - w.h, w.w, w.h);
-          gl.uniform1f(U.yB, w.yB); gl.uniform1f(U.A, w.A); gl.uniform1f(U.ph, w.ph); gl.uniform1f(U.dur, w.dur);
+          const w = r._wind, p = r._pt, pad = 2 + Math.ceil(1.2 * w.A * w.w); // blades move at most 3 gap half-widths from the card, plus the sway
+          const gx = p ? [Math.floor((p.x - 3 * p.w) * w.w) - pad, Math.ceil((p.x + 3 * p.w) * w.w) + pad] : null, ox = r._dx;
+          let x0 = 0, x1 = w.w;
+          if (col) { if (!gx && !ox) continue; x0 = Math.max(0, Math.min(gx ? gx[0] : w.w, ox ? ox[0] : w.w)); x1 = Math.min(w.w, Math.max(gx ? gx[1] : 0, ox ? ox[1] : 0)); }
+          r._dx = gx;
+          if (x1 <= x0) continue;
+          gl.bindTexture(gl.TEXTURE_2D, r._wtex);
+          gl.viewport(0, mh - w.h, w.w, w.h); gl.scissor(x0, mh - w.h, x1 - x0, w.h);
+          gl.uniform1f(U.yB, w.yB); gl.uniform1f(U.A, w.A); gl.uniform1f(U.ph, w.ph); gl.uniform1f(U.dur, w.dur); gl.uniform1f(U.pk, p ? p.k : 0);
+          // the gap is shaped around the card: none at its bottom (roots), full from 60% up; in this layer's own 0..1 height
+          if (p) { const hh = r._H - r._top; gl.uniform1f(U.pc, p.x); gl.uniform1f(U.pw, p.w); gl.uniform1f(U.pb, (p.by - r._top) / hh); gl.uniform1f(U.pt, (p.ty - r._top) / hh); }
           gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-          w.cx.clearRect(0, 0, w.w, w.h); w.cx.drawImage(cv, 0, 0, w.w, w.h, 0, 0, w.w, w.h);
+          w.cx.clearRect(x0, 0, x1 - x0, w.h); w.cx.drawImage(cv, x0, 0, x1 - x0, w.h, x0, 0, x1 - x0, w.h);
         }
       }
     });
@@ -1802,39 +1816,78 @@ class Component extends DCLogic {
   }
   _seasonVals() {
     const cur = this.state.season || 'auto', now = (() => { const m = new Date().getMonth(); return m === 11 || m < 2 ? 'winter' : m < 5 ? 'spring' : m < 8 ? 'summer' : 'fall'; })();
-    const pick = (v) => (e) => { e.preventDefault(); try { localStorage.setItem('tm-season', v); } catch (_) {}
-      if ((this.state.season || 'auto') === v) return;
-      const wrap = this._ringWrap, host = wrap && wrap.parentNode;
-      if (this._rm || !host || !host.animate) { this.setState({ season: v }); return; }
-      if (this._seaBusy) return; this._seaBusy = 1;
-      this._dimOn = false; this._fHov = false; this._pend = null; clearTimeout(this._hovT); this._hovEl = null;
-      // season change: a black curtain wipes down over the sky and field, the season swaps behind it, then it wipes on down and fades away
-      const sky = this._skyEl, page = sky && sky.offsetParent, hgt = sky ? sky.offsetHeight : 0, main = wrap.closest('main'), name = main && main.querySelector('h1');
-      if (!sky || !page || !hgt || !main) { this._seaBusy = 0; this.setState({ season: v }); return; }
-      const E = 140, clip = document.createElement('div'), cur = document.createElement('div');
-      // the curtain lives in the page's main area, under the name, and reaches up to the top of the page
-      if (getComputedStyle(main).position === 'static') main.style.position = 'relative';
-      if (name) { name.style.position = 'relative'; name.style.zIndex = '41'; }
-      const mTop = main.getBoundingClientRect().top - page.getBoundingClientRect().top;
-      clip.style.cssText = 'position:absolute;left:0;right:0;top:' + (-mTop) + 'px;height:' + hgt + 'px;overflow:hidden;z-index:40;pointer-events:auto';
-      cur.style.cssText = 'position:absolute;left:0;right:0;top:0;height:' + (hgt + 2 * E) + 'px;background:linear-gradient(to bottom, rgba(0,0,0,0) 0px, #000 ' + E + 'px, #000 ' + (hgt + E) + 'px, rgba(0,0,0,0) 100%);will-change:transform,opacity';
-      clip.appendChild(cur); main.appendChild(clip);
-      const off = 'translate3d(0,' + (-(hgt + 2 * E)) + 'px,0)', on = 'translate3d(0,' + (-E) + 'px,0)', gone = 'translate3d(0,' + (hgt + E) + 'px,0)';
-      cur.animate([{ transform: off }, { transform: on }], { duration: 560, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', fill: 'forwards' }).onfinish = () => {
-        this.setState({ season: v }, () => {
-          const t0 = performance.now();
-          const reveal = () => {
-            const w = this._ringWrap;
-            if (!(w && w._in) && performance.now() - t0 < 1800) { setTimeout(reveal, 50); return; }
-            const a = cur.animate([{ transform: on, opacity: 1 }, { transform: gone, opacity: 0 }], { duration: 900, easing: 'cubic-bezier(0.45, 0, 0.25, 1)', fill: 'forwards' });
-            a.onfinish = () => { clip.remove(); this._seaBusy = 0; };
-          };
-          setTimeout(reveal, 120);
-        });
-      };
+    const pick = (v) => (e) => { e.preventDefault();
+      if (this._seaBusy || (this.state.season || 'auto') === v) return; // busy: ignore (and don't save a pick that wasn't applied)
+      try { localStorage.setItem('tm-season', v); } catch (_) {}
+      this._dimOn = false; this._fHov = false; this._pend = null; clearTimeout(this._hovT); this._hovEl = null; this._puffs = null; // no winter powder carried into the new season
+      this._curtain((done) => this.setState({ season: v }, done));
     };
     const act = cur === 'auto' ? now : cur;
     return { seasonOpts: ['winter', 'spring', 'summer', 'fall'].map((v) => ({ label: v === now ? v + ' (now)' : v, pick: pick(v === now ? 'auto' : v), on: act === v ? 'true' : 'false', color: act === v ? 'var(--ink)' : 'rgba(var(--ink-rgb), 0.66)' })) };
+  }
+  // the season curtain: black under the name over the sky and field. swap(done) = season change: wipe in, swap behind it, then wipe on down and fade.
+  // No swap = arriving on the home page (refresh or nav): start black, then wipe down and fade. When it can't run, swap happens with no curtain.
+  _curtain(swap) {
+    const wrap = this._ringWrap, sky = this._skyEl, page = sky && sky.offsetParent, main = wrap && wrap.closest('main'), name = main && main.querySelector('h1');
+    if (this._rm || !wrap || !wrap.isConnected || !wrap.animate || !page || !main) { if (swap) swap(() => {}); return; }
+    // top of the page to the bottom of the field (not the sky: on arrival it's still its unfitted 900px)
+    const hgt = wrap.getBoundingClientRect().bottom - page.getBoundingClientRect().top;
+    this._seaBusy = 1;
+    const E = 140, clip = document.createElement('div'), cur = document.createElement('div');
+    // the curtain lives in the page's main area, under the name, and reaches up to the top of the page
+    if (getComputedStyle(main).position === 'static') main.style.position = 'relative';
+    if (name) { name.style.position = 'relative'; name.style.zIndex = '41'; }
+    const mTop = main.getBoundingClientRect().top - page.getBoundingClientRect().top;
+    clip.style.cssText = 'position:absolute;left:0;right:0;top:' + (-mTop) + 'px;height:' + hgt + 'px;overflow:hidden;z-index:40;pointer-events:auto';
+    cur.style.cssText = 'position:absolute;left:0;right:0;top:0;height:' + (hgt + 2 * E) + 'px;background:linear-gradient(to bottom, rgba(0,0,0,0) 0px, #000 ' + E + 'px, #000 ' + (hgt + E) + 'px, rgba(0,0,0,0) 100%);will-change:transform,opacity';
+    clip.appendChild(cur); main.appendChild(clip);
+    const off = 'translate3d(0,' + (-(hgt + 2 * E)) + 'px,0)', on = 'translate3d(0,' + (-E) + 'px,0)', gone = 'translate3d(0,' + (hgt + E) + 'px,0)';
+    // hold: on arrival keep it black at least as long as a season change's wipe-in, so it reads as black-then-fade
+    const WIPE = 560, open = (hold) => {
+      const t0 = performance.now();
+      const reveal = () => {
+        const w = this._ringWrap;
+        if (!(w && w._in) && performance.now() - t0 < 1800) { setTimeout(reveal, 50); return; }
+        clip.style.pointerEvents = 'none'; // the field is usable again as soon as it starts showing
+        const a = cur.animate([{ transform: on, opacity: 1 }, { transform: gone, opacity: 0 }], { duration: 900, easing: 'cubic-bezier(0.45, 0, 0.25, 1)', fill: 'forwards' });
+        a.onfinish = () => { clip.remove(); this._seaBusy = 0; };
+      };
+      setTimeout(reveal, Math.max(120, hold));
+    };
+    // arrival: black from the first frame (main's own fade-in would otherwise show the paper colour through it first)
+    if (!swap) { main.style.animation = 'none'; cur.style.transform = on; open(WIPE); return; }
+    cur.animate([{ transform: off }, { transform: on }], { duration: WIPE, easing: 'cubic-bezier(0.65, 0, 0.35, 1)', fill: 'forwards' }).onfinish = () => swap(() => open(0));
+  }
+  // powder thrown up at (cx, gy) across a card of width cw: fine flakes that arc out and fall, plus a few soft clouds that drift up and fade. k scales the burst.
+  _snowPuff(cx, gy, cw, sc, k) {
+    const rnd = Math.random, P = this._puffs || (this._puffs = []);
+    for (let i = 0, n = Math.round((40 + 50 * sc) * k); i < n; i++) { const u = rnd() * 2 - 1; P.push({ x: cx + u * cw * 0.5, y: gy + rnd() * 4 * sc, vx: (u * (30 + rnd() * 80) + (rnd() - 0.5) * 30) * sc, vy: -(70 + rnd() * 190) * sc * k, g: 320 * sc, r: (1 + rnd() * rnd() * 3) * (0.5 + sc * 0.7), t: 0, life: 0.9 + rnd() * 0.8, a: 0.85 + rnd() * 0.15 }); }
+    for (let i = 0, n = Math.round(9 * k); i < n; i++) { const u = rnd() * 2 - 1; P.push({ x: cx + u * cw * 0.45, y: gy, vx: u * 30 * sc, vy: -(25 + rnd() * 50) * sc * k, g: 20 * sc, r: (12 + rnd() * 16) * sc, t: 0, life: 1.1 + rnd() * 0.6, a: 0.3, soft: 1 }); }
+  }
+  // 3D home field: used when the browser can do WebGL (probed once, the probe's context released), and not after it has failed once
+  _want3d() {
+    if (this._no3d) return false;
+    if (this._has3d == null) { try { const gl = document.createElement('canvas').getContext('webgl2'), lose = gl && gl.getExtension('WEBGL_lose_context'); this._has3d = !!gl; if (lose) lose.loseContext(); } catch (e) { this._has3d = false; } }
+    return this._has3d;
+  }
+  // mounts field3d.js in the field box (the box is also _ringWrap, so the sky fit and the season curtain work as with 2D); unmount frees the GPU.
+  // If the module or WebGL fails, the page re-renders with the 2D field.
+  _mount3d(el) {
+    if (!el) { if (this._f3) this._f3.destroy(); this._f3 = null; this._f3Host = null; return; }
+    this._ringWrap = el; this._f3Host = el;
+    if (this._skyFit) [30, 200].forEach((d) => setTimeout(() => requestAnimationFrame(() => this._skyFit && this._skyFit()), d));
+    const fail = () => { if (this._f3Host !== el) return; this._no3d = 1; this._ringMemo = null; this.setState({ f3fail: 1 }); };
+    import('./field3d.js?v=105').then((m) => { // bump v whenever field3d.js changes, or browsers keep running their cached copy
+      if (this._f3Host !== el || !el.isConnected) return;
+      try {
+        this._f3Sea = this._season();
+        this._f3 = m.createField(el, { cards: this._f3List, sp: this._seasonParams(this._f3Sea), rm: this._rm, seed: this._homeSeed,
+          getT: () => { const p = this._skyEl && this._skyEl.offsetParent; return p ? el.getBoundingClientRect().top - p.getBoundingClientRect().top : 0; },
+          onOpen: (i) => { const c = this._f3Cards && this._f3Cards[i]; if (c) c.go(); },
+          // fade the field in once it has drawn (the arrival curtain waits for _in, as it does for the 2D field)
+          onReady: () => { if (el._in) return; el._in = 1; if (this._rm || !el.animate) el.style.opacity = '1'; else el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 950, easing: 'cubic-bezier(0.25, 0.6, 0.3, 1)', fill: 'forwards' }); } });
+      } catch (e) { fail(); }
+    }, fail);
   }
   _breeze(cv, T, dt) {
     const W = cv.clientWidth, H = cv.clientHeight; if (!W || !H) return;
@@ -1882,6 +1935,7 @@ class Component extends DCLogic {
     }
     for (const m of this._motes) {
       if (kind === 'snow') {
+        if (this._f3) continue; // the 3D field has its own real snowfall
         const near = Math.min(1, m.r / 6);
         m.p += dt * (0.6 + near * 0.5); m.y += (10 + m.r * 7) * dt; m.x += (Math.sin(m.p + m.rot) * (6 + near * 10) + 4 * (0.35 + gust)) * dt;
         if (m.y > H + 10) { m.y = -10 - rnd() * 40; m.x = rnd() * W; } if (m.x > W + 10) m.x = -10; if (m.x < -10) m.x = W + 10;
@@ -1914,19 +1968,51 @@ class Component extends DCLogic {
       else { c.moveTo(-m.r * 0.9, 0); c.bezierCurveTo(-m.r * 0.4, -m.r * 0.75, m.r * 0.8, -m.r * 0.6, m.r, 0); c.bezierCurveTo(m.r * 0.8, m.r * 0.6, -m.r * 0.4, m.r * 0.75, -m.r * 0.9, 0); }
       c.fill(); c.restore();
     }
+    if (this._puffs && this._puffs.length) {
+      this._puffs = this._puffs.filter((q) => (q.t += dt) < q.life);
+      for (const q of this._puffs) {
+        q.vx *= Math.exp(-1.8 * dt); q.vy = (q.vy + q.g * dt) * Math.exp(-1.2 * dt); q.x += q.vx * dt; q.y += q.vy * dt;
+        const u = q.t / q.life, al = q.a * Math.min(1, q.t / 0.08) * (1 - u) * (1 - u);
+        if (q.soft) { const R = q.r * (1 + u * 1.2), g = c.createRadialGradient(q.x, q.y, 0, q.x, q.y, R); g.addColorStop(0, 'rgba(244,247,252,' + al.toFixed(3) + ')'); g.addColorStop(1, 'rgba(244,247,252,0)'); c.globalAlpha = 1; c.fillStyle = g; c.beginPath(); c.arc(q.x, q.y, R, 0, 6.283); c.fill(); }
+        else { c.globalAlpha = al; c.fillStyle = '#F4F7FC'; c.beginPath(); c.arc(q.x, q.y, q.r, 0, 6.283); c.fill(); }
+      }
+    }
     c.globalAlpha = 1;
   }
   _windTick(t) {
     this._wRaf = 0;
-    const rows = (this._windRows || []).filter((c) => c.isConnected); this._windRows = rows;
+    // rows gone from the page (season change) free their GL textures
+    const rows = []; for (const c of this._windRows || []) { if (c.isConnected) rows.push(c); else if (c._wtex && this._wR) this._wR.gl.deleteTexture(c._wtex); } this._windRows = rows;
     const bz = this._bzCv && this._bzCv.isConnected ? this._bzCv : null;
     if ((!rows.length && !bz) || this._rm) return;
-    if (this._fVis !== false && !document.hidden && t - (this._wLast || 0) > 30) {
+    if (this._fVis !== false && !document.hidden && t - (this._wLast || 0) > (this._f3 ? 0 : 30)) { // with the 3D field the particles run every frame, in step with it
       const dt = Math.min(0.1, (t - (this._wLast || t)) / 1000); this._wLast = t;
-      const R = rows.length ? this._windGL() : null; if (R) R.draw(rows.filter((c) => c._wind && c._wtex), (t / 1000) % 3600);
+      const R = rows.length ? this._windGL() : null; if (R) R.draw(rows.filter((c) => c._wind && c._wtex), this._wT = (t / 1000) % 3600);
       if (bz) this._breeze(bz, t / 1000, dt);
     }
     this._windKick();
+  }
+  // Grass parting, drawn from _spin in the same frame the cards move. Each card parts the grass layer stacked right in front of its resting spot
+  // (a swaying front row, or a still back layer); per layer the most open card wins. Only the gap's columns are redrawn, at the rows' last sway time.
+  _partDraw(parts) {
+    const was = this._pL || new Map(), now = new Map();
+    if (this._rm) return;
+    for (const p of parts) {
+      let L = null; for (const q of this._fItems) if (q.grp && q.el.isConnected) { const z = +q.el.style.zIndex; if (z > p.zi && (!L || z < +L.style.zIndex)) L = q.el; }
+      if (L && (!now.has(L) || now.get(L).k < p.k)) now.set(L, p);
+    }
+    if (!now.size && !was.size) return;
+    const R = this._windGL(); if (!R) return;
+    const free = (o) => { if (o._still && o._wtex) R.gl.deleteTexture(o._wtex); if (o._still) { o._wtex = null; o._wind = null; o._still = 0; } this._stills.delete(o); };
+    const list = [];
+    for (const [L, p] of now) {
+      // a still back layer gets a no-sway texture of its painted grass (dropped when the layer repaints); a closed one is kept for re-hovers until another layer needs one
+      if (!L._wind) { this._stills = this._stills || new Set(); this._stills.forEach((o) => { if (!now.has(o)) free(o); }); L._still = 1; L._wtex = R.tex(L); L._wind = { cx: L.getContext('2d'), w: L.width, h: L.height, yB: 1, A: 0, ph: 0, dur: 1 }; this._stills.add(L); }
+      L._pt = p; list.push(L);
+    }
+    for (const L of was.keys()) if (!now.has(L)) { L._pt = null; if (L.isConnected && L._wind) list.push(L); } // one clean redraw closes it
+    if (list.length) R.draw(list, this._wT || 0, true);
+    this._pL = now;
   }
   _kick() { if (!this._raf) this._raf = requestAnimationFrame(() => this._spin()); }
   _spin() {
@@ -1946,7 +2032,7 @@ class Component extends DCLogic {
     const spring = (o, kx, kv, tgt, w, z) => { const x = o[kx] || 0, v = o[kv] || 0; if (this._rm) { o[kx] = tgt; o[kv] = 0; return false; } const a = w * w * (tgt - x) - 2 * z * w * v, nv = v + a * dt, nx = x + nv * dt; if (Math.abs(tgt - nx) < 0.0015 * (Math.abs(tgt) > 2 ? 40 : 1) && Math.abs(nv) < 0.02) { o[kx] = tgt; o[kv] = 0; return false; } o[kx] = nx; o[kv] = nv; return true; };
     const tx = this._fTarget || 0, cam0 = this._fCam || 0, dc = tx - cam0;
     const cam = this._fCam = Math.abs(dc) < 0.05 ? tx : cam0 + dc * (this._rm ? 1 : 0.045);
-    let moving = cam !== tx, stale = false;
+    let moving = cam !== tx, stale = false; const parts = [];
     for (const it of this._fItems) {
       const el = it.el; if (!el.isConnected) { stale = true; continue; }
       if (it.drift) { const sc = it.sc || (it.sc = P / (P - it.z)), tf = 'translate3d(' + (W / 2 + (it.X + cam) * sc).toFixed(1) + 'px,' + (oy + (G + it.sink - oy) * sc - it.h * sc).toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')'; if (el._tf !== tf) { el._tf = tf; el.style.transform = tf; } continue; }
@@ -1957,7 +2043,11 @@ class Component extends DCLogic {
       // two-step motion: on hover the card first rises straight up out of the grass (still behind the blades in front),
       // then comes forward; on the way back it settles into place first, then sinks down into the grass
       const want = el._pullT ? 1 : 0, snowy = !!this._noMask, up = -(it.sink + (snowy ? 58 : 75));
-      const pt = want ? ((this._rm || el._lift <= up * (snowy ? 0.88 : 0.35) || nowT - (el._hovAt || 0) > (snowy ? 600 : 140)) ? 1 : 0) : 0;
+      // the grass in front parts over ~0.3s (its own spring) and stays open until the card is back behind it, then closes as it sinks;
+      // the card only jumps in front once the grass is mostly open (no wind grass in winter / without WebGL, so no wait there)
+      if (spring(el, '_gp', '_gpV', want || (el._pull || 0) >= 0.35 ? 1 : 0, 10, 1)) moving = true;
+      const gpOk = snowy || !this._wR || el._gp > 0.8;
+      const pt = want ? ((this._rm || (gpOk && (el._lift <= up * (snowy ? 0.88 : 0.35) || nowT - (el._hovAt || 0) > (snowy ? 600 : 140)))) ? 1 : 0) : 0;
       const lt = want ? up : up * Math.min(1, Math.max(0, el._pull || 0) * 1.8);
       if (pt === 1 && el._zHi && el.style.zIndex !== el._zHi) el.style.zIndex = el._zHi;
       if (want && !pt) moving = true;
@@ -1969,18 +2059,27 @@ class Component extends DCLogic {
       // hoverable again once it's most of the way home, instead of waiting for the spring to fully settle
       if (el._ret && pt === 0 && el._pull < 0.45) { el._ret = 0; el.style.pointerEvents = ''; if (this._mx != null && !this._hovEl && !this._pend && el.isConnected && this._hoverNow) { const u = document.elementFromPoint(this._mx, this._my), on = u && u.closest ? u.closest('a[data-base]') : null; if (on === el && !this._fHov) this._hoverNow(el); } }
       let sc = it.sc || (it.sc = P / (P - it.z)), sx = W / 2 + (it.X + cam) * sc, sy = oy + (G + it.sink + lift - oy) * sc - it.h * sc;
+      // winter: a card rising out of the snow kicks up a puff of powder where it breaks the surface; a smaller one when it settles back in
+      if (snowy && !this._rm) { const cw = 230 * (it.h / 300) * sc, gy = oy + (G - oy) * sc;
+        if (want && !el._snowUp) { el._snowUp = 1; this._snowPuff(sx + cw / 2, gy, cw, sc, 1); }
+        else if (!want && el._snowUp && (el._pull || 0) < 0.05 && lift > up * 0.2) { el._snowUp = 0; this._snowPuff(sx + cw / 2, gy, cw, sc, 0.45); } }
+      // grass parting at the card's home spot: springs back as the card flies forward, opens again as it comes home (not in winter: snow doesn't part)
+      const pa = snowy ? 0 : Math.max(0, Math.min(1, el._gp || 0)) * Math.sqrt(Math.max(0, 1 - pull));
+      if (pa > 0.001) { const cw = 230 * (it.h / 300) * sc, by = oy + (G + it.sink - oy) * sc + 6 * sc; parts.push({ k: pa, x: (sx + cw / 2 + GM) / (W + 2 * GM), w: cw * 0.5 / (W + 2 * GM), zi: +(el.dataset.z != null ? el.dataset.z : el.style.zIndex), by, ty: by - 0.6 * it.h * sc }); } // grass canvases span the field + GM each side; by/ty = card's resting bottom / 60% up, in field px
       const scF = Math.max(sc, Math.min(1.1, (H - 120) / it.h)); el._kF = (1 / scF).toFixed(3);
       if (pull > 0) {
         const w = 230 * (it.h / 300) * scF, hh = it.h * scF, cx = sx + w / scF * sc / 2, bot = sy + it.h * sc;
         const fx = Math.max(12, Math.min(W - w - 12, cx - w / 2)), fy = Math.max(70, Math.min(H - hh - 24, bot - hh)), e = pull * pull * (3 - 2 * pull);
         sx += (fx - sx) * e; sy += (fy - sy) * e; sc += (scF - sc) * e;
       }
-      if (!this._noMask) { const mk = (pt === 1 || pull >= 0.35) ? '0 0%' : '0 100%'; const im = el.firstChild; if (im && el._mk !== mk) { el._mk = mk; im.style.webkitMaskPosition = mk; im.style.maskPosition = mk; } }
+      // the card's faded-into-grass bottom eases in/out (CSS transition) with the grass parting, so the gap never shows a faded band
+      if (!this._noMask) { const mk = (pt === 1 || pull >= 0.35 || (el._gp || 0) > 0.3) ? '0 0%' : '0 100%'; const im = el.firstChild; if (im && el._mk !== mk) { el._mk = mk; im.style.webkitMaskPosition = mk; im.style.maskPosition = mk; } }
       const tf = 'translate3d(' + sx.toFixed(1) + 'px,' + sy.toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')';
       if (el._tf !== tf) { el._tf = tf; el.style.transform = tf; }
       if (pull > 0 || el._capOn) { const cap = el._cap || (el._cap = el.querySelector('[data-cap]')); if (cap) { const spr = el._cs || 0, ct = 'translateX(-50%) scale(' + ((0.82 + 0.18 * spr) / sc).toFixed(3) + ') translateY(' + (-10 * (1 - spr)).toFixed(1) + 'px)'; if (cap._tf !== ct) { cap._tf = ct; cap.style.transform = ct; } } el._capOn = pull > 0; }
     }
     if (stale) this._fItems = this._fItems.filter((q) => q.el.isConnected);
+    this._partDraw(parts);
     if (moving || this._fDirty) { this._fDirty = 0; this._kick(); }
   }
   _snake(flat) {
@@ -2004,6 +2103,7 @@ class Component extends DCLogic {
     fetch(NOW_PLAYING_URL).then((r) => r.json()).then((d) => { if (d && d.title) this.setState({ np: d }); }).catch(() => {});
   }
   componentDidMount() { try { this._rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {} setTimeout(() => this._setTitle(), 0);
+    this._guardMedia();
     ['./assets/playing-sm.jpg', './assets/photos/p40.jpg', './assets/portrait-2025.jpg'].forEach((s) => { const i = new Image(); i.src = s; });
     this._np(); this._npT = setInterval(() => { if (!document.hidden) this._np(); }, 30000);
     fetch('./assets/shows.json').then((r) => r.json()).then((shows) => {
@@ -2120,10 +2220,10 @@ class Component extends DCLogic {
   }
   _setTitle() {
     const st = this.state, p = st.page, base = 'Timothy Masso';
-    const L = { music: 'music', photos: 'photos', about: 'about', perf: 'performances', live: 'live sound', sessions: 'sunday sessions', comp: 'sheet music', people: 'who i played with', all: 'everything', colophon: 'colophon', data: 'data', project: 'projects' };
+    const L = { music: 'music', photos: 'photos', about: 'about', perf: 'performances', live: 'live sound', sessions: 'sunday sessions', comp: 'sheet music', people: 'who i played with', all: 'everything', colophon: 'colophon', data: 'data', project: 'projects', graphic: 'untitled graphic score' };
     let t = L[p];
     try {
-      if (p === 'detail' || p === 'graphic') { const x = PERFS.find((q) => q.slug === st.slug); t = x && x.title; }
+      if (p === 'detail') { const x = PERFS.find((q) => q.slug === st.slug); t = x && x.title; }
       else if (p === 'gig') { const x = GIGS.find((q) => q.slug === st.gig); t = x && x.title; }
       else if (p === 'compdetail') { const x = COMPS.find((q) => q.s === st.comp); t = x && x.t; }
       else if (p === 'sessiondetail') { const x = SESSIONS[st.session]; t = x && ('sunday sessions · ' + x.artist); }
@@ -2138,6 +2238,8 @@ class Component extends DCLogic {
   _stateToHash(st) {
     switch (st.page) {
       case 'index':         return '#/';
+      case 'music':         return '#/music';
+      case 'photos':        return '#/photos';
       case 'perf':          return '#/performances';
       case 'detail':        return '#/performances/' + st.slug;
       case 'live':          return '#/live';
@@ -2164,18 +2266,21 @@ class Component extends DCLogic {
     // old gig slugs that shows.json replaced; unknown slugs would fall back to the first show
     const OLD_GIG = { tavern: 'show-tavern-trek-2025-07-28', mob: 'show-halloween' };
     switch (parts[0]) {
+      // unknown slugs go to the list instead of silently showing the first item
       case 'performances':
-        return parts[1] ? { page: 'detail', slug: parts[1] } : { page: 'perf' };
+        return PERFS.some((p) => p.slug === parts[1]) ? { page: 'detail', slug: parts[1] } : { page: 'perf' };
       case 'live':
         if (parts[1] === 'session' && parts[2] != null) return sess(parts[2]);
         return parts[1] ? { page: 'gig', gig: OLD_GIG[parts[1]] || parts[1] } : { page: 'live' };
       case 'sessions':
         return parts[1] != null ? sess(parts[1]) : { page: 'sessions' };
       case 'compositions':
-        return parts[1] ? { page: 'compdetail', comp: parts[1], part: 0 } : { page: 'comp' };
+        return COMPS.some((c) => c.s === parts[1]) ? { page: 'compdetail', comp: parts[1], part: 0 } : { page: 'comp' };
       case 'tech':
-        return parts[1] ? { page: 'project', project: parts[1] } : { page: 'data' };
+        return PROJECTS.some((p) => p.slug === parts[1]) ? { page: 'project', project: parts[1] } : { page: 'data' };
       case 'about':   return { page: 'about' };
+      case 'music':   return { page: 'music' };
+      case 'photos':  return { page: 'photos' };
       case 'people':  return { page: 'people' };
       case 'all':     return { page: 'all' };
       case 'colophon': return { page: 'colophon' };
@@ -2222,9 +2327,23 @@ class Component extends DCLogic {
     this._scrollFor(from, merged.page);
   }
 
+  // shortcut: stops casual "Save image as"; DevTools / screenshots still work
+  _guardMedia() {
+    if (this._mediaGuard) return; this._mediaGuard = 1;
+    const sel = 'img, canvas, [role="img"], [data-pdf], [data-scrimg], picture, video, #ph-stage, [data-phglow]';
+    const hit = (t) => {
+      if (!t || !t.closest) return false;
+      if (t.closest(sel)) return true;
+      // imgs often use pointer-events:none, so the event lands on the parent link/card
+      try { if (t.querySelector && t.querySelector(sel)) return true; } catch (e) {}
+      return false;
+    };
+    document.addEventListener('contextmenu', (e) => { if (hit(e.target)) e.preventDefault(); });
+    document.addEventListener('dragstart', (e) => { if (hit(e.target)) e.preventDefault(); });
+  }
   _renderPdfs() {
     const lib = window.pdfjsLib;
-    if (!lib) { setTimeout(() => this._renderPdfs(), 250); return; }
+    if (!lib) { if (!this._pdfT) this._pdfT = setTimeout(() => { this._pdfT = 0; this._renderPdfs(); }, 250); return; } // one pending retry, not one per render
     lib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     this._pdfCache = this._pdfCache || {};
     document.querySelectorAll('[data-pdf]').forEach((host) => {
@@ -2256,6 +2375,7 @@ class Component extends DCLogic {
           const canvas = document.createElement('canvas');
           canvas.width = vp.width;
           canvas.height = vp.height;
+          canvas.draggable = false;
           canvas.style.width = mode === 'cover' ? '100%' : (targetW + 'px');
           if (mode === 'cover') canvas.style.maxWidth = '100%';
           canvas.style.height = 'auto';
@@ -2386,11 +2506,10 @@ class Component extends DCLogic {
         return { heroTs: '0 1px 2px rgba(' + c + ',0.35), 0 4px 18px rgba(' + c + ',0.4), 0 10px 70px rgba(' + c + ',0.55)', navTs: '0 1px 2px rgba(' + c + ',0.5), 0 2px 14px rgba(' + c + ',0.6)' }; })(),
       hdrBg: (this._hdrTopBg = (p === 'index' && (this._seasonParams(this._season()) || {}).skyAll) ? 'transparent' : 'var(--paper)'),
       skyRef: this._skyRefFn || (this._skyRefFn = (el) => { this._skyEl = el; if (!el) return; this._dimOn = !!this._fHov;
-          // arriving on the home page: start on black and fade out once the field is drawn, so nothing is seen loading
-          if (!this._rm && !this._introOv) { const ov = document.createElement('div'); ov.setAttribute('aria-hidden', 'true'); ov.style.cssText = 'position:fixed;inset:0;background:#000;z-index:99999;pointer-events:none;opacity:1'; document.body.appendChild(ov); this._introOv = ov;
-            const t0 = performance.now(); const go = () => { const w = this._ringWrap; if (!(w && w._in) && performance.now() - t0 < 2200) { setTimeout(go, 60); return; }
-              setTimeout(() => { const a = ov.animate ? ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 900, easing: 'cubic-bezier(0.3, 0, 0.3, 1)', fill: 'forwards' }) : null; const done = () => { ov.remove(); if (this._introOv === ov) this._introOv = null; }; if (a) a.onfinish = done; else done(); }, 150); };
-            setTimeout(go, 60); } const fit = () => { const s = this._skyEl, w = this._ringWrap; if (!s || !s.isConnected || !w || !w.isConnected) return;
+          // arriving on the home page (refresh or clicking the name): play the season curtain, not a full-page black.
+          // Microtask: the field's ref is set by then (same render), and it still runs before the first paint.
+          queueMicrotask(() => { this._puffs = null; if (!this._seaBusy) this._curtain(); document.documentElement.classList.remove('tm-boot'); }); // powder left from a visit before starts fresh
+          const fit = () => { const s = this._skyEl, w = this._ringWrap; if (!s || !s.isConnected || !w || !w.isConnected) return;
           const K = (this._seasonParams(this._season()) || {}).skyAll; if (!K) return;
           const o = s.offsetParent.getBoundingClientRect(), wr = w.getBoundingClientRect(), sec = w.closest('section') || w, T = wr.top - o.top, H = wr.height, Wd = wr.width, S = sec.getBoundingClientRect().top - o.top;
           if (!(H > 0)) return;
@@ -2400,6 +2519,7 @@ class Component extends DCLogic {
           const R = K.sun.R * H, glow = 'radial-gradient(circle ' + px(R) + ' at ' + px(wr.left - o.left + K.sun.x * Wd) + ' ' + px(T + K.sun.y * H) + ', ' + K.sun.stops.map(([f, c]) => c + ' ' + (f * 100).toFixed(1) + '%').join(', ') + ')';
           s.style.height = px(T + H); s.style.background = glow + ', ' + lin;
           const dim = s.querySelector('[data-skydim]'); if (dim) { const fd = this._dimEl; if (!fd || !fd.isConnected || fd.style.opacity !== '1') this._dimOn = false; dim.style.height = px(Math.max(0, S)); dim.style.opacity = this._dimOn ? '1' : '0'; }
+          if (this._f3) this._f3.refreshSky(); // the 3D field fades into this same sky, so it repaints when the sky does
         }; [0, 60, 250, 800].forEach((d) => setTimeout(() => requestAnimationFrame(fit), d)); if (!this._skyFit) { this._skyFit = fit; const refit = () => this._skyFit && this._skyFit(); window.addEventListener('resize', refit, { passive: true }); try { document.fonts && document.fonts.ready.then(refit); document.fonts && document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', refit); } catch (e) {} } else this._skyFit = fit;
           if (window.ResizeObserver) { if (this._skyRO) this._skyRO.disconnect(); const q = () => this._skyFit && this._skyFit(); this._skyRO = new ResizeObserver(() => requestAnimationFrame(q)); const pg = el.offsetParent || el.parentElement; if (pg) { this._skyRO.observe(pg); const m = pg.querySelector('main'); if (m) this._skyRO.observe(m); const h1 = pg.querySelector('main h1'); if (h1) this._skyRO.observe(h1); } } }),
       isIndex: p === 'index', notIndex: p !== 'index', hdrNameOp: p === 'index' ? 0 : 1, hdrNamePe: p === 'index' ? 'none' : 'auto', hdrNameHidden: p === 'index' ? 'true' : 'false', hdrNameTab: p === 'index' ? -1 : 0, isGig: p === 'gig', isProject: p === 'project', isPeople: p === 'people', isAll: p === 'all', isColophon: p === 'colophon', isGraphic: p === 'graphic', goGraphic: this.go('graphic'),
@@ -2497,7 +2617,7 @@ class Component extends DCLogic {
         return { show: 0 };
       })(),
       ...(() => {
-        const rows = [['01', 'music', 'goMusic', String(PERFS.length + SESSIONS.length + COMPS.length + 1), './assets/playing-sm.jpg', 'Timothy Masso playing alto with his quartet', 'auto 175%', '48% 58%'], ['02', 'photos', 'goPhotos', String(this._photos().length), (() => { const ring = [25, 34, 7, 42, 26, 12, 22, 47, 14, 56, 29, 35, 62, 52]; const pool = []; for (let k = 1; k <= 65; k++) if (ring.indexOf(k) < 0) pool.push(k); return './assets/photos/p' + String(pool[Math.floor(Date.now() / 86400000) % pool.length]).padStart(2, '0') + '.jpg'; })(), 'Photograph by Timothy Masso'], ['03', 'about', 'goAbout', '→', './assets/portrait-2025.jpg', 'Timothy Masso portrait', 'cover', '62% 40%']];
+        const rows = [['01', 'music', 'goMusic', String(PERFS.length + SESSIONS.length + COMPS.length + 1), './assets/playing-sm.jpg', 'Timothy Masso playing alto with his quartet', 'auto 175%', '48% 58%'], ['02', 'photos', 'goPhotos', String(this._photos().length), (() => { const ring = [25, 34, 7, 42, 26, 12, 22, 47, 14, 56, 29, 35, 62, 52]; const pool = []; for (let k = 1; k <= 83; k++) if (ring.indexOf(k) < 0) pool.push(k); return './assets/photos/p' + String(pool[Math.floor(Date.now() / 86400000) % pool.length]).padStart(2, '0') + '.jpg'; })(), 'Photograph by Timothy Masso'], ['03', 'about', 'goAbout', '→', './assets/portrait-2025.jpg', 'Timothy Masso portrait', 'cover', '62% 40%']];
         const cur = this.state.workHover || 'music';
         const pick = rows.find((r) => r[1] === cur) || rows[0];
         return {
@@ -2598,6 +2718,15 @@ class Component extends DCLogic {
         const extra = [perfs[0], null, lives[0], null, perfs[1], null, lives[1], null, perfs[2]];
         const cards = []; photoCards.forEach((p, i) => { cards.push(p); if (extra[i]) cards.push(extra[i]); }); for (let i = cards.length - 1; i > 0; i--) { const j = Math.floor(hr() * (i + 1)); [cards[i], cards[j]] = [cards[j], cards[i]]; }
         const n = cards.length, h = React.createElement;
+        // the field is 3D (field3d.js) when the browser has WebGL; everything below this is the 2D canvas field, kept as the fallback
+        if (this._want3d()) {
+          this._f3Cards = cards; this._f3List = cards.map((c) => ({ bg: c.bg, wide: c.wide, ratio: c.ratio, text: c.text, sub: c.sub, label: c.l }));
+          if (this._f3 && this._f3Sea !== SEA) { this._f3Sea = SEA; this._f3.setSeason(SP); }
+          const el3 = h('div', { key: 'ring3d', ref: this._f3Ref || (this._f3Ref = (el) => this._mount3d(el)), style: { position: 'absolute', inset: 0, opacity: this._rm ? 1 : 0, overflow: 'hidden', contain: 'strict', userSelect: 'none', WebkitUserSelect: 'none' } },
+            // the 2D field's seasonal particles (snowfall and sparkles, petals, butterflies, leaves, wisps; _breeze) drawn over the 3D scene, under the caption
+            h('canvas', { key: 'breeze', 'aria-hidden': 'true', ref: this._bzRef3 || (this._bzRef3 = (el) => { this._bzCv = el; if (el) this._windKick(); }), style: { position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none' } }));
+          this._ringMemo = { k: mkey, el: el3 }; return el3;
+        }
         const hover = (on, forced) => (e) => {
           if (this._touch && !forced) return;
           const el = e.currentTarget, img = el.firstChild, cap = el.querySelector('[data-cap]') || el.lastChild;
@@ -2633,7 +2762,7 @@ class Component extends DCLogic {
         const HH = (this._ringWrap && this._ringWrap.clientHeight) || Math.max(480, (window.innerHeight || 800) - 140), lay = (sd) => {
           let q0 = sd; const r = () => ((q0 = (q0 * 16807) % 2147483647) / 2147483647);
           const pl = [], out = [], B = bands.length, cnt = [];
-          const geo = (bj) => { const J = bj < B - 1 ? (bands[bj][0] - bands[bj + 1][0]) * 0.55 : 380, z = Math.min(-40, bands[bj][0] + (r() - 0.5) * J), sc = sAt(z), cw = CW * sc, sink = 30 + r() * 25, ty = HH * 0.2 + (HH - 30 + sink - HH * 0.2) * sc - CH * sc, ch = Math.max(0, HH * 0.2 + (HH - 30 - HH * 0.2) * sc - ty); return { z, sc, cw, sink, ty, ch, gap: 14 * sc + 6, bj }; };
+          const geo = (bj) => { const J = bj < B - 1 ? (bands[bj][0] - bands[bj + 1][0]) * 0.55 : 380, z = Math.min(-40, bands[bj][0] + (r() - 0.5) * J), sc = sAt(z), cw = CW * sc, sink = 8 + r() * 14, ty = HH * 0.2 + (HH - 30 + sink - HH * 0.2) * sc - CH * sc, ch = Math.max(0, HH * 0.2 + (HH - 30 - HH * 0.2) * sc - ty); return { z, sc, cw, sink, ty, ch, gap: 14 * sc + 6, bj }; };
           const free = (g, sx) => pl.every((q) => sx + g.cw / 2 + g.gap <= q.sx - q.cw / 2 || sx - g.cw / 2 - g.gap >= q.sx + q.cw / 2 || g.ty + g.ch + g.gap <= q.ty || g.ty - g.gap >= q.ty + q.ch);
           const put = (g, sx) => { const c = pl.length; if (c >= n || (cnt[g.bj] || 0) >= bands[g.bj][1]) return false; cnt[g.bj] = (cnt[g.bj] || 0) + 1; pl.push({ sx, cw: g.cw, z: g.z, ty: g.ty, ch: g.ch, bi: g.bj }); out[c] = { x: (sx - SW / 2) / g.sc - CW / 2, z: g.z, sink: g.sink }; return true; };
           const L = SW * 0.04, R = SW * 0.96;
@@ -2666,12 +2795,13 @@ class Component extends DCLogic {
           const cw = Math.min(5000, Math.round(rw * s * dpr)), full = Math.round(rh * s * dpr), gy = full * 230 / 350, G0 = full * 150 / 350; cv.width = cw; cv.height = full;
           const c = cv.getContext('2d'); let sd = 97 + ri * 131; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
           const near = Math.max(0, Math.min(1, s / 0.75)), px = s * dpr;
-          const ink = (l, a) => 'hsla(' + (SP.h + r() * SP.hv) + ',' + (SP.s + near * 10) + '%,' + (l + SP.l) + '%,' + a + ')';
           const gnd = 'hsl(' + SP.h + ', ' + SP.gs + '%, ' + (6 + near * 4 + SP.gl) + '%)';
           if (SP.snow || SP.ridge) {
             // winter: each row is a rolling ridge of snow; moonlit crest, soft blue shade falling away into the next ridge
-            const hum = []; for (let k = 0, nh = Math.max(2, Math.round(cw / (150 * px))); k < nh; k++) hum.push([r() * cw, (38 + r() * 80) * px, (5 + r() * 15) * px]);
-            const crest = (x) => { let y = gy - px * (11 + 6 * Math.sin(x / (150 * px) + ri * 1.7) + 4 * Math.sin(x / (61 * px) + ri * 0.6) + 1.6 * Math.sin(x / (21 * px) + ri * 2.3)); for (const [cx0, w0, h0] of hum) { const d0 = (x - cx0) / w0; y -= h0 * Math.exp(-d0 * d0); } return y; };
+            // every ridge is different: some rows lie low and smooth, others pile into tall drifts; the wind (left to right, like the wisps) carves each drift
+            // a long gentle windward slope and a short steep lee face
+            const amp = 0.45 + r() * 1.1, hum = []; for (let k = 0, nh = Math.max(2, Math.round(cw / (150 * px))); k < nh; k++) hum.push([r() * cw, (38 + r() * 90) * px, (3 + r() * r() * 34) * amp * px]);
+            const crest = (x) => { let y = gy - px * (11 + amp * (6 * Math.sin(x / (150 * px) + ri * 1.7) + 4 * Math.sin(x / (61 * px) + ri * 0.6)) + 1.6 * Math.sin(x / (21 * px) + ri * 2.3)); for (const [cx0, w0, h0] of hum) { const d0 = (x - cx0) / (x > cx0 ? w0 * 0.45 : w0); y -= h0 * Math.exp(-d0 * d0); } return y; };
             const step = 5 * px, top = gy - 46 * px, pts = []; for (let x = -step; x <= cw + step; x += step) pts.push([x, crest(x)]);
             if (SP.flat) {
               // cartoon winter: flat snow hills, one tone each, a wobbly ink line on top and a flat band of shade under the crest
@@ -2681,11 +2811,12 @@ class Component extends DCLogic {
               c.strokeStyle = ink; c.lineWidth = Math.max(1, 1.6 * px); c.lineJoin = 'round'; c.beginPath(); pts.forEach(([x, y], k2) => { const wob = Math.sin(x / (9 * px) + ri * 3) * 0.6 * px; k2 ? c.lineTo(x, y + wob) : c.moveTo(x, y + wob); }); c.stroke();
               if (SP.ridge) { c.strokeStyle = ink; c.lineWidth = Math.max(0.9, 1.3 * px); c.lineCap = 'round'; c.beginPath(); const gap = (11 + 6 * near) * px; for (let x = r() * gap; x < cw; x += gap * (0.6 + r() * 0.9)) { const y = crest(x) + 1.5 * px, hgt = (5 + r() * 7) * px * (0.6 + near * 0.6); for (let b = -1; b <= 1; b++) { c.moveTo(x + b * 2.2 * px, y); c.quadraticCurveTo(x + b * 2.6 * px, y - hgt * 0.6, x + b * 4.2 * px, y - hgt * (b ? 0.8 : 1)); } } c.stroke(); }
             } else {
-            const sg = c.createLinearGradient(0, top, 0, gy + 80 * px); sg.addColorStop(0, snowLit(near)); sg.addColorStop(0.32, snowMid(near)); sg.addColorStop(1, snowShade(near));
+            // distance flattens the light: far ridges keep less light-to-shade contrast and fainter crest lines, so the far field reads as one smooth snowfield, not stripes
+            const fade = Math.min(1, near / 0.55), sg = c.createLinearGradient(0, top, 0, gy + 80 * px); sg.addColorStop(0, snowLit(near)); sg.addColorStop(0.32, snowMid(near)); sg.addColorStop(1, 'hsla(219, 16%, ' + Math.round(27 + near * 21 + (21 + near * 3) * (1 - fade) * 0.6) + '%, 1)');
             c.fillStyle = sg; c.beginPath(); c.moveTo(-step, full); pts.forEach(([x, y]) => c.lineTo(x, y)); c.lineTo(cw + step, full); c.closePath(); c.fill();
             // soft occlusion where the ridge meets the slope behind it, then a bright moonlit rim on the crest
-            c.save(); c.filter = 'blur(' + (3 * px).toFixed(1) + 'px)'; c.strokeStyle = snowShade(near, 0.35); c.lineWidth = 4 * px; c.beginPath(); pts.forEach(([x, y], k) => k ? c.lineTo(x, y + 2.5 * px) : c.moveTo(x, y + 2.5 * px)); c.stroke(); c.restore();
-            c.save(); c.filter = 'blur(' + (0.7 * px).toFixed(1) + 'px)'; c.strokeStyle = snowLit(near, 0.55 + 0.35 * near); c.lineWidth = 1.5 * px; c.beginPath(); pts.forEach(([x, y], k) => k ? c.lineTo(x, y + 0.6 * px) : c.moveTo(x, y + 0.6 * px)); c.stroke(); c.restore();
+            c.save(); c.filter = 'blur(' + (3 * px).toFixed(1) + 'px)'; c.strokeStyle = snowShade(near, 0.35 * fade); c.lineWidth = 4 * px; c.beginPath(); pts.forEach(([x, y], k) => k ? c.lineTo(x, y + 2.5 * px) : c.moveTo(x, y + 2.5 * px)); c.stroke(); c.restore();
+            c.save(); c.filter = 'blur(' + (0.7 * px).toFixed(1) + 'px)'; c.strokeStyle = snowLit(near, (0.55 + 0.35 * near) * (0.3 + 0.7 * fade)); c.lineWidth = 1.5 * px; c.beginPath(); pts.forEach(([x, y], k) => k ? c.lineTo(x, y + 0.6 * px) : c.moveTo(x, y + 0.6 * px)); c.stroke(); c.restore();
             // glints on the nearer ridges
             // moonlight: ridges facing the moon catch a cool sheen, the far side falls into blue shade
             { const mx = (cw - SW * dpr) / 2 + 0.8 * SW * dpr; c.save(); c.globalCompositeOperation = 'source-atop';
@@ -2702,17 +2833,30 @@ class Component extends DCLogic {
           const g2 = c.createLinearGradient(0, gy * 0.6, 0, gy); g2.addColorStop(0, 'hsla(' + SP.h + ',' + SP.gs + '%,' + (6 + near * 4 + SP.gl) + '%,0)'); g2.addColorStop(1, gnd); c.fillStyle = g2; c.fillRect(0, gy * 0.6, cw, gy * 0.4);
           }
           const nb = Math.round(cw / Math.max(0.9, 1.1 * dpr));
+          // the field is lit by its season's sun: soft lusher/drier patches (a few slow seeded sines), blades darker at the root than the tip,
+          // and the near blades catch a rim of sunlight on the side facing the sun
+          const K = SP.skyAll, sunX = K ? cw / 2 + (K.sun.x - 0.5) * SW * dpr : 0, sunC = K ? K.sun.stops[2][1].replace(/[\d.]+\)$/, '') : '';
+          const ph = [r() * 6.28, r() * 6.28, r() * 6.28], patch = (x) => { const u = x / px; return 0.5 * Math.sin(u / 180 + ph[0]) + 0.3 * Math.sin(u / 80 + ph[1]) + 0.2 * Math.sin(u / 37 + ph[2]); };
           for (let layer = 0; layer < 3; layer++) {
-            const L = [7, 11, 16][layer] + near * [3, 6, 10][layer], A = [0.9, 0.85, 0.8][layer], hMul = [0.55, 0.8, 1][layer] * SP.hm * (SW <= 820 ? 0.84 : 1) * _ck;
             if (SP.snow || SP.ridge) continue;
+            const L = [7, 11, 16][layer] + near * [3, 6, 10][layer], A = [0.9, 0.85, 0.8][layer], hMul = [0.55, 0.8, 1][layer] * SP.hm * (SW <= 820 ? 0.84 : 1) * _ck, tipY = gy - G0 * hMul;
             c.lineCap = 'round'; const buckets = [];
             for (let i = 0; i < nb * [1.15, 0.95, 0.5][layer]; i++) {
               const x = r() * cw, root = gy + Math.pow(r(), 1.5) * (full - gy) * 0.9, hh = Math.min(G0 * hMul * (0.35 + 0.65 * r()), root - 4 * px), lean = (r() - 0.5) * hh * 0.5 + Math.sin(x * 0.004 + ri) * hh * 0.12;
-              const bk = Math.floor(r() * 6); (buckets[bk] = buckets[bk] || []).push(x, root, lean, hh);
+              const bk = Math.max(0, Math.min(5, Math.floor((patch(x) * 0.5 + 0.5) * 6 + (r() - 0.5) * 2.2))); (buckets[bk] = buckets[bk] || []).push(x, root, lean, hh);
             }
-            for (let bk = 0; bk < 6; bk++) { const B = buckets[bk]; if (!B) continue; c.fillStyle = ink(L + bk * 0.7, A); const bw = Math.max(0.9, (1.9 + (bk % 3) * 0.8) * px); c.beginPath(); for (let j = 0; j < B.length; j += 4) { const x = B[j], root = B[j + 1], lean = B[j + 2], hh = B[j + 3], w = bw * (0.7 + ((x * 13) % 7) / 10), mx = x + lean * 0.18, my = root - hh * 0.58, tx = x + lean, ty = root - hh, curl = lean * 0.08; c.moveTo(x - w, root); c.quadraticCurveTo(mx - w * 0.55, my, tx + curl, ty); c.quadraticCurveTo(mx + w * 0.75, my + hh * 0.04, x + w, root); c.closePath(); } c.fill();
-              if (SP.snow) { c.fillStyle = snowCol(near, layer * 3 - 2, 0.92); c.beginPath(); for (let j = 0; j < B.length; j += 12) { const x = B[j], root = B[j + 1], w = (8 + ((x * 7) % 12)) * px, hgt = w * 0.4; c.moveTo(x + w, root); c.ellipse(x, root, w, hgt, 0, 0, 6.283); } c.fill(); }
-              if (SP.snow && layer > 0) { c.strokeStyle = 'rgba(232,238,246,' + (0.42 + 0.4 * near) + ')'; c.lineWidth = Math.max(0.6, 1.2 * px); c.beginPath(); for (let j = 0; j < B.length; j += layer === 2 ? 4 : 12) { const x = B[j], root = B[j + 1], lean = B[j + 2], hh = B[j + 3], ax = x + lean * 0.55, ay = root - hh * 0.8; c.moveTo(ax, ay); c.quadraticCurveTo(x + lean * 0.8, root - hh * 0.92, x + lean, root - hh); } c.stroke(); }
+            for (let bk = 0; bk < 6; bk++) { const B = buckets[bk]; if (!B) continue;
+              // bk = patch: 0 lush and dark .. 5 dry and light (a touch warmer)
+              const hu = SP.h + SP.hv * (0.3 + 0.4 * r()) - (bk - 2.5) * 1.6, sa = SP.s + near * 10, li = L + SP.l + (bk - 2.5) * 1.5, gr = c.createLinearGradient(0, tipY, 0, full);
+              gr.addColorStop(0, 'hsla(' + hu + ',' + sa + '%,' + (li + 5 + 4 * near) + '%,' + A + ')'); gr.addColorStop(1, 'hsla(' + hu + ',' + sa + '%,' + (li - 6) + '%,' + A + ')');
+              c.fillStyle = gr; const bw = Math.max(0.9, (1.9 + (bk % 3) * 0.8) * px); c.beginPath(); for (let j = 0; j < B.length; j += 4) { const x = B[j], root = B[j + 1], lean = B[j + 2], hh = B[j + 3], w = bw * (0.7 + ((x * 13) % 7) / 10), mx = x + lean * 0.18, my = root - hh * 0.58, tx = x + lean, ty = root - hh, curl = lean * 0.08; c.moveTo(x - w, root); c.quadraticCurveTo(mx - w * 0.55, my, tx + curl, ty); c.quadraticCurveTo(mx + w * 0.75, my + hh * 0.04, x + w, root); c.closePath(); } c.fill();
+              if (layer === 2 && K && near > 0.25) {
+                // rim light, brightest under the sun and fading across the field
+                const rg = c.createLinearGradient(sunX - SW * dpr, 0, sunX + SW * dpr, 0), ra = (0.18 + 0.32 * near).toFixed(3); rg.addColorStop(0, sunC + (ra * 0.35) + ')'); rg.addColorStop(0.5, sunC + ra + ')'); rg.addColorStop(1, sunC + (ra * 0.35) + ')');
+                c.strokeStyle = rg; c.lineWidth = Math.max(0.6, 0.9 * px); c.beginPath();
+                for (let j = 0; j < B.length; j += 8) { const x = B[j], root = B[j + 1], lean = B[j + 2], hh = B[j + 3], w = bw * (x < sunX ? 0.5 : -0.5); c.moveTo(x + lean * 0.3 + w * 0.7, root - hh * 0.55); c.quadraticCurveTo(x + lean * 0.6 + w * 0.4, root - hh * 0.82, x + lean, root - hh); }
+                c.stroke();
+              }
             }
           }
           const fl = SP.fl;
@@ -2738,7 +2882,7 @@ class Component extends DCLogic {
           if (near > 0.5 && !SP.snow && !SP.ridge) { c.strokeStyle = SP.snow ? 'rgba(240,243,248,' + (0.3 * near) + ')' : 'hsla(' + (SP.h - 8) + ', 30%, 62%, ' + (0.18 * near) + ')'; c.lineWidth = Math.max(0.5, 0.6 * px); c.beginPath(); for (let i = 0; i < nb * 0.04; i++) { const x = r() * cw, hh = G0 * (0.6 + 0.4 * r()), lean = (r() - 0.5) * hh * 0.4, root = gy + r() * (full - gy) * 0.3; c.moveTo(x + lean * 0.5, root - hh * 0.6); c.quadraticCurveTo(x + lean * 0.8, root - hh * 0.85, x + lean, root - hh); } c.stroke(); }
           if (SP.haze) { const k = Math.pow(1 - near, 1.4) * SP.haze[1]; if (k > 0.01) { c.globalCompositeOperation = 'source-atop'; c.fillStyle = SP.haze[0]; c.globalAlpha = k; c.fillRect(0, 0, cw, full); c.globalAlpha = 1; c.globalCompositeOperation = 'source-over'; } }
         };
-        const GM = 48, cz = place.map((p) => p.z).sort((x, y) => y - x);
+        const cz = place.map((p) => p.z).sort((x, y) => y - x);
         const groups = []; rows.slice().sort((x, y) => x - y).forEach((z) => { const k = cz.filter((q) => q > z).length; if (sAt(z) >= 0.45) { groups.push({ k, rows: [z], solo: 1 }); return; } let g = groups.find((q) => q.k === k && !q.solo); if (!g) { g = { k, rows: [] }; groups.push(g); } g.rows.push(z); });
         groups.forEach((g) => { g.zi = 1000 + Math.round(Math.max(...g.rows) / 10) * 2; g.gs = g.rows.reduce((t, z) => t + sAt(z), 0) / g.rows.length; });
         this._gPend = groups.length; this._gReady = null;
@@ -2748,7 +2892,8 @@ class Component extends DCLogic {
             const wrap = this._ringWrap; if (!wrap || !cv.isConnected) return; const W = wrap.clientWidth, H = wrap.clientHeight; if (!W || !H) { setTimeout(paint, 60); return; }
             const dpr = Math.min(SW < 720 ? 1.5 : 2, window.devicePixelRatio || 1), CWd = W + 2 * GM, oy = H * 0.2, G = H - 30;
             let top = 0, s0 = 1, gyL = 0; if (g.solo) { s0 = sAt(g.rows[0]); const y0 = oy + (G + 8 - oy) * s0 - 230 * s0; top = Math.max(0, Math.floor(y0)); gyL = y0 - top + 230 * s0; cv.style.top = top + 'px'; cv.style.height = (H - top) + 'px'; }
-            const tgt = g.solo ? document.createElement('canvas') : cv; tgt.width = Math.round(CWd * dpr); tgt.height = Math.round((H - top) * dpr); cv._W = W; cv._H = H;
+            const tgt = g.solo ? document.createElement('canvas') : cv; tgt.width = Math.round(CWd * dpr); tgt.height = Math.round((H - top) * dpr); cv._W = W; cv._H = H; cv._top = top;
+            if (cv._wtex) { if (this._wR) this._wR.gl.deleteTexture(cv._wtex); cv._wtex = null; cv._wind = null; cv._still = 0; } // repainting: its GL texture is stale (a wind row gets a new one below)
             const c = tgt.getContext('2d');
             g.rows.forEach((z) => {
               const ri = rows.indexOf(z), sc = sAt(z), rw = 2.8 * (SW / 2) / sc, tmp = document.createElement('canvas'); tmp._go = 1; drawRow(z, ri)(tmp);
@@ -2760,7 +2905,7 @@ class Component extends DCLogic {
               const HH = H - top, yB = Math.min(HH, gyL + 70 * s0);
               cv.width = tgt.width; cv.height = tgt.height; const cx = cv.getContext('2d'); if (cx) cx.drawImage(tgt, 0, 0);
               const R = this._windGL();
-              if (R && cx && !SP.snow && !SP.ridge) { if (cv._wtex) R.gl.deleteTexture(cv._wtex); cv._wtex = R.tex(tgt); cv._wind = { cx, w: tgt.width, h: tgt.height, yB: yB / HH, A: 12 * s0 / CWd, ph: gi * 0.52, dur: 8.2 + (gi % 3) * 0.9 }; if (!this._rm) { (this._windRows = (this._windRows || []).filter((q) => q !== cv && q.isConnected)).push(cv); this._windKick(); } }
+              if (R && cx && !SP.snow && !SP.ridge) { cv._wtex = R.tex(tgt); cv._wind = { cx, w: tgt.width, h: tgt.height, yB: yB / HH, A: 12 * s0 / CWd, ph: gi * 0.52, dur: 8.2 + (gi % 3) * 0.9 }; if (!this._rm) { (this._windRows = (this._windRows || []).filter((q) => q !== cv && q.isConnected)).push(cv); this._windKick(); } }
             }
             if (!cv._counted) { cv._counted = 1; if (--this._gPend <= 0 && this._gReady) { const f = this._gReady; this._gReady = null; f(); } }
           };
@@ -2792,7 +2937,7 @@ class Component extends DCLogic {
           h('canvas', { key: 'breeze', 'aria-hidden': 'true', ref: (el) => { this._bzCv = el; if (el) this._windKick(); }, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 1400, pointerEvents: 'none' } }),
             h('div', { key: 'fcover', 'aria-hidden': 'true', ref: (el) => { if (!el || el._go) return; el._go = 1; if (this._rm || !el.animate) { el.style.display = 'none'; return; } const go = () => { if (el._run) return; el._run = 1; const rw = this._ringWrap; if (rw && rw.animate && !rw._in) { rw._in = 1; rw.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 950, easing: 'cubic-bezier(0.25, 0.6, 0.3, 1)', fill: 'forwards' }); } else if (rw) rw.style.opacity = '1'; const an = el.animate([{ transform: 'translate3d(0,-66.667%,0)' }, { transform: 'translate3d(0,33.4%,0)' }], { duration: 2600, easing: 'cubic-bezier(0.33, 0, 0.15, 1)', fill: 'forwards' }); an.onfinish = () => { el.style.display = 'none'; }; setTimeout(() => { el.style.pointerEvents = 'none'; }, 700); }; this._gReady = () => requestAnimationFrame(go); if (this._gPend <= 0) requestAnimationFrame(go); setTimeout(go, 2200); }, onPointerDown: (e) => { e.stopPropagation(); e.preventDefault(); }, onClick: (e) => { e.stopPropagation(); e.preventDefault(); }, style: { position: 'absolute', left: 0, right: 0, top: 0, height: '300%', zIndex: 6000, pointerEvents: 'auto', cursor: 'default', transform: 'translate3d(0,-66.667%,0)', background: 'none', willChange: 'transform' } }),
             h('div', { key: 'rows', ref: (el) => { this._rowsEl = el; }, style: { position: 'absolute', inset: 0 } },
-            groups.map((g, gi) => h('canvas', { key: 'g' + gi + '-' + g.rows.length, 'aria-hidden': true, ref: drawGroup(g, gi), style: { position: 'absolute', left: 0, top: 0, width: 'calc(100% + ' + (2 * GM) + 'px)', height: '100%', zIndex: g.zi, pointerEvents: 'none', willChange: 'transform', transform: 'translate3d(-48px,0,0)' } })),
+            groups.map((g, gi) => h('canvas', { key: 'g' + gi + '-' + g.rows.length, 'aria-hidden': true, ref: drawGroup(g, gi), style: { position: 'absolute', left: 0, top: 0, width: 'calc(100% + ' + (2 * GM) + 'px)', height: '100%', zIndex: g.zi, pointerEvents: 'none', willChange: 'transform', transform: 'translate3d(' + (-GM) + 'px,0,0)' } })),
             cards.map((c, i) => {
               const p = place[i]; if (!p) return null;
               return [h('a', {
@@ -2823,7 +2968,7 @@ class Component extends DCLogic {
                       h('path', { d, fill: 'url(#cap' + i + ')' }), h('path', { d: d.slice(0, d.indexOf(' L' + wC)).replace(/^M0,[0-9.]+ L/, 'M'), fill: 'none', stroke: 'rgba(255,255,255,0.9)', strokeWidth: 1.2 })); })() : null,
                   h('span', { 'data-pad': '', 'aria-hidden': true, style: { position: 'absolute', inset: '-' + Math.round(9 / sAt(p.z)) + 'px', borderRadius: '18px' } }),
                   h('span', { 'data-cap': '', style: { position: 'absolute', left: '50%', top: '12px', transformOrigin: '50% 0', maxWidth: '210px', overflow: 'hidden', textOverflow: 'ellipsis', boxSizing: 'border-box', padding: '8px 16px', borderRadius: '999px', background: 'rgba(22,21,15,0.92)', boxShadow: '0 0 0 1px rgba(242,239,228,0.14), 0 10px 24px -10px rgba(0,0,0,0.7)', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic', fontSize: '17px', fontWeight: 400, color: '#F2EFE4', pointerEvents: 'none', opacity: 0, transform: 'translateX(-50%) scale(' + (1 / sAt(p.z)).toFixed(3) + ') translateY(-8px)', transition: 'opacity 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) 0.04s', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } }, c.l)), SP.snow ? (() => {
-                // winter: a drift of snow banked against the foot of each card; it stays put when the card lifts out
+                // winter: a drift of snow banked against the foot of each card; it stays put when the card lifts out. Its foot melts into the snowfield (no dark edge).
                 const sc0 = sAt(p.z), nr = Math.max(0, Math.min(1, sc0 / 0.75)), wD = CW + 90, ext = 34, hD = p.sink + 40 + ext, gL = 40, n = 9, cut = ((hD - ext) / hD).toFixed(3);
                 const hh = (k) => { const s = Math.sin(i * 97.13 + k * 13.71) * 43758.5453; return s - Math.floor(s); };
                 const pts = []; for (let k = 0; k <= n; k++) { const fx = k / n, bump = (18 + hh(k) * 24) * Math.pow(Math.sin(Math.PI * fx), 0.6); pts.push([fx * wD, gL + 5 - bump]); }
@@ -2833,8 +2978,8 @@ class Component extends DCLogic {
                     ref: (el) => { if (el && !(this._fItems || []).some((q) => q.el === el)) { (this._fItems = this._fItems || []).push({ el, drift: 1, X: p.x, z: p.z, sink: p.sink, h: CH }); this._kick(); } },
                     style: { position: 'absolute', left: 0, top: 0, width: CW + 'px', height: CH + 'px', transformOrigin: '0 0', pointerEvents: 'none', zIndex: 1002 + Math.round(p.z / 10) * 2, willChange: 'transform' } },
                   h('svg', { width: wD, height: hD, viewBox: '0 0 ' + wD + ' ' + hD, style: { position: 'absolute', left: -45 + 'px', top: (CH - hD + ext) + 'px', overflow: 'visible' } },
-                    h('defs', null, h('linearGradient', { id: gid, x1: 0, y1: 0, x2: 0, y2: 1 }, h('stop', { offset: '0', stopColor: snowLit(nr) }), h('stop', { offset: '0.3', stopColor: snowMid(nr) }), h('stop', { offset: cut, stopColor: snowShade(nr) }), h('stop', { offset: '1', stopColor: snowShade(nr), stopOpacity: 0 })), h('filter', { id: gid + 'b', x: '-10%', y: '-50%', width: '120%', height: '200%' }, h('feGaussianBlur', { stdDeviation: 3 }))),
-                    SP.flat ? null : h('ellipse', { cx: wD / 2, cy: gL - 14, rx: CW * 0.5, ry: 9, fill: 'rgba(10,12,18,0.45)', filter: 'url(#' + gid + 'b)' }),
+                    h('defs', null, h('linearGradient', { id: gid, x1: 0, y1: 0, x2: 0, y2: 1 }, h('stop', { offset: '0', stopColor: snowLit(nr) }), h('stop', { offset: '0.35', stopColor: snowMid(nr) }), h('stop', { offset: (cut * 0.75).toFixed(3), stopColor: snowMid(nr), stopOpacity: 0.7 }), h('stop', { offset: cut, stopColor: snowMid(nr), stopOpacity: 0 })), h('filter', { id: gid + 'b', x: '-10%', y: '-50%', width: '120%', height: '200%' }, h('feGaussianBlur', { stdDeviation: 3 }))),
+                    SP.flat ? null : h('ellipse', { cx: wD / 2, cy: gL - 14, rx: CW * 0.5, ry: 9, fill: 'rgba(10,12,18,0.3)', filter: 'url(#' + gid + 'b)' }),
                     h('path', { d, fill: SP.flat ? '#F6F4F2' : 'url(#' + gid + ')' }),
                     h('path', { d: rim, fill: 'none', stroke: SP.flat ? '#8C92B6' : snowLit(nr, 0.85), strokeWidth: SP.flat ? 2 : 1.6, strokeLinecap: 'round' })));
               })() : null];
